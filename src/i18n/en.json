@@ -1,0 +1,254 @@
+{
+  "app": {
+    "name": "macItRun"
+  },
+  "nav": {
+    "skip": "Skip to content",
+    "main": "Main navigation",
+    "home": "Home",
+    "download": "Download",
+    "support": "Support",
+    "language": "Language",
+    "lightMode": "Use light theme",
+    "darkMode": "Use dark theme",
+    "menu": "Open menu",
+    "privacy": "Privacy",
+    "terms": "Terms of use",
+    "licenses": "Licenses"
+  },
+  "footer": {
+    "label": "Footer links",
+    "tagline": "© {{ year }} macItRun · free, no ads and no tracking.",
+    "github": "GitHub",
+    "kofi": "Ko-fi"
+  },
+  "seo": {
+    "home": {
+      "title": "macItRun · Play Windows games on your Mac",
+      "description": "Free macOS app that installs and runs Windows games with Wine, DXMT and DXVK, with game profiles from the community."
+    },
+    "download": {
+      "title": "Download",
+      "description": "Download macItRun for Apple silicon Macs running macOS 26: install command, .zip and how to open it the first time."
+    },
+    "privacy": {
+      "title": "Privacy",
+      "description": "How the macItRun website handles your personal data, under Brazil's LGPD."
+    },
+    "terms": {
+      "title": "Terms of use",
+      "description": "Rules for the macItRun website and community, with no warranty and an anti-cheat warning."
+    },
+    "licenses": {
+      "title": "Licenses",
+      "description": "Licenses of macItRun's open-source components and the Wine source code."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "description": "This page does not exist on the macItRun website."
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Play Windows games on your Mac",
+      "subtitle": "macItRun installs, sets up and launches Windows games with Wine and open-source graphics layers. Free, no account, no hassle.",
+      "download": "Download macItRun",
+      "learnMore": "See features",
+      "requirements": "For Apple silicon Macs with macOS 26.",
+      "logoAlt": "macItRun logo: a smiling laptop running down a road"
+    },
+    "features": {
+      "title": "Everything a Windows game needs",
+      "layers": {
+        "title": "DXMT and DXVK",
+        "body": "Translates DirectX to Metal with DXMT or DXVK + MoltenVK. Pick the layer per bottle and per game."
+      },
+      "apps": {
+        "title": "Ready-made apps",
+        "body": "Each game becomes an app in Launchpad and Spotlight, with the .exe's own icon and macOS Game Mode."
+      },
+      "community": {
+        "title": "Community profiles",
+        "body": "Settings tested by other players for each game, applied in one click."
+      },
+      "updates": {
+        "title": "Safe updates",
+        "body": "The app updates itself, and every download is checked by SHA-256 and signature."
+      }
+    },
+    "tested": {
+      "title": "Tested games",
+      "subtitle": "These games already ship with a profile in the app.",
+      "darkSouls3": "Runs smoothly with DXVK; async mode reduces shader stutter. With DXMT the image freezes on the enemy death effect.",
+      "dragonBall": "DirectX 12 only: runs with Wine's own DirectX (vkd3d). The lobby character still shows without color.",
+      "communitySoon": "Coming soon: profiles shared by the community, with search, likes and comments."
+    },
+    "support": {
+      "title": "Support the project",
+      "body": "macItRun is free and has no ads. If it helped you, a donation keeps development going.",
+      "cta": "Support on Ko-fi"
+    }
+  },
+  "download": {
+    "title": "Download macItRun",
+    "version": "Version {{ version }} · {{ date }}",
+    "versionUnavailable": "The latest version is on GitHub.",
+    "install": {
+      "title": "Install from Terminal",
+      "body": "The fastest way: paste it into Terminal. The command downloads the latest version, checks its SHA-256, puts the app in Applications and opens it, without the first-launch block.",
+      "copy": "Copy",
+      "copied": "Command copied",
+      "copyFailed": "Couldn't copy. Select the command and copy it manually."
+    },
+    "zip": {
+      "title": "Or download the .zip",
+      "body": "Unzip it and drag macItRun to the Applications folder.",
+      "button": "Download macItRun.zip"
+    },
+    "requirements": {
+      "title": "Requirements",
+      "appleSilicon": {
+        "title": "Apple silicon",
+        "body": "Macs with an M or A chip. Intel Macs are not supported."
+      },
+      "macos": {
+        "title": "macOS 26",
+        "body": "macOS Tahoe 26 or later."
+      },
+      "rosetta": {
+        "title": "Rosetta 2",
+        "body": "Wine needs it. If it's missing, the app tells you and macOS offers to install it."
+      }
+    },
+    "openAnyway": {
+      "title": "Opening it the first time",
+      "body": "The app is not notarized by Apple yet, so macOS blocks the first launch when you downloaded the .zip. Allow it once:",
+      "steps": {
+        "unzip": "Unzip macItRun.zip.",
+        "drag": "Drag macItRun to the Applications folder.",
+        "open": "Open macItRun. macOS says it can't verify the app: click OK.",
+        "settings": "Open System Settings → Privacy & Security and scroll to the message about macItRun.",
+        "confirm": "Click \"Open Anyway\" and confirm with your password or Touch ID."
+      },
+      "updates": "You only need to do this once: later updates are installed by the app itself."
+    },
+    "notes": {
+      "title": "What's new",
+      "onGithub": "View on GitHub",
+      "unavailable": "Couldn't load the release notes right now.",
+      "allReleases": "All releases"
+    }
+  },
+  "legal": {
+    "updated": "Updated {{ date }}",
+    "updatedDate": "November 3, 2026",
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains which personal data the macItRun website handles, why, and what your rights are, under Brazil's General Data Protection Law (Law No. 13,709/2018, LGPD). The Mac app does not send personal data to the website.",
+      "controller": {
+        "title": "Who the controller is",
+        "body": "Matheus Fernandes da Rosa, an individual, responsible for macItRun and this website."
+      },
+      "data": {
+        "title": "What data we handle",
+        "body": "Browsing without an account: no personal data is stored, apart from the IP address used temporarily to limit abuse.\n\nWith an account: email (to sign in and recover your password), username (public) and, if you sign in with GitHub, your GitHub account identifier.\n\nWhat you publish: game profiles, notes and comments, which are public, together with your username."
+      },
+      "purpose": {
+        "title": "Why",
+        "body": "To keep your account, show what you publish in the community, moderate reports and protect the site against spam and abuse. We don't sell data, show ads or build behavior profiles."
+      },
+      "legalBasis": {
+        "title": "Legal basis",
+        "body": "Performance of a contract (the terms of use) for the account and publications, and legitimate interest for security and abuse limits (art. 7, V and IX, of the LGPD)."
+      },
+      "sharing": {
+        "title": "Who we share it with",
+        "body": "Only the services that host the site: Supabase (database and sign-in) and Vercel (hosting), which may process data outside Brazil with adequate safeguards. If you sign in with GitHub, GitHub also takes part in the sign-in."
+      },
+      "retention": {
+        "title": "How long",
+        "body": "Account data is kept while the account exists. IP addresses used to limit abuse are deleted within 30 days. When you delete your account, your email and username are removed; your published profiles either stay as \"author removed\" or are deleted, as you choose."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We only use what's needed to keep you signed in (session) and to remember the light or dark theme in your browser. There are no advertising or tracking cookies, so there is no cookie banner."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can confirm and access your data, correct it, download a copy, delete your account and withdraw consent. Downloading your data and deleting your account are in My account; for anything else, contact the controller. You may also file a complaint with the ANPD (Brazil's National Data Protection Authority)."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "For any request about your data, write to the controller at the contact email published on this page."
+      }
+    },
+    "terms": {
+      "title": "Terms of use",
+      "intro": "By using the macItRun website or creating an account, you agree to these terms. If you don't agree, don't use the site.",
+      "service": {
+        "title": "What the service is",
+        "body": "macItRun is a free macOS app that runs Windows programs with Wine. This website presents the app, points to the download on GitHub releases and hosts the community of game profiles."
+      },
+      "warranty": {
+        "title": "No warranty",
+        "body": "The app, the profiles and the website are provided \"as is\", without warranty of any kind. Games may not start, may crash or may lose saved data. Back up what matters. To the extent permitted by law, we are not liable for damages arising from their use."
+      },
+      "antiCheat": {
+        "title": "Anti-cheat and online games",
+        "body": "Many online games use anti-cheat systems that don't work with Wine or may treat Wine as cheating. Playing online through macItRun may get your game account banned. The decision and the risk are yours."
+      },
+      "accounts": {
+        "title": "Account",
+        "body": "You must be at least 13 years old (or the minimum age in your country) to create an account. Keep your password secret; you are responsible for what is done with your account."
+      },
+      "content": {
+        "title": "What you publish",
+        "body": "You keep ownership of what you publish and grant macItRun a free, worldwide license to display, copy and distribute that content on the website, the API and the app. Profiles are settings only: they cannot contain programs, links to download files or other people's data."
+      },
+      "prohibited": {
+        "title": "What is not allowed",
+        "body": "Offensive, discriminatory or illegal content; spam and advertising; profiles made to bypass anti-cheat or copy protection; piracy; trying to break into, overload or get around the site's limits."
+      },
+      "moderation": {
+        "title": "Moderation",
+        "body": "Anyone signed in can report profiles and comments. Items with several reports are hidden until reviewed. We may hide content and suspend accounts that break these terms."
+      },
+      "thirdParty": {
+        "title": "Trademarks and third parties",
+        "body": "Game names and trademarks belong to their owners and appear only to identify the game. macItRun is not affiliated with Apple, Microsoft, the Wine project or the game studios."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "We may update these terms; the date at the top shows the latest version. Important changes will be announced on the site. These terms are governed by Brazilian law."
+      }
+    },
+    "licenses": {
+      "title": "Licenses",
+      "intro": "macItRun uses open-source components. Here are the licenses of each one and where to find the source code.",
+      "wine": {
+        "title": "Wine source code",
+        "body": "The runtime the app distributes is Wine with its own patches, under the LGPL 2.1 or later. The file below has the complete source code used in the build, including the patches and the libraries shipped with the runtime."
+      },
+      "wineSources": "Download the runtime source code (macitrun-wine-26.3.0-r5)",
+      "app": {
+        "title": "In the app",
+        "body": "Shipped with the app or downloaded by it. The app shows the full texts under Licenses."
+      },
+      "site": {
+        "title": "On this website",
+        "body": "Libraries used to build the website."
+      },
+      "columns": {
+        "component": "Component",
+        "license": "License",
+        "source": "Source code",
+        "sourceLink": "View"
+      }
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The address may be wrong, or the page has moved.",
+    "home": "Back to home"
+  }
+}

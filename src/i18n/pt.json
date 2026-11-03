@@ -1,0 +1,254 @@
+{
+  "app": {
+    "name": "macItRun"
+  },
+  "nav": {
+    "skip": "Pular para o conteúdo",
+    "main": "Navegação principal",
+    "home": "Início",
+    "download": "Download",
+    "support": "Apoiar",
+    "language": "Idioma",
+    "lightMode": "Usar tema claro",
+    "darkMode": "Usar tema escuro",
+    "menu": "Abrir menu",
+    "privacy": "Privacidade",
+    "terms": "Termos de uso",
+    "licenses": "Licenças"
+  },
+  "footer": {
+    "label": "Links do rodapé",
+    "tagline": "© {{ year }} macItRun · gratuito, sem anúncios e sem rastreamento.",
+    "github": "GitHub",
+    "kofi": "Ko-fi"
+  },
+  "seo": {
+    "home": {
+      "title": "macItRun · Jogue jogos de Windows no seu Mac",
+      "description": "App gratuito para macOS que instala e roda jogos de Windows com Wine, DXMT e DXVK, com perfis de jogo da comunidade."
+    },
+    "download": {
+      "title": "Baixar",
+      "description": "Baixe o macItRun para Macs com Apple silicon e macOS 26: comando de instalação, .zip e o passo a passo para abrir pela primeira vez."
+    },
+    "privacy": {
+      "title": "Privacidade",
+      "description": "Como o site do macItRun trata seus dados pessoais, conforme a LGPD."
+    },
+    "terms": {
+      "title": "Termos de uso",
+      "description": "Regras de uso do site e da comunidade do macItRun, sem garantia e com aviso sobre anti-cheat."
+    },
+    "licenses": {
+      "title": "Licenças",
+      "description": "Licenças dos componentes de código aberto do macItRun e o código-fonte do Wine."
+    },
+    "notFound": {
+      "title": "Página não encontrada",
+      "description": "Esta página não existe no site do macItRun."
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "Jogue jogos de Windows no seu Mac",
+      "subtitle": "O macItRun instala, configura e abre jogos de Windows com Wine e camadas gráficas de código aberto. Gratuito, sem conta e sem complicação.",
+      "download": "Baixar o macItRun",
+      "learnMore": "Ver recursos",
+      "requirements": "Para Macs com Apple silicon e macOS 26.",
+      "logoAlt": "Logo do macItRun: um notebook sorridente correndo numa estrada"
+    },
+    "features": {
+      "title": "Tudo o que um jogo de Windows precisa",
+      "layers": {
+        "title": "DXMT e DXVK",
+        "body": "Traduz DirectX para Metal com DXMT ou DXVK + MoltenVK. Escolha a camada por garrafa e por jogo."
+      },
+      "apps": {
+        "title": "Apps prontos",
+        "body": "Cada jogo vira um app no Launchpad e no Spotlight, com o ícone do próprio .exe e o Game Mode do macOS."
+      },
+      "community": {
+        "title": "Perfis da comunidade",
+        "body": "Configurações testadas por outras pessoas para cada jogo, aplicadas com um clique."
+      },
+      "updates": {
+        "title": "Atualizações seguras",
+        "body": "O app se atualiza sozinho, e cada download é conferido por SHA-256 e assinatura."
+      }
+    },
+    "tested": {
+      "title": "Jogos testados",
+      "subtitle": "Estes jogos já vêm com perfil pronto no app.",
+      "darkSouls3": "Roda liso com DXVK; o modo async reduz as travadas de shader. Com DXMT a imagem congela no efeito de morte dos inimigos.",
+      "dragonBall": "Só DirectX 12: roda com o DirectX do Wine (vkd3d). O personagem do lobby ainda aparece sem cor.",
+      "communitySoon": "Em breve: perfis enviados pela comunidade, com busca, curtidas e comentários."
+    },
+    "support": {
+      "title": "Apoie o projeto",
+      "body": "O macItRun é gratuito e sem anúncios. Se ele te ajudou, uma doação mantém o desenvolvimento.",
+      "cta": "Apoiar no Ko-fi"
+    }
+  },
+  "download": {
+    "title": "Baixar o macItRun",
+    "version": "Versão {{ version }} · {{ date }}",
+    "versionUnavailable": "A versão mais recente fica no GitHub.",
+    "install": {
+      "title": "Instalar pelo Terminal",
+      "body": "O jeito mais rápido: cole no Terminal. O comando baixa a versão mais recente, confere o SHA-256, coloca o app em Aplicativos e o abre, sem o bloqueio da primeira abertura.",
+      "copy": "Copiar",
+      "copied": "Comando copiado",
+      "copyFailed": "Não deu para copiar. Selecione o comando e copie manualmente."
+    },
+    "zip": {
+      "title": "Ou baixe o .zip",
+      "body": "Descompacte e arraste o macItRun para a pasta Aplicativos.",
+      "button": "Baixar macItRun.zip"
+    },
+    "requirements": {
+      "title": "Requisitos",
+      "appleSilicon": {
+        "title": "Apple silicon",
+        "body": "Macs com chip M ou A. Macs com Intel não são suportados."
+      },
+      "macos": {
+        "title": "macOS 26",
+        "body": "macOS Tahoe 26 ou mais recente."
+      },
+      "rosetta": {
+        "title": "Rosetta 2",
+        "body": "O Wine precisa dele. Se faltar, o app avisa e o macOS oferece instalar."
+      }
+    },
+    "openAnyway": {
+      "title": "Abrir pela primeira vez",
+      "body": "O app ainda não é notarizado pela Apple, então o macOS bloqueia a primeira abertura de quem baixou o .zip. Libere uma vez:",
+      "steps": {
+        "unzip": "Descompacte o macItRun.zip.",
+        "drag": "Arraste o macItRun para a pasta Aplicativos.",
+        "open": "Abra o macItRun. O macOS avisa que não pode verificar o app: clique em OK.",
+        "settings": "Abra Ajustes do Sistema → Privacidade e Segurança e role até o aviso sobre o macItRun.",
+        "confirm": "Clique em \"Abrir Mesmo Assim\" e confirme com sua senha ou Touch ID."
+      },
+      "updates": "Só é preciso uma vez: as atualizações seguintes são instaladas pelo próprio app."
+    },
+    "notes": {
+      "title": "Novidades",
+      "onGithub": "Ver no GitHub",
+      "unavailable": "Não foi possível ler as novidades agora.",
+      "allReleases": "Todas as versões"
+    }
+  },
+  "legal": {
+    "updated": "Atualizado em {{ date }}",
+    "updatedDate": "3 de novembro de 2026",
+    "privacy": {
+      "title": "Política de privacidade",
+      "intro": "Esta política explica quais dados pessoais o site do macItRun trata, por quê e quais são os seus direitos, conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD). O app de Mac não envia dados pessoais ao site.",
+      "controller": {
+        "title": "Quem é o controlador",
+        "body": "Matheus Fernandes da Rosa, pessoa física, responsável pelo macItRun e por este site."
+      },
+      "data": {
+        "title": "Quais dados tratamos",
+        "body": "Sem conta, só navegando: nenhum dado pessoal é guardado, além do endereço IP usado temporariamente para limitar abusos.\n\nCom conta: e-mail (para entrar e recuperar a senha), nome de usuário (público) e, se você entrar pelo GitHub, o identificador da conta GitHub.\n\nO que você publica: perfis de jogo, notas e comentários, que são públicos, com o seu nome de usuário."
+      },
+      "purpose": {
+        "title": "Para quê",
+        "body": "Para manter sua conta, mostrar o que você publica na comunidade, moderar denúncias e proteger o site contra spam e abuso. Não vendemos dados, não mostramos anúncios e não fazemos perfis de comportamento."
+      },
+      "legalBasis": {
+        "title": "Base legal",
+        "body": "Execução do contrato (os termos de uso) para a conta e as publicações, e legítimo interesse para a segurança e o limite de abusos (art. 7º, V e IX, da LGPD)."
+      },
+      "sharing": {
+        "title": "Com quem compartilhamos",
+        "body": "Só com os serviços que hospedam o site: Supabase (banco de dados e login) e Vercel (hospedagem), que podem processar dados fora do Brasil com cláusulas de proteção adequadas. Se você entrar pelo GitHub, o GitHub também participa do login."
+      },
+      "retention": {
+        "title": "Por quanto tempo",
+        "body": "Os dados da conta ficam enquanto ela existir. Endereços IP usados para limitar abusos são apagados em até 30 dias. Ao apagar a conta, o e-mail e o nome de usuário são removidos; seus perfis publicados ficam como \"autor removido\" ou são apagados, como você escolher."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "Só usamos o necessário para manter você conectado (sessão) e lembrar o tema claro ou escuro no seu navegador. Não há cookies de anúncio nem de rastreamento, por isso não há banner de cookies."
+      },
+      "rights": {
+        "title": "Seus direitos",
+        "body": "Você pode confirmar e acessar seus dados, corrigir, baixar uma cópia, apagar a conta e revogar o consentimento. Baixar os dados e apagar a conta ficam em Minha conta; para o resto, fale com o controlador. Você também pode reclamar à ANPD (Autoridade Nacional de Proteção de Dados)."
+      },
+      "contact": {
+        "title": "Contato",
+        "body": "Para qualquer pedido sobre seus dados, escreva para o controlador pelo e-mail de contato publicado nesta página."
+      }
+    },
+    "terms": {
+      "title": "Termos de uso",
+      "intro": "Ao usar o site do macItRun ou criar uma conta, você concorda com estes termos. Se não concordar, não use o site.",
+      "service": {
+        "title": "O que é o serviço",
+        "body": "O macItRun é um app gratuito para macOS que roda programas de Windows com Wine. Este site divulga o app, aponta para o download nas releases do GitHub e hospeda a comunidade de perfis de jogo."
+      },
+      "warranty": {
+        "title": "Sem garantia",
+        "body": "O app, os perfis e o site são oferecidos \"como estão\", sem garantia de qualquer tipo. Jogos podem não abrir, travar ou perder dados salvos. Faça backup do que for importante. Na medida permitida por lei, não respondemos por danos decorrentes do uso."
+      },
+      "antiCheat": {
+        "title": "Anti-cheat e jogos online",
+        "body": "Muitos jogos online usam sistemas anti-cheat que não funcionam com o Wine ou que podem tratar o Wine como trapaça. Jogar online pelo macItRun pode resultar no banimento da sua conta do jogo. A decisão e o risco são seus."
+      },
+      "accounts": {
+        "title": "Conta",
+        "body": "Você precisa ter pelo menos 13 anos (ou a idade mínima do seu país) para criar uma conta. Mantenha sua senha em segredo; você responde pelo que for feito com a sua conta."
+      },
+      "content": {
+        "title": "O que você publica",
+        "body": "Você continua dono do que publica e dá ao macItRun licença gratuita e mundial para mostrar, copiar e distribuir esse conteúdo no site, na API e no app. Perfis são só configuração: não podem conter programas, links para baixar arquivos ou dados de outras pessoas."
+      },
+      "prohibited": {
+        "title": "O que é proibido",
+        "body": "Conteúdo ofensivo, discriminatório ou ilegal; spam e propaganda; perfis feitos para burlar anti-cheat ou proteção contra cópia; pirataria; tentar invadir, sobrecarregar ou contornar os limites do site."
+      },
+      "moderation": {
+        "title": "Moderação",
+        "body": "Qualquer pessoa conectada pode denunciar perfis e comentários. Itens com várias denúncias ficam ocultos até revisão. Podemos ocultar conteúdo e suspender contas que violem estes termos."
+      },
+      "thirdParty": {
+        "title": "Marcas e terceiros",
+        "body": "Nomes de jogos e marcas pertencem aos seus donos e aparecem só para identificar o jogo. O macItRun não tem relação com a Apple, a Microsoft, o projeto Wine nem com os estúdios dos jogos."
+      },
+      "changes": {
+        "title": "Mudanças",
+        "body": "Podemos atualizar estes termos; a data no topo mostra a última versão. Mudanças importantes serão avisadas no site. Estes termos seguem a lei brasileira."
+      }
+    },
+    "licenses": {
+      "title": "Licenças",
+      "intro": "O macItRun usa componentes de código aberto. Aqui estão as licenças de cada um e onde encontrar o código-fonte.",
+      "wine": {
+        "title": "Código-fonte do Wine",
+        "body": "O runtime distribuído pelo app é o Wine com patches próprios, sob a LGPL 2.1 ou posterior. O arquivo abaixo tem o código-fonte completo usado no build, inclusive os patches e as bibliotecas que acompanham o runtime."
+      },
+      "wineSources": "Baixar o código-fonte do runtime (macitrun-wine-26.3.0-r5)",
+      "app": {
+        "title": "No app",
+        "body": "Distribuídos junto com o app ou baixados por ele. O app mostra os textos completos em Licenças."
+      },
+      "site": {
+        "title": "Neste site",
+        "body": "Bibliotecas usadas para construir o site."
+      },
+      "columns": {
+        "component": "Componente",
+        "license": "Licença",
+        "source": "Código-fonte",
+        "sourceLink": "Ver"
+      }
+    }
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "body": "O endereço pode estar errado ou a página mudou de lugar.",
+    "home": "Voltar ao início"
+  }
+}

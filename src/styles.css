@@ -1,0 +1,37 @@
+@layer theme, base, primeng, components, utilities;
+
+@import 'tailwindcss';
+@import 'tailwindcss-primeui';
+
+/* O modo escuro segue a classe que o PrimeNG também usa (ver app.config.ts). */
+@custom-variant dark (&:where(.app-dark, .app-dark *));
+
+html {
+  color-scheme: light;
+}
+
+html.app-dark {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  background: var(--p-surface-0);
+  color: var(--p-surface-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+html.app-dark body {
+  background: var(--p-surface-950);
+  color: var(--p-surface-0);
+}
+
+/* Texto vindo de fora (notas de versão) mantém as quebras de linha, sem virar HTML. */
+.plain-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,36 @@
+<app-legal-page page="licenses" [sections]="sections">
+  <p class="mt-3">
+    <a [href]="wineSourcesUrl" class="text-primary" data-testid="wine-sources">
+      <i class="pi pi-download mr-1" aria-hidden="true"></i>{{ 'legal.licenses.wineSources' | transloco }}
+    </a>
+  </p>
+
+  @for (group of groups; track group.key) {
+    <section class="mt-10">
+      <h2 class="m-0 text-xl font-semibold">{{ 'legal.licenses.' + group.key + '.title' | transloco }}</h2>
+      <p class="mt-2 text-surface-600 dark:text-surface-300">
+        {{ 'legal.licenses.' + group.key + '.body' | transloco }}
+      </p>
+      <p-table [value]="group.notices" styleClass="mt-4" [tableStyle]="{ 'min-width': '32rem' }">
+        <ng-template #header>
+          <tr>
+            <th scope="col">{{ 'legal.licenses.columns.component' | transloco }}</th>
+            <th scope="col">{{ 'legal.licenses.columns.license' | transloco }}</th>
+            <th scope="col">{{ 'legal.licenses.columns.source' | transloco }}</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-notice>
+          <tr>
+            <td>{{ notice.component }}</td>
+            <td><code class="text-sm">{{ notice.license }}</code></td>
+            <td>
+              <a [href]="notice.source" target="_blank" rel="noopener" class="text-primary">
+                {{ 'legal.licenses.columns.sourceLink' | transloco }}
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </section>
+  }
+</app-legal-page>
