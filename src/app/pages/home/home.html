@@ -83,8 +83,11 @@
         </article>
       }
     </div>
-    <p class="mt-8 text-center text-surface-600 dark:text-surface-300">
-      <i class="pi pi-clock mr-2" aria-hidden="true"></i>{{ 'home.tested.communitySoon' | transloco }}
+    <p class="mt-8 text-center">
+      <a [routerLink]="['/', lang(), 'community']" class="text-primary">
+        {{ 'home.tested.community' | transloco }}
+        <i class="pi pi-arrow-right ml-1 text-sm" aria-hidden="true"></i>
+      </a>
     </p>
   </div>
 </section>

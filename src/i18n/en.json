@@ -68,7 +68,7 @@
     },
     "community": {
       "title": "Community",
-      "description": "Community setup profiles for running Windows apps and games on your Mac with macItRun: search by game, see what each profile changes and import it into the app."
+      "description": "Community setup profiles for running Windows apps and games on your Mac with macItRun: search by game, see what each one changes and import it into the app."
     },
     "communityProfile": {
       "title": "Setup profile",
@@ -95,7 +95,7 @@
         "body": "Each program becomes an app in Launchpad and Spotlight, with the .exe's own icon and, for games, macOS Game Mode."
       },
       "community": {
-        "title": "Community profiles",
+        "title": "Community setup profiles",
         "body": "Settings tested by other people for each app or game, applied in one click."
       },
       "updates": {
@@ -105,10 +105,10 @@
     },
     "tested": {
       "title": "Tested games",
-      "subtitle": "These games already ship with a profile in the app.",
+      "subtitle": "These games already ship with a setup profile in the app.",
       "darkSouls3": "Runs smoothly with DXVK; async mode reduces shader stutter. With DXMT the image freezes on the enemy death effect.",
       "dragonBall": "DirectX 12 only: runs with Wine's own DirectX (vkd3d). The lobby character still shows without color.",
-      "communitySoon": "Coming soon: profiles shared by the community, with search, likes and comments."
+      "community": "See the setup profiles shared by the community"
     },
     "support": {
       "title": "Support the project",
@@ -194,7 +194,7 @@
       },
       "retention": {
         "title": "How long",
-        "body": "Account data is kept while the account exists. IP addresses used to limit abuse are deleted within 30 days. When you delete your account, your email and username are removed; your published profiles either stay as \"author removed\" or are deleted, as you choose."
+        "body": "Account data is kept while the account exists. IP addresses used to limit abuse are deleted within 30 days. When you delete your account, your email and username are removed; your published setup profiles either stay as \"author removed\" or are deleted, as you choose."
       },
       "cookies": {
         "title": "Cookies",
@@ -218,7 +218,7 @@
       },
       "warranty": {
         "title": "No warranty",
-        "body": "The app, the profiles and the website are provided \"as is\", without warranty of any kind. Apps and games may not start, may crash or may lose saved data. Back up what matters. To the extent permitted by law, we are not liable for damages arising from their use."
+        "body": "The app, the setup profiles and the website are provided \"as is\", without warranty of any kind. Apps and games may not start, may crash or may lose saved data. Back up what matters. To the extent permitted by law, we are not liable for damages arising from their use."
       },
       "antiCheat": {
         "title": "Anti-cheat and online games",
@@ -230,15 +230,15 @@
       },
       "content": {
         "title": "What you publish",
-        "body": "You keep ownership of what you publish and grant macItRun a free, worldwide license to display, copy and distribute that content on the website, the API and the app. Profiles are settings only: they cannot contain programs, links to download files or other people's data."
+        "body": "You keep ownership of what you publish and grant macItRun a free, worldwide license to display, copy and distribute that content on the website, the API and the app. Setup profiles hold settings only: they cannot contain programs, links to download files or other people's data."
       },
       "prohibited": {
         "title": "What is not allowed",
-        "body": "Offensive, discriminatory or illegal content; spam and advertising; profiles made to bypass anti-cheat or copy protection; piracy; trying to break into, overload or get around the site's limits."
+        "body": "Offensive, discriminatory or illegal content; spam and advertising; setup profiles made to bypass anti-cheat or copy protection; piracy; trying to break into, overload or get around the site's limits."
       },
       "moderation": {
         "title": "Moderation",
-        "body": "Anyone signed in can report profiles and comments. Items with several reports are hidden until reviewed. We may hide content and suspend accounts that break these terms."
+        "body": "Anyone signed in can report setup profiles and comments. Items with several reports are hidden until reviewed. We may hide content and suspend accounts that break these terms."
       },
       "thirdParty": {
         "title": "Trademarks and third parties",
@@ -313,7 +313,7 @@
     },
     "signup": {
       "title": "Create account",
-      "subtitle": "To publish profiles, like and comment. Browsing and downloading need no account.",
+      "subtitle": "To publish setup profiles, like and comment. Browsing and downloading need no account.",
       "submit": "Create account",
       "haveAccount": "Already have an account?",
       "login": "Sign in",
@@ -372,7 +372,7 @@
       "link_expired": "The link expired or was already used. Request a new one.",
       "account_incomplete": "Choose your username and accept the terms in My account to take part.",
       "comment_invalid": "Comments must have 1 to 2,000 characters, with no special control characters.",
-      "not_found": "This profile is no longer available."
+      "not_found": "This setup profile is no longer available."
     }
   },
   "account": {
@@ -389,7 +389,7 @@
       "done": "Sign-up complete"
     },
     "profile": {
-      "title": "Profile",
+      "title": "Your account",
       "editUsername": "Change username",
       "usernameSaved": "Username changed",
       "providers": "Sign-in methods",
@@ -423,11 +423,11 @@
   },
   "community": {
     "title": "Community",
-    "subtitle": "Setup profiles shared by macItRun users. Search by game or app, see what each profile changes and import it into the app.",
+    "subtitle": "Setup profiles shared by macItRun users. Search by game or app, see what each one changes and import it into the app.",
     "unavailable": "The community isn't available at this address yet.",
-    "error": "Couldn't load the profiles right now. Try again in a moment.",
+    "error": "Couldn't load the setup profiles right now. Try again in a moment.",
     "search": {
-      "label": "Search profiles",
+      "label": "Search setup profiles",
       "placeholder": "Game, executable or author",
       "submit": "Search"
     },
@@ -446,9 +446,9 @@
       "recent": "Most recent",
       "downloads": "Most downloaded"
     },
-    "results": "Profiles found: {{ count }}",
+    "results": "Setup profiles found: {{ count }}",
     "empty": {
-      "title": "No profiles found",
+      "title": "No setup profiles found",
       "body": "Try other terms or clear the filters."
     },
     "card": {
@@ -477,24 +477,24 @@
       "seoDescription": "macItRun setup profile for {{ name }}: graphics layer, Windows version and settings tested by the community.",
       "published": "Published on {{ date }}",
       "open": "Open in macItRun",
-      "download": "Download profile",
-      "importHelp": "Open in macItRun needs the app installed. If nothing happens, download the profile and, in the app, use File → Import Profile… or drag the file onto the window.",
+      "download": "Download setup profile",
+      "importHelp": "Open in macItRun needs the app installed. If nothing happens, download the setup profile and, in the app, use File → Import Profile… or drag the file onto the window.",
       "like": "Like",
       "liked": "Liked",
       "loginToLike": "Sign in to like",
       "notFound": {
-        "title": "Profile not found",
-        "body": "This profile doesn't exist or is no longer published."
+        "title": "Setup profile not found",
+        "body": "This setup profile doesn't exist or is no longer published."
       },
       "changes": {
-        "title": "What this profile changes",
+        "title": "What this setup profile changes",
         "executables": "Executables",
         "graphics": "Graphics layer",
         "windows": "Windows version",
         "dlls": "DLLs",
         "environment": "Environment variables",
         "arguments": "Arguments",
-        "notes": "Profile notes",
+        "notes": "Setup profile notes",
         "none": "No changes",
         "bottleDefault": "Bottle's default"
       },
@@ -521,7 +521,7 @@
       "title": "Comments ({{ count }})",
       "empty": "No comments yet.",
       "label": "Your comment",
-      "placeholder": "Tell how it went with this profile",
+      "placeholder": "Tell how it went with this setup profile",
       "counter": "{{ count }}/{{ max }}",
       "submit": "Comment",
       "posted": "Comment posted",

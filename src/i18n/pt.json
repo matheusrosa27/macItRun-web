@@ -68,7 +68,7 @@
     },
     "community": {
       "title": "Comunidade",
-      "description": "Perfis de configuração da comunidade para rodar apps e jogos de Windows no Mac com o macItRun: busque pelo jogo, veja o que cada perfil muda e importe no app."
+      "description": "Perfis de configuração da comunidade para rodar apps e jogos de Windows no Mac com o macItRun: busque pelo jogo, veja o que cada um muda e importe no app."
     },
     "communityProfile": {
       "title": "Perfil de configuração",
@@ -95,7 +95,7 @@
         "body": "Cada programa vira um app no Launchpad e no Spotlight, com o ícone do próprio .exe e, nos jogos, o Game Mode do macOS."
       },
       "community": {
-        "title": "Perfis da comunidade",
+        "title": "Perfis de configuração da comunidade",
         "body": "Configurações testadas por outras pessoas para cada app ou jogo, aplicadas com um clique."
       },
       "updates": {
@@ -105,10 +105,10 @@
     },
     "tested": {
       "title": "Jogos testados",
-      "subtitle": "Estes jogos já vêm com perfil pronto no app.",
+      "subtitle": "Estes jogos já vêm com perfil de configuração pronto no app.",
       "darkSouls3": "Roda liso com DXVK; o modo async reduz as travadas de shader. Com DXMT a imagem congela no efeito de morte dos inimigos.",
       "dragonBall": "Só DirectX 12: roda com o DirectX do Wine (vkd3d). O personagem do lobby ainda aparece sem cor.",
-      "communitySoon": "Em breve: perfis enviados pela comunidade, com busca, curtidas e comentários."
+      "community": "Veja os perfis de configuração enviados pela comunidade"
     },
     "support": {
       "title": "Apoie o projeto",
@@ -194,7 +194,7 @@
       },
       "retention": {
         "title": "Por quanto tempo",
-        "body": "Os dados da conta ficam enquanto ela existir. Endereços IP usados para limitar abusos são apagados em até 30 dias. Ao apagar a conta, o e-mail e o nome de usuário são removidos; seus perfis publicados ficam como \"autor removido\" ou são apagados, como você escolher."
+        "body": "Os dados da conta ficam enquanto ela existir. Endereços IP usados para limitar abusos são apagados em até 30 dias. Ao apagar a conta, o e-mail e o nome de usuário são removidos; seus perfis de configuração publicados ficam como \"autor removido\" ou são apagados, como você escolher."
       },
       "cookies": {
         "title": "Cookies",
@@ -218,7 +218,7 @@
       },
       "warranty": {
         "title": "Sem garantia",
-        "body": "O app, os perfis e o site são oferecidos \"como estão\", sem garantia de qualquer tipo. Apps e jogos podem não abrir, travar ou perder dados salvos. Faça backup do que for importante. Na medida permitida por lei, não respondemos por danos decorrentes do uso."
+        "body": "O app, os perfis de configuração e o site são oferecidos \"como estão\", sem garantia de qualquer tipo. Apps e jogos podem não abrir, travar ou perder dados salvos. Faça backup do que for importante. Na medida permitida por lei, não respondemos por danos decorrentes do uso."
       },
       "antiCheat": {
         "title": "Anti-cheat e jogos online",
@@ -230,15 +230,15 @@
       },
       "content": {
         "title": "O que você publica",
-        "body": "Você continua dono do que publica e dá ao macItRun licença gratuita e mundial para mostrar, copiar e distribuir esse conteúdo no site, na API e no app. Perfis são só configuração: não podem conter programas, links para baixar arquivos ou dados de outras pessoas."
+        "body": "Você continua dono do que publica e dá ao macItRun licença gratuita e mundial para mostrar, copiar e distribuir esse conteúdo no site, na API e no app. Perfis de configuração contêm só ajustes: não podem conter programas, links para baixar arquivos ou dados de outras pessoas."
       },
       "prohibited": {
         "title": "O que é proibido",
-        "body": "Conteúdo ofensivo, discriminatório ou ilegal; spam e propaganda; perfis feitos para burlar anti-cheat ou proteção contra cópia; pirataria; tentar invadir, sobrecarregar ou contornar os limites do site."
+        "body": "Conteúdo ofensivo, discriminatório ou ilegal; spam e propaganda; perfis de configuração feitos para burlar anti-cheat ou proteção contra cópia; pirataria; tentar invadir, sobrecarregar ou contornar os limites do site."
       },
       "moderation": {
         "title": "Moderação",
-        "body": "Qualquer pessoa conectada pode denunciar perfis e comentários. Itens com várias denúncias ficam ocultos até revisão. Podemos ocultar conteúdo e suspender contas que violem estes termos."
+        "body": "Qualquer pessoa conectada pode denunciar perfis de configuração e comentários. Itens com várias denúncias ficam ocultos até revisão. Podemos ocultar conteúdo e suspender contas que violem estes termos."
       },
       "thirdParty": {
         "title": "Marcas e terceiros",
@@ -313,7 +313,7 @@
     },
     "signup": {
       "title": "Criar conta",
-      "subtitle": "Para publicar perfis, curtir e comentar. Para ver e baixar, não precisa de conta.",
+      "subtitle": "Para publicar perfis de configuração, curtir e comentar. Para ver e baixar, não precisa de conta.",
       "submit": "Criar conta",
       "haveAccount": "Já tem conta?",
       "login": "Entrar",
@@ -372,7 +372,7 @@
       "link_expired": "O link venceu ou já foi usado. Peça um novo.",
       "account_incomplete": "Escolha seu nome de usuário e aceite os termos em Minha conta para participar.",
       "comment_invalid": "O comentário precisa ter de 1 a 2.000 caracteres, sem caracteres especiais de controle.",
-      "not_found": "Este perfil não está mais disponível."
+      "not_found": "Este perfil de configuração não está mais disponível."
     }
   },
   "account": {
@@ -389,7 +389,7 @@
       "done": "Cadastro concluído"
     },
     "profile": {
-      "title": "Perfil",
+      "title": "Sua conta",
       "editUsername": "Trocar o nome de usuário",
       "usernameSaved": "Nome de usuário alterado",
       "providers": "Formas de entrar",
@@ -423,11 +423,11 @@
   },
   "community": {
     "title": "Comunidade",
-    "subtitle": "Perfis de configuração compartilhados por quem usa o macItRun. Busque pelo jogo ou app, veja o que cada perfil muda e importe no app.",
+    "subtitle": "Perfis de configuração compartilhados por quem usa o macItRun. Busque pelo jogo ou app, veja o que cada um muda e importe no app.",
     "unavailable": "A comunidade ainda não está disponível neste endereço.",
-    "error": "Não foi possível carregar os perfis agora. Tente de novo em instantes.",
+    "error": "Não foi possível carregar os perfis de configuração agora. Tente de novo em instantes.",
     "search": {
-      "label": "Buscar perfis",
+      "label": "Buscar perfis de configuração",
       "placeholder": "Jogo, executável ou autor",
       "submit": "Buscar"
     },
@@ -446,9 +446,9 @@
       "recent": "Mais recentes",
       "downloads": "Mais baixados"
     },
-    "results": "Perfis encontrados: {{ count }}",
+    "results": "Perfis de configuração encontrados: {{ count }}",
     "empty": {
-      "title": "Nenhum perfil encontrado",
+      "title": "Nenhum perfil de configuração encontrado",
       "body": "Tente outros termos ou tire os filtros."
     },
     "card": {
@@ -477,24 +477,24 @@
       "seoDescription": "Perfil de configuração do macItRun para {{ name }}: camada gráfica, versão do Windows e ajustes testados pela comunidade.",
       "published": "Publicado em {{ date }}",
       "open": "Abrir no macItRun",
-      "download": "Baixar perfil",
-      "importHelp": "Abrir no macItRun precisa do app instalado. Se nada acontecer, baixe o perfil e, no app, use Arquivo → Importar perfil… ou arraste o arquivo para a janela.",
+      "download": "Baixar perfil de configuração",
+      "importHelp": "Abrir no macItRun precisa do app instalado. Se nada acontecer, baixe o perfil de configuração e, no app, use Arquivo → Importar perfil… ou arraste o arquivo para a janela.",
       "like": "Curtir",
       "liked": "Curtido",
       "loginToLike": "Entre para curtir",
       "notFound": {
-        "title": "Perfil não encontrado",
-        "body": "Este perfil não existe ou não está mais publicado."
+        "title": "Perfil de configuração não encontrado",
+        "body": "Este perfil de configuração não existe ou não está mais publicado."
       },
       "changes": {
-        "title": "O que este perfil muda",
+        "title": "O que este perfil de configuração muda",
         "executables": "Executáveis",
         "graphics": "Camada gráfica",
         "windows": "Versão do Windows",
         "dlls": "DLLs",
         "environment": "Variáveis de ambiente",
         "arguments": "Argumentos",
-        "notes": "Notas do perfil",
+        "notes": "Notas do perfil de configuração",
         "none": "Nenhum ajuste",
         "bottleDefault": "Padrão da garrafa"
       },
@@ -521,7 +521,7 @@
       "title": "Comentários ({{ count }})",
       "empty": "Ninguém comentou ainda.",
       "label": "Seu comentário",
-      "placeholder": "Conte como foi com este perfil",
+      "placeholder": "Conte como foi com este perfil de configuração",
       "counter": "{{ count }}/{{ max }}",
       "submit": "Comentar",
       "posted": "Comentário publicado",
