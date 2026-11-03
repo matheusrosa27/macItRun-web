@@ -10,6 +10,12 @@ export const serverRoutes: ServerRoute[] = [
   { path: ':lang/privacy', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
   { path: ':lang/terms', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
   { path: ':lang/licenses', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
+  // Formulários de conta: o HTML é fixo; o login acontece no navegador.
+  { path: ':lang/signup', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
+  { path: ':lang/login', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
+  { path: ':lang/reset-password', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
+  // Só faz sentido com a sessão, que fica no navegador.
+  { path: ':lang/account', renderMode: RenderMode.Client },
   // Download mostra a versão atual: renderiza no servidor e a CDN guarda por 10 minutos.
   {
     path: ':lang/download',

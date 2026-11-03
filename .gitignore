@@ -46,3 +46,6 @@ Thumbs.db
 /.claude
 /.vercel
 .env*
+
+# Gerado por scripts/public-env.mjs
+/src/environments/public-env.ts

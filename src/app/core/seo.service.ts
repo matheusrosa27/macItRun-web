@@ -20,8 +20,9 @@ export class SeoService {
    * @param page chave em `seo.<page>` nos arquivos de tradução
    * @param lang idioma da URL atual
    * @param path caminho depois do idioma, sem barra inicial ("download", "" para a Home)
+   * @param noindex tira a página dos buscadores (conta, nova senha)
    */
-  update(page: string, lang: Lang, path: string): void {
+  update(page: string, lang: Lang, path: string, noindex = false): void {
     const t = (key: string) => this.transloco.translate(key, {}, lang);
     const siteName = t('app.name');
     const pageTitle = t(`seo.${page}.title`);
@@ -40,6 +41,7 @@ export class SeoService {
     this.setProperty('og:image', DEFAULT_IMAGE);
     this.setProperty('og:locale', OG_LOCALE[lang]);
     this.setName('twitter:card', 'summary');
+    this.setName('robots', noindex ? 'noindex' : 'index, follow');
 
     this.setLink('canonical', url);
     for (const other of LANGS) this.setLink('alternate', this.url(other, path), HTML_LANG[other]);

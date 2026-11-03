@@ -14,7 +14,9 @@
     "menu": "Open menu",
     "privacy": "Privacy",
     "terms": "Terms of use",
-    "licenses": "Licenses"
+    "licenses": "Licenses",
+    "login": "Sign in",
+    "account": "My account"
   },
   "footer": {
     "label": "Footer links",
@@ -46,6 +48,22 @@
     "notFound": {
       "title": "Page not found",
       "description": "This page does not exist on the macItRun website."
+    },
+    "signup": {
+      "title": "Create account",
+      "description": "Create your macItRun account to publish, like and comment on community setup profiles."
+    },
+    "login": {
+      "title": "Sign in",
+      "description": "Sign in to your macItRun account with email and password, Google or GitHub."
+    },
+    "resetPassword": {
+      "title": "New password",
+      "description": "Get an email link to choose a new password for your macItRun account."
+    },
+    "account": {
+      "title": "My account",
+      "description": "Username, your data and account deletion on macItRun."
     }
   },
   "home": {
@@ -151,7 +169,7 @@
       },
       "data": {
         "title": "What data we handle",
-        "body": "Browsing without an account: no personal data is stored, apart from the IP address used temporarily to limit abuse.\n\nWith an account: email (to sign in and recover your password), username (public) and, if you sign in with GitHub, your GitHub account identifier.\n\nWhat you publish: setup profiles, notes and comments, which are public, together with your username."
+        "body": "Browsing without an account: no personal data is stored, apart from the IP address used temporarily to limit abuse.\n\nWith an account: email (to sign in and recover your password), username (public) and, if you sign in with Google or GitHub, your account identifier and name on that service.\n\nWhat you publish: setup profiles, notes and comments, which are public, together with your username."
       },
       "purpose": {
         "title": "Why",
@@ -163,7 +181,7 @@
       },
       "sharing": {
         "title": "Who we share it with",
-        "body": "Only the services that host the site: Supabase (database and sign-in) and Vercel (hosting), which may process data outside Brazil with adequate safeguards. If you sign in with GitHub, GitHub also takes part in the sign-in."
+        "body": "Only with the services that run the website: Supabase (database and sign-in), Vercel (hosting) and Cloudflare Turnstile (bot check on sign-up, sign-in and password reset), which may process data outside Brazil under adequate protection clauses. If you sign in with Google or GitHub, that service also takes part in the sign-in."
       },
       "retention": {
         "title": "How long",
@@ -171,7 +189,7 @@
       },
       "cookies": {
         "title": "Cookies",
-        "body": "We only use what's needed to keep you signed in (session) and to remember the light or dark theme in your browser. There are no advertising or tracking cookies, so there is no cookie banner."
+        "body": "We use no advertising or tracking cookies, so there's no cookie banner. Your browser keeps only what's needed: the sign-in session (in local storage, removed when you sign out) and the light or dark theme. Cloudflare's bot check runs only on the account screens."
       },
       "rights": {
         "title": "Your rights",
@@ -250,5 +268,140 @@
     "title": "Page not found",
     "body": "The address may be wrong, or the page has moved.",
     "home": "Back to home"
+  },
+  "auth": {
+    "unavailable": "Accounts aren't available at this address yet. Please try again later.",
+    "loading": "Loading",
+    "or": "or",
+    "oauth": {
+      "google": "Continue with Google",
+      "github": "Continue with GitHub"
+    },
+    "fields": {
+      "email": "Email",
+      "username": "Username",
+      "password": "Password",
+      "newPassword": "New password",
+      "confirmPassword": "Repeat the new password"
+    },
+    "validation": {
+      "email": "Enter a valid email.",
+      "required": "Fill in this field.",
+      "passwordMin": "The password must have at least {{ min }} characters.",
+      "terms": "To create the account, accept the terms of use and the privacy policy.",
+      "mismatch": "The passwords don't match."
+    },
+    "username": {
+      "help": "Public. 3 to 20 characters: lowercase letters, numbers, - and _.",
+      "checking": "Checking…",
+      "available": "Available"
+    },
+    "password": {
+      "prompt": "Use at least {{ min }} characters",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "signup": {
+      "title": "Create account",
+      "subtitle": "To publish profiles, like and comment. Browsing and downloading need no account.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "login": "Sign in",
+      "oauthNeedsTerms": "Accept the terms above to continue with Google or GitHub.",
+      "terms": {
+        "accept": "I have read and accept the",
+        "terms": "terms of use",
+        "and": "and the",
+        "privacy": "privacy policy",
+        "end": "."
+      },
+      "sent": {
+        "title": "Confirm your email",
+        "body": "We sent a link to {{ email }}. Open it to activate your account. If it doesn't arrive in a few minutes, check your spam folder.",
+        "login": "Go to sign in"
+      }
+    },
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Welcome back.",
+      "forgot": "Forgot password",
+      "submit": "Sign in",
+      "noAccount": "No account yet?",
+      "signup": "Create account"
+    },
+    "reset": {
+      "title": "Forgot password",
+      "subtitle": "We'll send you a link to choose a new password.",
+      "chooseTitle": "Choose a new password",
+      "chooseSubtitle": "After saving, you stay signed in.",
+      "send": "Send link",
+      "save": "Save new password",
+      "saved": "Password changed",
+      "backToLogin": "Back to sign in",
+      "sent": {
+        "title": "Check your email",
+        "body": "If there's an account for {{ email }}, the link will arrive in a few minutes. Check your spam folder too."
+      }
+    },
+    "errors": {
+      "generic": "Something went wrong. Please try again in a moment.",
+      "invalid_credentials": "Wrong email or password.",
+      "email_not_confirmed": "Confirm your email before signing in: open the link we sent when you signed up.",
+      "weak_password": "That password is too weak. Use a longer one mixing letters, numbers and symbols.",
+      "same_password": "The new password must be different from the current one.",
+      "over_email_send_rate_limit": "Too many emails sent. Wait a few minutes and try again.",
+      "over_request_rate_limit": "Too many attempts. Wait a few minutes and try again.",
+      "captcha_failed": "The bot check failed. Please try again.",
+      "signup_disabled": "New sign-ups are turned off right now.",
+      "email_address_invalid": "That email address isn't accepted.",
+      "user_banned": "This account is suspended.",
+      "username_taken": "That username is already taken.",
+      "username_invalid": "Use 3 to 20 characters: lowercase letters, numbers, - and _, starting with a letter or number.",
+      "not_authenticated": "Your session ended. Please sign in again.",
+      "unavailable": "Accounts aren't available at this address yet.",
+      "link_expired": "The link expired or was already used. Request a new one."
+    }
+  },
+  "account": {
+    "title": "My account",
+    "signOut": "Sign out",
+    "save": "Save",
+    "cancel": "Cancel",
+    "changePassword": "Change password",
+    "banned": "Your account is suspended: you can still sign in, but you can't publish or comment.",
+    "setup": {
+      "title": "Almost there",
+      "body": "Choose the username shown on what you publish and accept the terms to finish signing up.",
+      "submit": "Finish sign-up",
+      "done": "Sign-up complete"
+    },
+    "profile": {
+      "title": "Profile",
+      "editUsername": "Change username",
+      "usernameSaved": "Username changed",
+      "providers": "Sign-in methods",
+      "memberSince": "Member since"
+    },
+    "providers": {
+      "email": "Email and password",
+      "google": "Google",
+      "github": "GitHub"
+    },
+    "data": {
+      "title": "Your data",
+      "body": "Download a JSON file with everything the website stores about you.",
+      "download": "Download my data"
+    },
+    "delete": {
+      "title": "Delete account",
+      "body": "Permanently deletes your account, email and username. This can't be undone.",
+      "button": "Delete my account",
+      "dialogTitle": "Delete your account?",
+      "confirmBody": "Your account and data will be deleted now, for good.",
+      "typeToConfirm": "To confirm, type {{ name }}:",
+      "confirm": "Delete forever",
+      "done": "Account deleted"
+    }
   }
 }

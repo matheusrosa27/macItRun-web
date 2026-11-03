@@ -32,7 +32,7 @@ export class App {
         const page = route.data['page'];
         if (!isLang(lang) || typeof page !== 'string') return;
         const path = router.url.split(/[?#]/)[0].split('/').slice(2).join('/');
-        seo.update(page, lang, page === 'notFound' ? '' : path);
+        seo.update(page, lang, page === 'notFound' ? '' : path, route.data['noindex'] === true);
       });
   }
 }

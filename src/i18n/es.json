@@ -14,7 +14,9 @@
     "menu": "Abrir menú",
     "privacy": "Privacidad",
     "terms": "Términos de uso",
-    "licenses": "Licencias"
+    "licenses": "Licencias",
+    "login": "Entrar",
+    "account": "Mi cuenta"
   },
   "footer": {
     "label": "Enlaces del pie de página",
@@ -46,6 +48,22 @@
     "notFound": {
       "title": "Página no encontrada",
       "description": "Esta página no existe en el sitio de macItRun."
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "description": "Crea tu cuenta de macItRun para publicar, dar me gusta y comentar perfiles de configuración de la comunidad."
+    },
+    "login": {
+      "title": "Entrar",
+      "description": "Entra en tu cuenta de macItRun con correo y contraseña, Google o GitHub."
+    },
+    "resetPassword": {
+      "title": "Nueva contraseña",
+      "description": "Recibe por correo un enlace para elegir una nueva contraseña de tu cuenta de macItRun."
+    },
+    "account": {
+      "title": "Mi cuenta",
+      "description": "Nombre de usuario, tus datos y eliminación de la cuenta en macItRun."
     }
   },
   "home": {
@@ -151,7 +169,7 @@
       },
       "data": {
         "title": "Qué datos tratamos",
-        "body": "Navegando sin cuenta: no se guarda ningún dato personal, salvo la dirección IP usada temporalmente para limitar abusos.\n\nCon cuenta: correo electrónico (para entrar y recuperar la contraseña), nombre de usuario (público) y, si entras con GitHub, el identificador de tu cuenta de GitHub.\n\nLo que publicas: perfiles de configuración, notas y comentarios, que son públicos, junto con tu nombre de usuario."
+        "body": "Navegando sin cuenta: no se guarda ningún dato personal, salvo la dirección IP usada temporalmente para limitar abusos.\n\nCon cuenta: correo electrónico (para entrar y recuperar la contraseña), nombre de usuario (público) y, si entras con Google o GitHub, el identificador y el nombre de tu cuenta en ese servicio.\n\nLo que publicas: perfiles de configuración, notas y comentarios, que son públicos, junto con tu nombre de usuario."
       },
       "purpose": {
         "title": "Para qué",
@@ -163,7 +181,7 @@
       },
       "sharing": {
         "title": "Con quién los compartimos",
-        "body": "Solo con los servicios que alojan el sitio: Supabase (base de datos e inicio de sesión) y Vercel (alojamiento), que pueden procesar datos fuera de Brasil con garantías adecuadas. Si entras con GitHub, GitHub también participa en el inicio de sesión."
+        "body": "Solo con los servicios que hacen funcionar el sitio: Supabase (base de datos y acceso), Vercel (alojamiento) y Cloudflare Turnstile (verificación contra bots en el registro, el acceso y el cambio de contraseña), que pueden procesar datos fuera de Brasil con cláusulas de protección adecuadas. Si entras con Google o GitHub, ese servicio también participa del acceso."
       },
       "retention": {
         "title": "Por cuánto tiempo",
@@ -171,7 +189,7 @@
       },
       "cookies": {
         "title": "Cookies",
-        "body": "Solo usamos lo necesario para mantener tu sesión y recordar el tema claro u oscuro en tu navegador. No hay cookies de publicidad ni de rastreo, por eso no hay banner de cookies."
+        "body": "No usamos cookies de publicidad ni de rastreo, por eso no hay banner de cookies. Tu navegador guarda solo lo necesario: la sesión (en el almacenamiento local, borrada al salir) y el tema claro u oscuro. La verificación contra bots de Cloudflare solo se ejecuta en las pantallas de cuenta."
       },
       "rights": {
         "title": "Tus derechos",
@@ -250,5 +268,140 @@
     "title": "Página no encontrada",
     "body": "La dirección puede estar mal o la página cambió de lugar.",
     "home": "Volver al inicio"
+  },
+  "auth": {
+    "unavailable": "Las cuentas aún no están disponibles en esta dirección. Inténtalo más tarde.",
+    "loading": "Cargando",
+    "or": "o",
+    "oauth": {
+      "google": "Continuar con Google",
+      "github": "Continuar con GitHub"
+    },
+    "fields": {
+      "email": "Correo electrónico",
+      "username": "Nombre de usuario",
+      "password": "Contraseña",
+      "newPassword": "Nueva contraseña",
+      "confirmPassword": "Repite la nueva contraseña"
+    },
+    "validation": {
+      "email": "Escribe un correo válido.",
+      "required": "Completa este campo.",
+      "passwordMin": "La contraseña debe tener al menos {{ min }} caracteres.",
+      "terms": "Para crear la cuenta, acepta los términos de uso y la política de privacidad.",
+      "mismatch": "Las contraseñas no coinciden."
+    },
+    "username": {
+      "help": "Público. De 3 a 20 caracteres: letras minúsculas, números, - y _.",
+      "checking": "Comprobando…",
+      "available": "Disponible"
+    },
+    "password": {
+      "prompt": "Usa al menos {{ min }} caracteres",
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "subtitle": "Para publicar perfiles, dar me gusta y comentar. Para ver y descargar no necesitas cuenta.",
+      "submit": "Crear cuenta",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "login": "Entrar",
+      "oauthNeedsTerms": "Acepta los términos de arriba para continuar con Google o GitHub.",
+      "terms": {
+        "accept": "He leído y acepto los",
+        "terms": "términos de uso",
+        "and": "y la",
+        "privacy": "política de privacidad",
+        "end": "."
+      },
+      "sent": {
+        "title": "Confirma tu correo",
+        "body": "Enviamos un enlace a {{ email }}. Ábrelo para activar la cuenta. Si no llega en unos minutos, revisa el spam.",
+        "login": "Ir a entrar"
+      }
+    },
+    "login": {
+      "title": "Entrar",
+      "subtitle": "Qué bueno verte de nuevo.",
+      "forgot": "Olvidé mi contraseña",
+      "submit": "Entrar",
+      "noAccount": "¿No tienes cuenta?",
+      "signup": "Crear cuenta"
+    },
+    "reset": {
+      "title": "Olvidé mi contraseña",
+      "subtitle": "Te enviamos un enlace para elegir una nueva contraseña.",
+      "chooseTitle": "Elige una nueva contraseña",
+      "chooseSubtitle": "Después de guardar, sigues conectado.",
+      "send": "Enviar enlace",
+      "save": "Guardar nueva contraseña",
+      "saved": "Contraseña cambiada",
+      "backToLogin": "Volver a entrar",
+      "sent": {
+        "title": "Revisa tu correo",
+        "body": "Si hay una cuenta con {{ email }}, el enlace llegará en unos minutos. Revisa también el spam."
+      }
+    },
+    "errors": {
+      "generic": "Algo salió mal. Inténtalo de nuevo en un momento.",
+      "invalid_credentials": "Correo o contraseña incorrectos.",
+      "email_not_confirmed": "Confirma tu correo antes de entrar: abre el enlace que enviamos al registrarte.",
+      "weak_password": "Esa contraseña es demasiado débil. Usa una más larga, con letras, números y símbolos.",
+      "same_password": "La nueva contraseña debe ser distinta de la actual.",
+      "over_email_send_rate_limit": "Se enviaron demasiados correos. Espera unos minutos e inténtalo de nuevo.",
+      "over_request_rate_limit": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
+      "captcha_failed": "La verificación contra bots falló. Inténtalo de nuevo.",
+      "signup_disabled": "Los registros nuevos están desactivados por ahora.",
+      "email_address_invalid": "Esa dirección de correo no se acepta.",
+      "user_banned": "Esta cuenta está suspendida.",
+      "username_taken": "Ese nombre de usuario ya está en uso.",
+      "username_invalid": "Usa de 3 a 20 caracteres: letras minúsculas, números, - y _, empezando por letra o número.",
+      "not_authenticated": "Tu sesión terminó. Vuelve a entrar.",
+      "unavailable": "Las cuentas aún no están disponibles en esta dirección.",
+      "link_expired": "El enlace venció o ya se usó. Pide uno nuevo."
+    }
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "signOut": "Salir",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "changePassword": "Cambiar la contraseña",
+    "banned": "Tu cuenta está suspendida: puedes entrar, pero no publicar ni comentar.",
+    "setup": {
+      "title": "Ya casi",
+      "body": "Elige el nombre de usuario que aparece en lo que publiques y acepta los términos para terminar el registro.",
+      "submit": "Terminar registro",
+      "done": "Registro completado"
+    },
+    "profile": {
+      "title": "Perfil",
+      "editUsername": "Cambiar el nombre de usuario",
+      "usernameSaved": "Nombre de usuario cambiado",
+      "providers": "Formas de entrar",
+      "memberSince": "Miembro desde"
+    },
+    "providers": {
+      "email": "Correo y contraseña",
+      "google": "Google",
+      "github": "GitHub"
+    },
+    "data": {
+      "title": "Tus datos",
+      "body": "Descarga un archivo JSON con todo lo que el sitio guarda sobre ti.",
+      "download": "Descargar mis datos"
+    },
+    "delete": {
+      "title": "Eliminar cuenta",
+      "body": "Elimina para siempre tu cuenta, tu correo y tu nombre de usuario. No se puede deshacer.",
+      "button": "Eliminar mi cuenta",
+      "dialogTitle": "¿Eliminar la cuenta?",
+      "confirmBody": "Tu cuenta y tus datos se eliminarán ahora, sin vuelta atrás.",
+      "typeToConfirm": "Para confirmar, escribe {{ name }}:",
+      "confirm": "Eliminar para siempre",
+      "done": "Cuenta eliminada"
+    }
   }
 }

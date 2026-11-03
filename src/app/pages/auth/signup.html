@@ -1,0 +1,116 @@
+<app-auth-card [title]="'auth.signup.title' | transloco" [subtitle]="'auth.signup.subtitle' | transloco">
+  @if (sentTo(); as email) {
+    <p-message severity="success" icon="pi pi-envelope">
+      <div class="flex flex-col gap-1">
+        <strong>{{ 'auth.signup.sent.title' | transloco }}</strong>
+        <span>{{ 'auth.signup.sent.body' | transloco: { email } }}</span>
+      </div>
+    </p-message>
+    <a [routerLink]="['/', lang(), 'login']" class="text-primary">{{ 'auth.signup.sent.login' | transloco }}</a>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5" novalidate>
+      <div class="flex flex-col gap-2">
+        <label for="signup-email" class="font-medium">{{ 'auth.fields.email' | transloco }}</label>
+        <input pInputText id="signup-email" type="email" formControlName="email" autocomplete="email" fluid />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <p-message severity="error" size="small" variant="simple">{{ 'auth.validation.email' | transloco }}</p-message>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="signup-username" class="font-medium">{{ 'auth.fields.username' | transloco }}</label>
+        <input
+          pInputText
+          id="signup-username"
+          formControlName="username"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+          [maxlength]="usernameMax"
+          aria-describedby="signup-username-help"
+          fluid
+        />
+        @switch (usernameStatus()) {
+          @case ('checking') {
+            <p-message id="signup-username-help" severity="secondary" size="small" variant="simple" icon="pi pi-spin pi-spinner">{{ 'auth.username.checking' | transloco }}</p-message>
+          }
+          @case ('available') {
+            <p-message id="signup-username-help" severity="success" size="small" variant="simple" icon="pi pi-check">{{ 'auth.username.available' | transloco }}</p-message>
+          }
+          @case ('taken') {
+            <p-message id="signup-username-help" severity="error" size="small" variant="simple">{{ 'auth.errors.username_taken' | transloco }}</p-message>
+          }
+          @case ('invalid') {
+            <p-message id="signup-username-help" severity="error" size="small" variant="simple">{{ 'auth.errors.username_invalid' | transloco }}</p-message>
+          }
+          @default {
+            <small id="signup-username-help" class="text-surface-500 dark:text-surface-400">{{ 'auth.username.help' | transloco }}</small>
+          }
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="signup-password" class="font-medium">{{ 'auth.fields.password' | transloco }}</label>
+        <p-password
+          inputId="signup-password"
+          formControlName="password"
+          autocomplete="new-password"
+          [toggleMask]="true"
+          [promptLabel]="'auth.password.prompt' | transloco: { min: passwordMin }"
+          [weakLabel]="'auth.password.weak' | transloco"
+          [mediumLabel]="'auth.password.medium' | transloco"
+          [strongLabel]="'auth.password.strong' | transloco"
+          [fluid]="true"
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <p-message severity="error" size="small" variant="simple">{{ 'auth.validation.passwordMin' | transloco: { min: passwordMin } }}</p-message>
+        }
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <div class="flex items-start gap-2">
+          <p-checkbox inputId="signup-terms" formControlName="terms" [binary]="true" />
+          <label for="signup-terms" class="text-sm leading-relaxed">
+            {{ 'auth.signup.terms.accept' | transloco }}
+            <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary">{{ 'auth.signup.terms.terms' | transloco }}</a>
+            {{ 'auth.signup.terms.and' | transloco }}
+            <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
+          </label>
+        </div>
+        @if (form.controls.terms.touched && form.controls.terms.invalid) {
+          <p-message severity="error" size="small" variant="simple">{{ 'auth.validation.terms' | transloco }}</p-message>
+        }
+      </div>
+
+      @if (captchaEnabled) {
+        <app-turnstile [lang]="lang()" (token)="captchaToken.set($event)" />
+      }
+
+      @if (error(); as error) {
+        <p-message severity="error" [text]="error | transloco" />
+      }
+
+      <p-button
+        type="submit"
+        [label]="'auth.signup.submit' | transloco"
+        [loading]="submitting()"
+        [disabled]="captchaEnabled && !captchaToken()"
+        [fluid]="true"
+      />
+    </form>
+
+    <p-divider align="center"><span class="text-sm text-surface-500">{{ 'auth.or' | transloco }}</span></p-divider>
+
+    <div class="flex flex-col gap-2">
+      <app-oauth-buttons [lang]="lang()" [disabled]="!termsAccepted()" [termsAccepted]="termsAccepted()" />
+      @if (!termsAccepted()) {
+        <small class="text-surface-500 dark:text-surface-400">{{ 'auth.signup.oauthNeedsTerms' | transloco }}</small>
+      }
+    </div>
+
+    <p class="m-0 text-center text-sm">
+      {{ 'auth.signup.haveAccount' | transloco }}
+      <a [routerLink]="['/', lang(), 'login']" class="text-primary">{{ 'auth.signup.login' | transloco }}</a>
+    </p>
+  }
+</app-auth-card>

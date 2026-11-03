@@ -32,6 +32,28 @@
     </nav>
 
     <div class="ml-auto flex items-center gap-2">
+      <!-- Conta: só aparece no navegador, depois de saber se há alguém conectado. -->
+      @if (auth.enabled && auth.ready()) {
+        @if (auth.user()) {
+          <a
+            pButton
+            [routerLink]="link('account')"
+            severity="secondary"
+            [text]="true"
+            size="small"
+            [attr.aria-label]="'nav.account' | transloco"
+          >
+            <i class="pi pi-user" pButtonIcon></i>
+            <span pButtonLabel class="hidden max-w-32 truncate sm:inline">{{
+              auth.account()?.username ?? ('nav.account' | transloco)
+            }}</span>
+          </a>
+        } @else {
+          <a pButton [routerLink]="link('login')" size="small" class="hidden sm:inline-flex">
+            <span pButtonLabel>{{ 'nav.login' | transloco }}</span>
+          </a>
+        }
+      }
       <p-select
         class="hidden sm:flex"
         [options]="langOptions"
@@ -80,6 +102,14 @@
       >
     }
     <a [href]="kofiUrl" target="_blank" rel="noopener" class="rounded-md px-3 py-2 no-underline text-inherit hover:bg-surface-100 dark:hover:bg-surface-800">{{ 'nav.support' | transloco }}</a>
+    @if (auth.enabled && auth.ready()) {
+      <a
+        [routerLink]="link(auth.user() ? 'account' : 'login')"
+        class="rounded-md px-3 py-2 no-underline text-inherit hover:bg-surface-100 dark:hover:bg-surface-800"
+        (click)="menuOpen.set(false)"
+        >{{ (auth.user() ? 'nav.account' : 'nav.login') | transloco }}</a
+      >
+    }
   </nav>
   <div class="mt-6">
     <p-select

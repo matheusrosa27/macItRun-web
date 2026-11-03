@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 import { SelectModule } from 'primeng/select';
 import { filter, map } from 'rxjs';
+import { AuthService } from '../core/auth/auth.service';
 import { Lang, LANG_LABEL, LANGS } from '../core/i18n/langs';
 import { KOFI_URL, RELEASES_URL } from '../core/site';
 import { ThemeService } from '../core/theme.service';
@@ -34,6 +35,7 @@ interface NavItem {
 export class Shell {
   private readonly router = inject(Router);
   protected readonly theme = inject(ThemeService);
+  protected readonly auth = inject(AuthService);
 
   private readonly route = inject(ActivatedRoute);
 
