@@ -401,7 +401,12 @@
       "confirmBody": "Sua conta e seus dados serão apagados agora, sem volta.",
       "typeToConfirm": "Para confirmar, digite {{ name }}:",
       "confirm": "Apagar para sempre",
-      "done": "Conta apagada"
+      "done": "Conta apagada",
+      "profiles": {
+        "label": "Seus perfis de configuração publicados:",
+        "keep": "Manter na comunidade, como “autor removido”",
+        "remove": "Apagar junto com a conta"
+      }
     }
   }
 }

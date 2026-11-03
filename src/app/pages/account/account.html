@@ -183,6 +183,17 @@
     >
       <form [formGroup]="deleteForm" (ngSubmit)="deleteAccount()" class="flex flex-col gap-4" novalidate>
         <p class="m-0">{{ 'account.delete.confirmBody' | transloco }}</p>
+        <fieldset class="m-0 flex flex-col gap-3 border-0 p-0">
+          <legend class="mb-3 p-0 text-sm font-medium">{{ 'account.delete.profiles.label' | transloco }}</legend>
+          <div class="flex items-start gap-2">
+            <p-radiobutton inputId="delete-keep" formControlName="keepProfiles" [value]="true" />
+            <label for="delete-keep" class="text-sm">{{ 'account.delete.profiles.keep' | transloco }}</label>
+          </div>
+          <div class="flex items-start gap-2">
+            <p-radiobutton inputId="delete-remove" formControlName="keepProfiles" [value]="false" />
+            <label for="delete-remove" class="text-sm">{{ 'account.delete.profiles.remove' | transloco }}</label>
+          </div>
+        </fieldset>
         <label for="delete-confirm" class="text-sm">
           {{ 'account.delete.typeToConfirm' | transloco: { name: current.username ?? current.email } }}
         </label>

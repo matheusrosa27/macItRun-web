@@ -10,6 +10,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { TagModule } from 'primeng/tag';
 import { authErrorKey } from '../../core/auth/auth-errors';
 import { AuthService } from '../../core/auth/auth.service';
@@ -31,6 +32,7 @@ type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
     InputTextModule,
     MessageModule,
     ProgressSpinnerModule,
+    RadioButtonModule,
     TagModule,
   ],
   templateUrl: './account.html',
@@ -66,9 +68,9 @@ export class Account {
   protected readonly editingUsername = signal(false);
   protected readonly usernameForm = this.fb.group({ username: ['', [Validators.required]] });
 
-  // Apagar a conta: digitar o nome de usuário para confirmar.
+  // Apagar a conta: escolher o destino dos perfis e digitar o nome de usuário para confirmar.
   protected readonly deleteOpen = signal(false);
-  protected readonly deleteForm = this.fb.group({ confirm: [''] });
+  protected readonly deleteForm = this.fb.group({ confirm: [''], keepProfiles: [true] });
 
   protected readonly busy = signal<Action | null>(null);
   protected readonly error = signal<string | null>(null);
@@ -147,7 +149,7 @@ export class Account {
   }
 
   protected openDelete(): void {
-    this.deleteForm.reset({ confirm: '' });
+    this.deleteForm.reset({ confirm: '', keepProfiles: true });
     this.error.set(null);
     this.deleteOpen.set(true);
   }
@@ -162,7 +164,7 @@ export class Account {
   protected async deleteAccount(): Promise<void> {
     if (!this.deleteConfirmed()) return;
     await this.run('delete', async () => {
-      await this.auth.deleteAccount();
+      await this.auth.deleteAccount(this.deleteForm.controls.keepProfiles.value);
       this.deleteOpen.set(false);
       this.toast('account.delete.done');
       await this.router.navigate(['/', this.lang()]);

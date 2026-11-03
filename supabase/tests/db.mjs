@@ -1,16 +1,24 @@
 // Postgres em memória (PGlite) com o mínimo do Supabase que as migrações usam:
-// papéis anon/authenticated, schema auth com users/identities/audit_log_entries,
-// auth.uid() lido do JWT da sessão e os privilégios padrão que o Supabase concede.
+// papéis anon/authenticated/service_role, schema auth com users/identities/audit_log_entries,
+// auth.uid() lido do JWT da sessão, o schema extensions e os privilégios padrão do Supabase.
 import { PGlite } from '@electric-sql/pglite';
+import { unaccent } from '@electric-sql/pglite/contrib/unaccent';
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const MIGRATIONS = join(import.meta.dirname, '..', 'migrations');
+const SUPABASE = join(import.meta.dirname, '..');
+const MIGRATIONS = join(SUPABASE, 'migrations');
 
 const SUPABASE_STUB = `
   create role anon nologin;
   create role authenticated nologin;
-  grant usage on schema public to anon, authenticated;
+  create role service_role nologin bypassrls;
+  grant usage on schema public to anon, authenticated, service_role;
+  grant all on all tables in schema public to service_role;
+  alter default privileges in schema public grant all on tables to service_role;
+
+  create schema extensions;
+  grant usage on schema extensions to anon, authenticated, service_role;
 
   create schema auth;
   grant usage on schema auth to anon, authenticated;
@@ -43,14 +51,15 @@ const SUPABASE_STUB = `
   alter default privileges in schema public grant all on functions to anon, authenticated;
 `;
 
-/** Banco novo com todas as migrações aplicadas, na ordem dos nomes. */
-export async function createDb() {
-  const db = new PGlite();
+/** Banco novo com todas as migrações aplicadas, na ordem dos nomes (e o seed, se pedir). */
+export async function createDb({ seed = false } = {}) {
+  const db = new PGlite({ extensions: { unaccent } });
   await db.exec(SUPABASE_STUB);
   const files = (await readdir(MIGRATIONS)).filter((f) => f.endsWith('.sql')).sort();
   for (const file of files) {
     await db.exec(await readFile(join(MIGRATIONS, file), 'utf8'));
   }
+  if (seed) await db.exec(await readFile(join(SUPABASE, 'seed.sql'), 'utf8'));
   return db;
 }
 
@@ -78,6 +87,14 @@ export async function as(db, userId, fn) {
     await tx.query(`select set_config('request.jwt.claims', $1, true)`, [
       JSON.stringify(userId ? { sub: userId, role: 'authenticated' } : { role: 'anon' }),
     ]);
+    return fn(tx);
+  });
+}
+
+/** Roda `fn` como a API no servidor, com a chave secreta (papel service_role). */
+export async function asService(db, fn) {
+  return db.transaction(async (tx) => {
+    await tx.exec('set local role service_role');
     return fn(tx);
   });
 }

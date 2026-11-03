@@ -24,11 +24,16 @@ npm run build && PORT=4000 npm run serve:ssr
 Checks (the same ones CI runs):
 
 ```bash
-npm run lint && npm run test:ci && npm run test:db && npm run build
+npm run lint && npm run test:ci && npm run typecheck:node && npm run test:node && npm run build
 ```
 
-`test:db` runs the SQL migrations in an in-memory Postgres (PGlite) with a stub of Supabase's
-`auth` schema, and checks the RLS rules and account functions.
+`test:node` runs, with `node:test`:
+
+- the profile format tests (`packages/profile-schema`): every case in `cases.json` through both the
+  Zod schema and the JSON Schema, which must agree;
+- the database tests: the SQL migrations in an in-memory Postgres (PGlite) with a stub of Supabase's
+  `auth` schema, checking the RLS rules, search, counters and account functions;
+- the `/api/v1` tests: the real handler on top of that database, with the seeded profile.
 
 Accounts need public keys at build time. Locally, put them in `.env.local` (git-ignored):
 
@@ -53,7 +58,12 @@ src/server.ts        Express server: SSR + GET /api/site/release
 api/ssr.mjs          Vercel function that calls the Angular server
 vercel.json          static files from the CDN, everything else through the function; security headers
 supabase/migrations/ SQL migrations (tables, RLS, functions)
+supabase/seed.sql    example profile (Dark Souls III), the same as the example file
+supabase/functions/  public API /api/v1 (Supabase Edge Function, Deno)
 supabase/tests/      database tests (node:test + PGlite)
+packages/profile-schema/
+                     .macitrun-profile format v1: profile.schema.json (source of the rules, copied
+                     to the Mac app), Zod schema, shared test cases and an example file
 scripts/             build helpers
 ```
 
@@ -69,6 +79,7 @@ server redirects based on `Accept-Language` (Portuguese as the fallback).
 | `/:lang/download` | SSR, cached for 10 min on the CDN (current release version) |
 | `/:lang/account` | browser only (needs the session) |
 | `/:lang/**` | SSR, 404 |
+| `/api/v1/**` | proxied to the Supabase Edge Function `api` (see below) |
 
 The release comes from `matheusrosa27/macItRun-runtime` through the GitHub API, cached in the process
 for 10 minutes. The optional `GITHUB_TOKEN` variable (read-only access to public repositories) avoids
@@ -86,9 +97,39 @@ Vercel deploys on every push. Project settings: Framework "Other", default comma
 | `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key |
 | `GITHUB_TOKEN` | optional, read-only; avoids GitHub's 60 requests/hour limit |
 
+## Public API (`/api/v1`)
+
+Read-only in this phase. The Mac app depends on this contract.
+
+| Request | Response |
+| --- | --- |
+| `GET /api/v1/profiles?q=&graphics=&sort=likes\|recent\|downloads&page=` | `{ items, page, pageSize, total }`, 20 per page, cached 60 s |
+| `GET /api/v1/profiles/{id}` | the `.macitrun-profile` file plus `community` (id, slug, author, notes, likes, comments, downloads, dates) |
+| `GET /api/v1/profiles/{id}/download` | the `.macitrun-profile` file as an attachment; counts one download |
+| `GET /api/v1/profiles/{id}/comments?page=` | visible comments, `{ items, page, pageSize, total }` |
+
+Errors: `{ "error": "not_found" }` (404), `{ "error": "invalid_parameter", "parameter": "sort" }`
+(400), `method_not_allowed` (405), `internal_error` (500). The API validates every profile with
+the shared schema before serving it.
+
+It runs as the Supabase Edge Function `api` (`supabase/functions/api`). `vercel.json` proxies
+`/api/v1/*` to it, so it lives on the site's domain. Reads use the publishable key (RLS applies);
+the secret key, which Supabase injects into the function, only counts downloads.
+
+Deploy (after changing `supabase/functions` or `packages/profile-schema`):
+
+```bash
+npx supabase login
+```
+
+```bash
+npx supabase functions deploy api --project-ref fcrrcxelhbdiihxxggur --no-verify-jwt --use-api
+```
+
 ## Supabase setup
 
-1. Run the files in `supabase/migrations/` in order in the SQL Editor (or `npx supabase db push`).
+1. Run the files in `supabase/migrations/` in order in the SQL Editor (or `npx supabase db push`),
+   then `supabase/seed.sql` for the example profile.
 2. Authentication → URL Configuration:
    - Site URL: `https://mac-it-run.vercel.app`
    - Redirect URLs: `https://mac-it-run.vercel.app/**`, `https://*-matheusmemphis-7207.vercel.app/**`

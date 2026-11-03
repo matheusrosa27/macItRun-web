@@ -1,0 +1,23 @@
+{
+  "format": "macitrun-profile",
+  "version": 1,
+  "profile": {
+    "id": "dark-souls-3",
+    "name": "Dark Souls III",
+    "executables": [
+      "DarkSoulsIII.exe"
+    ],
+    "graphics": "dxvk",
+    "windowsVersion": "win10",
+    "dllOverrides": {},
+    "environment": {},
+    "arguments": [],
+    "notes": "Com DXMT a GPU falha no efeito de morte dos inimigos."
+  },
+  "testedOn": {
+    "mac": "Mac17,1",
+    "macOS": "26.1",
+    "runtime": "macitrun-wine-26.3.0",
+    "app": "0.5.2"
+  }
+}

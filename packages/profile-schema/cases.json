@@ -1,0 +1,626 @@
+{
+  "description": "Casos de teste do formato v1, para rodar igual no site e no app. Em 'profile', só o perfil: o teste o coloca num arquivo válido. Em 'file', o arquivo inteiro. 'code' é a regra que recusa.",
+  "valid": [
+    {
+      "name": "mínimo",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "completo",
+      "profile": {
+        "id": "dark-souls-3",
+        "name": "Dark Souls III",
+        "executables": [
+          "DarkSoulsIII.exe",
+          "Launcher (x64).EXE"
+        ],
+        "graphics": "dxmt",
+        "windowsVersion": "win7",
+        "dllOverrides": {
+          "d3d11": "native,builtin",
+          "xinput1_3": "disabled",
+          "dinput8": ""
+        },
+        "environment": {
+          "DXVK_HUD": "fps",
+          "DXMT_LOG_LEVEL": "error",
+          "MVK_CONFIG_LOG_LEVEL": "0",
+          "MTL_HUD_ENABLED": "1"
+        },
+        "arguments": [
+          "-windowed",
+          "-dx11"
+        ],
+        "notes": "Roda liso."
+      }
+    },
+    {
+      "name": "argumentos no limite",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "arguments": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i",
+          "j",
+          "k",
+          "l",
+          "m",
+          "n",
+          "o",
+          "p",
+          "q",
+          "r",
+          "s",
+          "t"
+        ]
+      }
+    },
+    {
+      "name": "nome com 100 caracteres",
+      "profile": {
+        "id": "x",
+        "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "executables": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe"
+        ],
+        "notes": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+      }
+    },
+    {
+      "name": "nome com acento e símbolo",
+      "profile": {
+        "id": "pokemon",
+        "name": "Pokémon™ Ação",
+        "executables": [
+          "pkmn.exe"
+        ]
+      }
+    },
+    {
+      "name": "sem testedOn",
+      "file": {
+        "format": "macitrun-profile",
+        "version": 1,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "app: executável com pasta",
+      "code": "executable_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "C:\\Jogos\\X.exe"
+        ]
+      }
+    },
+    {
+      "name": "app: não é .exe",
+      "code": "executable_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.bat"
+        ]
+      }
+    },
+    {
+      "name": "app: steamwebhelper",
+      "code": "executable_reserved",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "steamwebhelper.exe"
+        ]
+      }
+    },
+    {
+      "name": "app: WINEMSYNC",
+      "code": "environment_bottle_wide",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "WINEMSYNC": "0"
+        }
+      }
+    },
+    {
+      "name": "app: DYLD_INSERT_LIBRARIES",
+      "code": "environment_not_allowed",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "DYLD_INSERT_LIBRARIES": "/tmp/a"
+        }
+      }
+    },
+    {
+      "name": "app: variável com caminho",
+      "code": "environment_path",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "DXVK_STATE_CACHE_PATH": "/tmp"
+        }
+      }
+    },
+    {
+      "name": "app: ordem de carga inválida",
+      "code": "load_order_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "dllOverrides": {
+          "d3d11": "talvez"
+        }
+      }
+    },
+    {
+      "name": "app: id com espaço",
+      "code": "id_invalid",
+      "profile": {
+        "id": "X Y",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "id começando com hífen",
+      "code": "id_invalid",
+      "profile": {
+        "id": "-x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "id longo demais",
+      "code": "id_invalid",
+      "profile": {
+        "id": "a1234567890123456789012345678901234567890123456789012345678901234",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "nome vazio",
+      "code": "name_invalid",
+      "profile": {
+        "id": "x",
+        "name": "",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "nome só com espaços",
+      "code": "name_invalid",
+      "profile": {
+        "id": "x",
+        "name": "   ",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "nome longo demais",
+      "code": "name_invalid",
+      "profile": {
+        "id": "x",
+        "name": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        "executables": [
+          "X.exe"
+        ]
+      }
+    },
+    {
+      "name": "notas longas demais",
+      "code": "notes_too_long",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "notes": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn"
+      }
+    },
+    {
+      "name": "executável com nome longo demais",
+      "code": "executable_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.exe"
+        ]
+      }
+    },
+    {
+      "name": "sem executável",
+      "code": "executables_empty",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": []
+      }
+    },
+    {
+      "name": "executável com barra",
+      "code": "executable_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "../X.exe"
+        ]
+      }
+    },
+    {
+      "name": "executável com quebra de linha",
+      "code": "executable_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X\n.exe"
+        ]
+      }
+    },
+    {
+      "name": "steamwebhelper em maiúsculas",
+      "code": "executable_reserved",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "SteamWebHelper.EXE"
+        ]
+      }
+    },
+    {
+      "name": "camada desconhecida",
+      "code": "invalid_value",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "graphics": "metal"
+      }
+    },
+    {
+      "name": "Windows desconhecido",
+      "code": "invalid_value",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "windowsVersion": "win95"
+      }
+    },
+    {
+      "name": "DLL com caminho",
+      "code": "dll_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "dllOverrides": {
+          "../d3d11": "native"
+        }
+      }
+    },
+    {
+      "name": "DLL em maiúsculas",
+      "code": "dll_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "dllOverrides": {
+          "D3D11": "native"
+        }
+      }
+    },
+    {
+      "name": "WINEESYNC",
+      "code": "environment_bottle_wide",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "WINEESYNC": "1"
+        }
+      }
+    },
+    {
+      "name": "WINEDLLOVERRIDES",
+      "code": "environment_not_allowed",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "WINEDLLOVERRIDES": "d3d11=n"
+        }
+      }
+    },
+    {
+      "name": "variável PATH",
+      "code": "environment_not_allowed",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "PATH": "/tmp"
+        }
+      }
+    },
+    {
+      "name": "variável com minúsculas",
+      "code": "environment_not_allowed",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "DXVK_hud": "fps"
+        }
+      }
+    },
+    {
+      "name": "variável terminada em FILE",
+      "code": "environment_path",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "DXVK_LOG_FILE": "/tmp/log"
+        }
+      }
+    },
+    {
+      "name": "variável terminada em DIR",
+      "code": "environment_path",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "MTL_HUD_LOG_DIR": "/tmp"
+        }
+      }
+    },
+    {
+      "name": "valor com quebra de linha",
+      "code": "environment_value_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "environment": {
+          "DXVK_HUD": "fps\nDYLD_INSERT_LIBRARIES=/tmp/a"
+        }
+      }
+    },
+    {
+      "name": "argumentos demais",
+      "code": "arguments_too_many",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "arguments": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+          "g",
+          "h",
+          "i",
+          "j",
+          "k",
+          "l",
+          "m",
+          "n",
+          "o",
+          "p",
+          "q",
+          "r",
+          "s",
+          "t",
+          "u"
+        ]
+      }
+    },
+    {
+      "name": "argumento com quebra de linha",
+      "code": "argument_invalid",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "arguments": [
+          "-a\r-b"
+        ]
+      }
+    },
+    {
+      "name": "campo desconhecido no perfil",
+      "code": "unrecognized_keys",
+      "profile": {
+        "id": "x",
+        "name": "X",
+        "executables": [
+          "X.exe"
+        ],
+        "command": "rm -rf ~"
+      }
+    },
+    {
+      "name": "formato errado",
+      "code": "invalid_value",
+      "file": {
+        "format": "other",
+        "version": 1,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        }
+      }
+    },
+    {
+      "name": "versão desconhecida",
+      "code": "invalid_value",
+      "file": {
+        "format": "macitrun-profile",
+        "version": 2,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        }
+      }
+    },
+    {
+      "name": "campo desconhecido no arquivo",
+      "code": "unrecognized_keys",
+      "file": {
+        "format": "macitrun-profile",
+        "version": 1,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        },
+        "script": "x"
+      }
+    },
+    {
+      "name": "testedOn com campo a mais",
+      "code": "unrecognized_keys",
+      "file": {
+        "format": "macitrun-profile",
+        "version": 1,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        },
+        "testedOn": {
+          "mac": "Mac17,1",
+          "url": "https://x"
+        }
+      }
+    },
+    {
+      "name": "testedOn com caractere estranho",
+      "code": "tested_on_invalid",
+      "file": {
+        "format": "macitrun-profile",
+        "version": 1,
+        "profile": {
+          "id": "x",
+          "name": "X",
+          "executables": [
+            "X.exe"
+          ]
+        },
+        "testedOn": {
+          "macOS": "<b>26</b>"
+        }
+      }
+    }
+  ]
+}

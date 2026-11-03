@@ -12,7 +12,8 @@
     "test": "npm run env && ng test",
     "lint": "ng lint",
     "test:ci": "npm run env && ng test --watch=false --browsers=ChromeHeadless",
-    "test:db": "node --test 'supabase/tests/*.test.mjs'",
+    "test:node": "node --test 'packages/**/*.test.ts' 'supabase/tests/*.test.mjs' 'supabase/functions/**/*.test.ts'",
+    "typecheck:node": "tsc -p tsconfig.node.json",
     "serve:ssr": "node dist/macItRun-web/server/server.mjs"
   },
   "prettier": {
@@ -45,7 +46,8 @@
     "primeicons": "^8.0.2",
     "primeng": "^20.4.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@angular/build": "^20.3.42",
@@ -56,6 +58,7 @@
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
+    "ajv": "^8.20.0",
     "angular-eslint": "20.7.0",
     "eslint": "^9.39.1",
     "jasmine-core": "~5.9.0",

@@ -191,10 +191,11 @@ export class AuthService {
   }
 
   /** Apaga a conta no banco e encerra a sessão local (a do servidor já não existe). */
-  async deleteAccount(): Promise<void> {
+  /** `keepProfiles`: os perfis publicados ficam na comunidade como "autor removido". */
+  async deleteAccount(keepProfiles: boolean): Promise<void> {
     // Sem call(): recarregar a conta depois de apagá-la só daria erro.
     const client = await this.api();
-    const { error } = await client.rpc('delete_my_account');
+    const { error } = await client.rpc('delete_my_account', { keep_profiles: keepProfiles });
     if (error) throw error;
     await client.auth.signOut({ scope: 'local' });
     this._account.set(null);

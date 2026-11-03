@@ -401,7 +401,12 @@
       "confirmBody": "Your account and data will be deleted now, for good.",
       "typeToConfirm": "To confirm, type {{ name }}:",
       "confirm": "Delete forever",
-      "done": "Account deleted"
+      "done": "Account deleted",
+      "profiles": {
+        "label": "Your published setup profiles:",
+        "keep": "Keep them in the community, as “deleted author”",
+        "remove": "Delete them with the account"
+      }
     }
   }
 }

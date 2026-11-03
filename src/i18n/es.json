@@ -401,7 +401,12 @@
       "confirmBody": "Tu cuenta y tus datos se eliminarán ahora, sin vuelta atrás.",
       "typeToConfirm": "Para confirmar, escribe {{ name }}:",
       "confirm": "Eliminar para siempre",
-      "done": "Cuenta eliminada"
+      "done": "Cuenta eliminada",
+      "profiles": {
+        "label": "Tus perfiles de configuración publicados:",
+        "keep": "Mantenerlos en la comunidad, como “autor eliminado”",
+        "remove": "Eliminarlos junto con la cuenta"
+      }
     }
   }
 }

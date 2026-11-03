@@ -1,0 +1,8 @@
+# Configuração do Supabase CLI (só o que o deploy da API usa).
+project_id = "macItRun-web"
+
+# A API pública é aberta: o app de Mac lê sem login. As leituras passam pelo RLS
+# com a chave publicável; a chave secreta só soma downloads, dentro da função.
+[functions.api]
+verify_jwt = false
+import_map = "./functions/api/deno.json"

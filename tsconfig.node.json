@@ -1,0 +1,17 @@
+/* Tipos do código que roda fora do Angular: o pacote do perfil e a API (Edge Function). */
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "target": "ES2022",
+    "module": "preserve",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["packages/**/*.ts", "supabase/functions/**/*.ts"],
+  // index.ts só roda no Deno do Supabase.
+  "exclude": ["supabase/functions/**/index.ts"]
+}
