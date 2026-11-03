@@ -9,7 +9,7 @@ import { join } from 'node:path';
 
 const env = process.env;
 const values = {
-  supabaseUrl: env.SUPABASE_URL ?? '',
+  supabaseUrl: origin(env.SUPABASE_URL ?? ''),
   supabaseKey: env.SUPABASE_PUBLISHABLE_KEY ?? env.SUPABASE_ANON_KEY ?? '',
   turnstileSiteKey: env.TURNSTILE_SITE_KEY ?? '',
 };
@@ -31,6 +31,16 @@ await writeFile(
 
 const missing = Object.entries(values).filter(([, v]) => !v).map(([k]) => k);
 if (missing.length) console.log(`public-env: sem ${missing.join(', ')} (contas desligadas no site).`);
+
+/** Só o endereço do projeto: a URL copiada da tela Data API vem com /rest/v1/ no fim. */
+function origin(value) {
+  if (!value) return '';
+  try {
+    return new URL(value.trim()).origin;
+  } catch {
+    throw new Error(`public-env: SUPABASE_URL inválida (${value}).`);
+  }
+}
 
 /** Papel de uma chave JWT antiga do Supabase (anon/service_role), sem validar a assinatura. */
 function jwtRole(value) {

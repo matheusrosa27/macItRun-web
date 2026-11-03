@@ -67,6 +67,10 @@
         }
       </div>
 
+      @if (captchaEnabled) {
+        <app-turnstile [lang]="lang()" (token)="captchaToken.set($event)" />
+      }
+
       <div class="flex flex-col gap-2">
         <div class="flex items-start gap-2">
           <p-checkbox inputId="signup-terms" formControlName="terms" [binary]="true" />
@@ -82,10 +86,6 @@
         }
       </div>
 
-      @if (captchaEnabled) {
-        <app-turnstile [lang]="lang()" (token)="captchaToken.set($event)" />
-      }
-
       @if (error(); as error) {
         <p-message severity="error" [text]="error | transloco" />
       }
@@ -99,7 +99,7 @@
       />
     </form>
 
-    <p-divider align="center"><span class="text-sm text-surface-500">{{ 'auth.or' | transloco }}</span></p-divider>
+    <p-divider align="center" styleClass="!my-0"><span class="text-sm text-surface-500">{{ 'auth.or' | transloco }}</span></p-divider>
 
     <div class="flex flex-col gap-2">
       <app-oauth-buttons [lang]="lang()" [disabled]="!termsAccepted()" [termsAccepted]="termsAccepted()" />

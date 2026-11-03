@@ -72,6 +72,8 @@ export class Account {
 
   protected readonly busy = signal<Action | null>(null);
   protected readonly error = signal<string | null>(null);
+  /** Saindo ou apagando: a conta some antes da navegação e não é erro. */
+  protected readonly leaving = computed(() => this.busy() === 'delete' || this.busy() === 'signOut');
 
   constructor() {
     // Preenche o cadastro com o login do GitHub ou o começo do e-mail do Google.

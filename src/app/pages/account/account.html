@@ -2,7 +2,7 @@
   <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
 
   @let current = account();
-  @if (current === undefined) {
+  @if (current === undefined || leaving()) {
     <div class="flex justify-center py-16">
       <p-progress-spinner strokeWidth="4" styleClass="!w-10 !h-10" [ariaLabel]="'auth.loading' | transloco" />
     </div>
