@@ -24,8 +24,8 @@
   },
   "seo": {
     "home": {
-      "title": "macItRun · Play Windows games on your Mac",
-      "description": "Free macOS app that installs and runs Windows games with Wine, DXMT and DXVK, with game profiles from the community."
+      "title": "macItRun · Run Windows apps and games on your Mac",
+      "description": "Free macOS app that installs and runs Windows apps and games with Wine, DXMT and DXVK, with setup profiles from the community."
     },
     "download": {
       "title": "Download",
@@ -50,26 +50,26 @@
   },
   "home": {
     "hero": {
-      "title": "Play Windows games on your Mac",
-      "subtitle": "macItRun installs, sets up and launches Windows games with Wine and open-source graphics layers. Free, no account, no hassle.",
+      "title": "Run Windows apps and games on your Mac",
+      "subtitle": "macItRun installs, sets up and launches Windows apps and games with Wine and open-source graphics layers. Free, no account, no hassle.",
       "download": "Download macItRun",
       "learnMore": "See features",
       "requirements": "For Apple silicon Macs with macOS 26.",
       "logoAlt": "macItRun logo: a smiling laptop running down a road"
     },
     "features": {
-      "title": "Everything a Windows game needs",
+      "title": "Everything a Windows app needs",
       "layers": {
         "title": "DXMT and DXVK",
-        "body": "Translates DirectX to Metal with DXMT or DXVK + MoltenVK. Pick the layer per bottle and per game."
+        "body": "Translates DirectX to Metal with DXMT or DXVK + MoltenVK. Pick the layer per bottle and per app."
       },
       "apps": {
         "title": "Ready-made apps",
-        "body": "Each game becomes an app in Launchpad and Spotlight, with the .exe's own icon and macOS Game Mode."
+        "body": "Each program becomes an app in Launchpad and Spotlight, with the .exe's own icon and, for games, macOS Game Mode."
       },
       "community": {
         "title": "Community profiles",
-        "body": "Settings tested by other players for each game, applied in one click."
+        "body": "Settings tested by other people for each app or game, applied in one click."
       },
       "updates": {
         "title": "Safe updates",
@@ -151,7 +151,7 @@
       },
       "data": {
         "title": "What data we handle",
-        "body": "Browsing without an account: no personal data is stored, apart from the IP address used temporarily to limit abuse.\n\nWith an account: email (to sign in and recover your password), username (public) and, if you sign in with GitHub, your GitHub account identifier.\n\nWhat you publish: game profiles, notes and comments, which are public, together with your username."
+        "body": "Browsing without an account: no personal data is stored, apart from the IP address used temporarily to limit abuse.\n\nWith an account: email (to sign in and recover your password), username (public) and, if you sign in with GitHub, your GitHub account identifier.\n\nWhat you publish: setup profiles, notes and comments, which are public, together with your username."
       },
       "purpose": {
         "title": "Why",
@@ -187,11 +187,11 @@
       "intro": "By using the macItRun website or creating an account, you agree to these terms. If you don't agree, don't use the site.",
       "service": {
         "title": "What the service is",
-        "body": "macItRun is a free macOS app that runs Windows programs with Wine. This website presents the app, points to the download on GitHub releases and hosts the community of game profiles."
+        "body": "macItRun is a free macOS app that runs Windows programs with Wine. This website presents the app, points to the download on GitHub releases and hosts the community of setup profiles."
       },
       "warranty": {
         "title": "No warranty",
-        "body": "The app, the profiles and the website are provided \"as is\", without warranty of any kind. Games may not start, may crash or may lose saved data. Back up what matters. To the extent permitted by law, we are not liable for damages arising from their use."
+        "body": "The app, the profiles and the website are provided \"as is\", without warranty of any kind. Apps and games may not start, may crash or may lose saved data. Back up what matters. To the extent permitted by law, we are not liable for damages arising from their use."
       },
       "antiCheat": {
         "title": "Anti-cheat and online games",
@@ -215,7 +215,7 @@
       },
       "thirdParty": {
         "title": "Trademarks and third parties",
-        "body": "Game names and trademarks belong to their owners and appear only to identify the game. macItRun is not affiliated with Apple, Microsoft, the Wine project or the game studios."
+        "body": "App and game names and trademarks belong to their owners and appear only to identify each title. macItRun is not affiliated with Apple, Microsoft, the Wine project or the developers of the apps and games."
       },
       "changes": {
         "title": "Changes",

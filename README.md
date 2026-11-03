@@ -1,6 +1,6 @@
 # macItRun-web
 
-Website for macItRun: product page, downloads and (in later phases) the community of game profiles.
+Website for macItRun: product page, downloads and (in later phases) the community of setup profiles for Windows apps and games.
 Angular 20 with SSR, PrimeNG 20 (Aura theme), Tailwind CSS 4 and Transloco (pt, en, es), hosted on Vercel.
 
 ## Development

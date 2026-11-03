@@ -24,8 +24,8 @@
   },
   "seo": {
     "home": {
-      "title": "macItRun · Jogue jogos de Windows no seu Mac",
-      "description": "App gratuito para macOS que instala e roda jogos de Windows com Wine, DXMT e DXVK, com perfis de jogo da comunidade."
+      "title": "macItRun · Rode apps e jogos de Windows no seu Mac",
+      "description": "App gratuito para macOS que instala e roda apps e jogos de Windows com Wine, DXMT e DXVK, com perfis de configuração da comunidade."
     },
     "download": {
       "title": "Baixar",
@@ -50,26 +50,26 @@
   },
   "home": {
     "hero": {
-      "title": "Jogue jogos de Windows no seu Mac",
-      "subtitle": "O macItRun instala, configura e abre jogos de Windows com Wine e camadas gráficas de código aberto. Gratuito, sem conta e sem complicação.",
+      "title": "Rode apps e jogos de Windows no seu Mac",
+      "subtitle": "O macItRun instala, configura e abre apps e jogos de Windows com Wine e camadas gráficas de código aberto. Gratuito, sem conta e sem complicação.",
       "download": "Baixar o macItRun",
       "learnMore": "Ver recursos",
       "requirements": "Para Macs com Apple silicon e macOS 26.",
       "logoAlt": "Logo do macItRun: um notebook sorridente correndo numa estrada"
     },
     "features": {
-      "title": "Tudo o que um jogo de Windows precisa",
+      "title": "Tudo o que um app de Windows precisa",
       "layers": {
         "title": "DXMT e DXVK",
-        "body": "Traduz DirectX para Metal com DXMT ou DXVK + MoltenVK. Escolha a camada por garrafa e por jogo."
+        "body": "Traduz DirectX para Metal com DXMT ou DXVK + MoltenVK. Escolha a camada por garrafa e por app."
       },
       "apps": {
         "title": "Apps prontos",
-        "body": "Cada jogo vira um app no Launchpad e no Spotlight, com o ícone do próprio .exe e o Game Mode do macOS."
+        "body": "Cada programa vira um app no Launchpad e no Spotlight, com o ícone do próprio .exe e, nos jogos, o Game Mode do macOS."
       },
       "community": {
         "title": "Perfis da comunidade",
-        "body": "Configurações testadas por outras pessoas para cada jogo, aplicadas com um clique."
+        "body": "Configurações testadas por outras pessoas para cada app ou jogo, aplicadas com um clique."
       },
       "updates": {
         "title": "Atualizações seguras",
@@ -151,7 +151,7 @@
       },
       "data": {
         "title": "Quais dados tratamos",
-        "body": "Sem conta, só navegando: nenhum dado pessoal é guardado, além do endereço IP usado temporariamente para limitar abusos.\n\nCom conta: e-mail (para entrar e recuperar a senha), nome de usuário (público) e, se você entrar pelo GitHub, o identificador da conta GitHub.\n\nO que você publica: perfis de jogo, notas e comentários, que são públicos, com o seu nome de usuário."
+        "body": "Sem conta, só navegando: nenhum dado pessoal é guardado, além do endereço IP usado temporariamente para limitar abusos.\n\nCom conta: e-mail (para entrar e recuperar a senha), nome de usuário (público) e, se você entrar pelo GitHub, o identificador da conta GitHub.\n\nO que você publica: perfis de configuração, notas e comentários, que são públicos, com o seu nome de usuário."
       },
       "purpose": {
         "title": "Para quê",
@@ -187,11 +187,11 @@
       "intro": "Ao usar o site do macItRun ou criar uma conta, você concorda com estes termos. Se não concordar, não use o site.",
       "service": {
         "title": "O que é o serviço",
-        "body": "O macItRun é um app gratuito para macOS que roda programas de Windows com Wine. Este site divulga o app, aponta para o download nas releases do GitHub e hospeda a comunidade de perfis de jogo."
+        "body": "O macItRun é um app gratuito para macOS que roda programas de Windows com Wine. Este site divulga o app, aponta para o download nas releases do GitHub e hospeda a comunidade de perfis de configuração."
       },
       "warranty": {
         "title": "Sem garantia",
-        "body": "O app, os perfis e o site são oferecidos \"como estão\", sem garantia de qualquer tipo. Jogos podem não abrir, travar ou perder dados salvos. Faça backup do que for importante. Na medida permitida por lei, não respondemos por danos decorrentes do uso."
+        "body": "O app, os perfis e o site são oferecidos \"como estão\", sem garantia de qualquer tipo. Apps e jogos podem não abrir, travar ou perder dados salvos. Faça backup do que for importante. Na medida permitida por lei, não respondemos por danos decorrentes do uso."
       },
       "antiCheat": {
         "title": "Anti-cheat e jogos online",
@@ -215,7 +215,7 @@
       },
       "thirdParty": {
         "title": "Marcas e terceiros",
-        "body": "Nomes de jogos e marcas pertencem aos seus donos e aparecem só para identificar o jogo. O macItRun não tem relação com a Apple, a Microsoft, o projeto Wine nem com os estúdios dos jogos."
+        "body": "Nomes de apps e jogos e marcas pertencem aos seus donos e aparecem só para identificar cada título. O macItRun não tem relação com a Apple, a Microsoft, o projeto Wine nem com os desenvolvedores dos apps e jogos."
       },
       "changes": {
         "title": "Mudanças",
