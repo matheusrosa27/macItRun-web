@@ -27,6 +27,9 @@ export const serverRoutes: ServerRoute[] = [
   },
   // Comunidade: renderiza no servidor (busca e perfis entram no HTML) e a CDN guarda por 1 minuto.
   // Curtidas e comentários de quem está conectado acontecem no navegador.
+  // Publicar lê o perfil do fragmento da URL e do sessionStorage; moderar precisa da sessão.
+  { path: ':lang/community/publish', renderMode: RenderMode.Client },
+  { path: ':lang/admin', renderMode: RenderMode.Client },
   { path: ':lang/community', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
   { path: ':lang/community/:id', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
   {

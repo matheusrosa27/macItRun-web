@@ -1,7 +1,7 @@
-import type { GameProfile, Graphics, TestedOn, WindowsVersion } from '@macitrun/profile-schema';
+import type { GameProfile, Graphics, ProfileIssue, TestedOn, WindowsVersion } from '@macitrun/profile-schema';
 import { PUBLIC_ENV } from '../../../environments/public-env';
 
-export type { GameProfile, Graphics, TestedOn, WindowsVersion };
+export type { GameProfile, Graphics, ProfileIssue, TestedOn, WindowsVersion };
 
 // Os mesmos valores do pacote do perfil; copiados para não trazer o Zod para estas páginas.
 export const GRAPHICS: readonly Graphics[] = ['dxmt', 'dxvk', 'wine'];
@@ -87,3 +87,35 @@ export interface ListParams {
 /** Abre o app de Mac, que busca o perfil na API. */
 export const importUrl = (id: string) => `macitrun://import-profile?id=${encodeURIComponent(id)}`;
 export const downloadUrl = (id: string) => `${API_BASE}/profiles/${encodeURIComponent(id)}/download`;
+
+/** Um perfil da própria pessoa, em /account (inclusive despublicados e ocultos). */
+export interface MyProfile {
+  id: string;
+  slug: string;
+  name: string;
+  status: 'published' | 'hidden' | 'removed';
+  notes: string;
+  likes: number;
+  comments: number;
+  downloads: number;
+  createdAt: string;
+}
+
+export const REPORT_REASONS = ['spam', 'offensive', 'cheating', 'unsafe', 'other'] as const;
+export type ReportReason = (typeof REPORT_REASONS)[number];
+export interface ReportTarget {
+  type: 'profile' | 'comment';
+  id: string;
+}
+
+/** Falha ao publicar: `code` da API e, se o arquivo foi recusado, os problemas dele. */
+export class PublishError extends Error {
+  readonly code: string;
+  readonly issues: ProfileIssue[];
+
+  constructor(code: string, issues: ProfileIssue[]) {
+    super(code);
+    this.code = code;
+    this.issues = issues;
+  }
+}

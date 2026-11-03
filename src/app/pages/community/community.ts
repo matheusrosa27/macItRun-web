@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe } from '@jsverse/transloco';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { ButtonModule } from 'primeng/button';
@@ -44,6 +44,7 @@ const oneOf = (value: string | undefined, allowed: readonly string[]) =>
   selector: 'app-community',
   imports: [
     FormsModule,
+    RouterLink,
     TranslocoPipe,
     AutoCompleteModule,
     ButtonModule,

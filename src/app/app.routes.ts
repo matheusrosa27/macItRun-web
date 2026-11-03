@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { guestOnly, requireAuth } from './core/auth/auth.guards';
+import { guestOnly, requireAdmin, requireAuth } from './core/auth/auth.guards';
 import { langMatch, langResolver, redirectToLang } from './core/i18n/lang.routing';
 import { Shell } from './layout/shell';
 
@@ -30,6 +30,12 @@ export const routes: Routes = [
         path: 'community',
         data: { page: 'community' },
         loadComponent: () => import('./pages/community/community').then((m) => m.Community),
+      },
+      {
+        // Antes de community/:id, senão "publish" viraria um id.
+        path: 'community/publish',
+        data: { page: 'publish', noindex: true },
+        loadComponent: () => import('./pages/community/publish').then((m) => m.Publish),
       },
       {
         // O slug é só para ler; o id basta para achar o perfil.
@@ -64,6 +70,12 @@ export const routes: Routes = [
         canActivate: [requireAuth],
         data: { page: 'account', noindex: true },
         loadComponent: () => import('./pages/account/account').then((m) => m.Account),
+      },
+      {
+        path: 'admin',
+        canActivate: [requireAdmin],
+        data: { page: 'admin', noindex: true },
+        loadComponent: () => import('./pages/admin/admin').then((m) => m.Admin),
       },
       {
         path: 'privacy',

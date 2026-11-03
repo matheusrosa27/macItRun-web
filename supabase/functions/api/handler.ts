@@ -1,5 +1,5 @@
 // API pública /api/v1 (contrato na seção "API pública e integração" do plano; o app de Mac
-// depende dela). Publicar e denunciar chegam na Fase 5.
+// depende dela).
 //
 // GET    /api/v1/profiles?q=&graphics=&sort=likes|recent|downloads&page=   (+ windowsVersion=, mac=)
 // GET    /api/v1/profiles/{id}
@@ -8,6 +8,8 @@
 // POST   /api/v1/profiles/{id}/like          (login)
 // DELETE /api/v1/profiles/{id}/like          (login)
 // POST   /api/v1/profiles/{id}/comments      (login) corpo { "body": "..." }
+// POST   /api/v1/profiles                    (login) publicar: { "file": {...}, "notes": "..." }
+// POST   /api/v1/reports                     (login) { "targetType", "targetId", "reason", "detail" }
 // GET    /api/v1/profile-filters             valores dos filtros (Macs testados)
 //
 // Login: `Authorization: Bearer <access token do Supabase>`. As escritas rodam como a pessoa
@@ -16,10 +18,12 @@
 // Fica separado de index.ts (que só existe no Deno) para os testes rodarem no Node.
 import {
   GRAPHICS,
+  MAX_PROFILE_BYTES,
   PROFILE_EXTENSION,
   WINDOWS_VERSIONS,
   parseProfileFile,
   serializeProfileFile,
+  type ProfileIssue,
 } from '../../../packages/profile-schema/src/index.ts';
 
 interface RpcResult {
@@ -39,14 +43,20 @@ export interface Clients {
   writer: Rpc;
   /** Chave publicável com o token da pessoa: escreve como ela (auth.uid()). */
   user(token: string): Rpc;
+  /** O id da pessoa dona do token, ou null se o token não vale. */
+  authenticate(token: string): Promise<string | null>;
 }
 
 const SORTS = ['likes', 'recent', 'downloads'];
 const MAX_PAGE = 1000;
 const MAX_QUERY = 100;
 const MAX_BODY_BYTES = 16 * 1024;
+/** O arquivo do perfil (até 16 KB) mais as notas (até 2.000 caracteres, até 4 bytes cada). */
+const MAX_PUBLISH_BYTES = MAX_PROFILE_BYTES + 9 * 1024;
+/** Escritas por IP por minuto (publicar, curtir, comentar, denunciar). */
+const WRITES_PER_MINUTE = 30;
 const ROUTE =
-  /\/v1\/(?:profiles(?:\/([a-z0-9-]{1,32})(?:\/(download|comments|like))?)?|(profile-filters))\/?$/;
+  /\/v1\/(?:profiles(?:\/([a-z0-9-]{1,32})(?:\/(download|comments|like))?)?|(profile-filters)|(reports))\/?$/;
 
 // A CDN (o atalho /api/v1 na Vercel) guarda por 60 s; o navegador sempre pergunta de novo, para
 // quem acabou de curtir ou comentar ver o número certo.
@@ -59,16 +69,21 @@ const DB_ERRORS: Record<string, number> = {
   user_banned: 403,
   not_found: 404,
   comment_invalid: 400,
+  text_invalid: 400,
+  own_content: 403,
+  daily_limit: 429,
 };
 
 class ApiError extends Error {
   readonly status: number;
   readonly code: string;
+  readonly issues?: ProfileIssue[];
 
-  constructor(status: number, code: string) {
+  constructor(status: number, code: string, issues?: ProfileIssue[]) {
     super(code);
     this.status = status;
     this.code = code;
+    this.issues = issues;
   }
 }
 
@@ -78,15 +93,38 @@ export async function handle(request: Request, clients: Clients): Promise<Respon
   if (!match) return error(404, 'not_found');
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
 
-  const [, id, action, filters] = match;
+  const [, id, action, filters, reports] = match;
   const method = request.method === 'HEAD' ? 'GET' : request.method;
-  const allowed = action === 'like' ? ['POST', 'DELETE'] : action === 'comments' && id ? ['GET', 'POST'] : ['GET'];
+  const allowed =
+    action === 'like'
+      ? ['POST', 'DELETE']
+      : reports
+        ? ['POST']
+        : (action === 'comments' && id) || (!id && !filters)
+          ? ['GET', 'POST']
+          : ['GET'];
   if (!allowed.includes(method)) {
     return error(405, 'method_not_allowed', { Allow: [...allowed, ...(allowed.includes('GET') ? ['HEAD'] : []), 'OPTIONS'].join(', ') });
   }
 
   try {
+    if (method !== 'GET') await limitByIp(request, clients.writer);
     if (filters) return json(await call(clients.reader, 'api_profile_filters', {}), 200, { 'Cache-Control': LIST_CACHE });
+    if (reports) {
+      const db = clients.user(bearer(request));
+      const body = (await jsonBody(request, MAX_BODY_BYTES)) as Record<string, unknown>;
+      const args = {
+        target_type: body['targetType'],
+        target_id: body['targetId'] === undefined ? undefined : String(body['targetId']),
+        reason: body['reason'],
+        detail: typeof body['detail'] === 'string' ? body['detail'] : '',
+      };
+      if (typeof args.target_type !== 'string' || !args.target_id || typeof args.reason !== 'string') {
+        throw new ApiError(400, 'invalid_report');
+      }
+      return json(await call(db, 'report', args), 201, NO_STORE);
+    }
+    if (!id && method === 'POST') return await publishProfile(request, clients);
     if (!id) return await listProfiles(url.searchParams, clients.reader);
     if (action === 'like') {
       const db = clients.user(bearer(request));
@@ -100,10 +138,49 @@ export async function handle(request: Request, clients: Clients): Promise<Respon
     if (action === 'comments') return await listComments(id, url.searchParams, clients.reader);
     return await getProfile(id, action === 'download', request.method === 'GET', clients);
   } catch (cause) {
-    if (cause instanceof ApiError) return error(cause.status, cause.code);
+    if (cause instanceof ApiError) {
+      return cause.issues
+        ? json({ error: cause.code, issues: cause.issues }, cause.status, NO_STORE)
+        : error(cause.status, cause.code);
+    }
     console.error(cause);
     return error(500, 'internal_error');
   }
+}
+
+/**
+ * Publicar: valida o arquivo com o schema do perfil (o mesmo do app) e grava como a pessoa do
+ * token. Só esta rota grava perfis; o banco não aceita perfil vindo direto do navegador.
+ */
+async function publishProfile(request: Request, clients: Clients): Promise<Response> {
+  const author = await clients.authenticate(bearer(request));
+  if (!author) throw new ApiError(401, 'not_authenticated');
+  const body = (await jsonBody(request, MAX_PUBLISH_BYTES)) as { file?: unknown; notes?: unknown };
+  const notes = body.notes ?? '';
+  if (typeof notes !== 'string') throw new ApiError(400, 'text_invalid');
+
+  // O arquivo pode vir como objeto ou como o texto do .macitrun-profile.
+  let file = body.file;
+  if (typeof file === 'string') {
+    if (new TextEncoder().encode(file).length > MAX_PROFILE_BYTES) throw new ApiError(413, 'too_large');
+    try {
+      file = JSON.parse(file);
+    } catch {
+      throw new ApiError(400, 'invalid_profile', [{ path: '', code: 'invalid_json' }]);
+    }
+  } else if (new TextEncoder().encode(JSON.stringify(file ?? null)).length > MAX_PROFILE_BYTES) {
+    throw new ApiError(413, 'too_large');
+  }
+  const result = parseProfileFile(file);
+  if (!result.ok) throw new ApiError(400, 'invalid_profile', result.issues);
+
+  const created = await call(clients.writer, 'publish_profile', {
+    author_id: author,
+    payload: result.file.profile,
+    tested_on: result.file.testedOn ?? {},
+    notes,
+  });
+  return json(created, 201, NO_STORE);
 }
 
 async function listProfiles(params: URLSearchParams, db: Rpc): Promise<Response> {
@@ -200,16 +277,41 @@ function bearer(request: Request): string {
 
 /** O texto do comentário; o banco limpa e valida o resto. */
 async function commentBody(request: Request): Promise<string> {
+  const { body } = (await jsonBody(request, MAX_BODY_BYTES)) as { body?: unknown };
+  if (typeof body !== 'string') throw new ApiError(400, 'comment_invalid');
+  return body;
+}
+
+async function jsonBody(request: Request, maxBytes: number): Promise<unknown> {
   const text = await request.text();
-  if (new TextEncoder().encode(text).length > MAX_BODY_BYTES) throw new ApiError(413, 'too_large');
-  let body: unknown;
+  if (new TextEncoder().encode(text).length > maxBytes) throw new ApiError(413, 'too_large');
   try {
-    body = (JSON.parse(text) as { body?: unknown }).body;
+    const value: unknown = JSON.parse(text);
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new Error();
+    return value;
   } catch {
     throw new ApiError(400, 'invalid_json');
   }
-  if (typeof body !== 'string') throw new ApiError(400, 'comment_invalid');
-  return body;
+}
+
+/**
+ * Limite de escritas por IP. O banco só vê um hash do IP, e a contagem some em um dia.
+ * Se a contagem falhar, a escrita segue (os limites por pessoa continuam valendo).
+ */
+async function limitByIp(request: Request, db: Rpc): Promise<void> {
+  const ip =
+    request.headers.get('cf-connecting-ip') ??
+    request.headers.get('x-real-ip') ??
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
+  if (!ip) return;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`macitrun:${ip}`));
+  const hash = [...new Uint8Array(digest)].slice(0, 16).map((b) => b.toString(16).padStart(2, '0')).join('');
+  const { data, error } = await db.rpc('api_rate_limit', { key: `write:${hash}`, max_hits: WRITES_PER_MINUTE, window_seconds: 60 });
+  if (error) {
+    console.error('api_rate_limit', error.message);
+    return;
+  }
+  if (data === false) throw new ApiError(429, 'rate_limited');
 }
 
 async function call(db: Rpc, fn: string, args: Record<string, unknown>): Promise<unknown> {

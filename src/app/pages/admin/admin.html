@@ -1,0 +1,150 @@
+<section class="mx-auto max-w-4xl px-4 py-12 md:py-16">
+  <h1 class="m-0 text-3xl font-bold">{{ 'admin.title' | transloco }}</h1>
+  <p class="mt-3 mb-0 text-surface-600 dark:text-surface-300">{{ 'admin.subtitle' | transloco }}</p>
+
+  <!-- Um item (perfil de configuração ou comentário), com autor e ações. -->
+  <ng-template #targetView let-item>
+    @let t = item.target;
+    @if (t) {
+      <p class="m-0 text-sm text-surface-500 dark:text-surface-400">
+        {{ (item.targetType === 'profile' ? 'admin.profile' : 'admin.comment') | transloco: { name: t.name } }}
+      </p>
+      <a [routerLink]="['/', lang(), 'community', t.profileId, t.slug]" target="_blank" class="font-medium text-primary break-words">
+        {{ t.name }}
+      </a>
+      @if (t.body) {
+        <p class="mt-2 mb-0 rounded-lg bg-surface-100 p-3 whitespace-pre-line break-words dark:bg-surface-800">{{ t.body }}</p>
+      }
+      <div class="mt-2 flex flex-wrap items-center gap-2 text-sm">
+        @if (t.author?.username; as username) {
+          <span>{{ 'community.card.by' | transloco: { username: '@' + username } }}</span>
+          @if (t.author?.banned) {
+            <p-tag [value]="'admin.banned' | transloco" severity="danger" />
+          }
+        } @else {
+          <span class="italic">{{ 'community.card.deletedAuthor' | transloco }}</span>
+        }
+        <p-tag [value]="'admin.status.' + t.status | transloco" severity="secondary" />
+      </div>
+    } @else {
+      <p class="m-0 italic text-surface-500">{{ 'admin.gone' | transloco }}</p>
+    }
+  </ng-template>
+
+  <p-tabs value="open" class="mt-8">
+    <p-tablist>
+      <p-tab value="open">{{ 'admin.open' | transloco }} ({{ openCount() }})</p-tab>
+      <p-tab value="hidden">{{ 'admin.hidden' | transloco }}</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <!-- Denúncias abertas -->
+      <p-tabpanel value="open">
+        @if (reports.error()) {
+          <p-message severity="error" [text]="'auth.errors.generic' | transloco" />
+        } @else if (reports.value(); as list) {
+          <ul class="m-0 flex list-none flex-col gap-4 p-0">
+            @for (item of list; track item.targetType + item.targetId) {
+              <li class="rounded-xl border border-surface-200 p-5 dark:border-surface-800">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <ng-container *ngTemplateOutlet="targetView; context: { $implicit: item }" />
+                  </div>
+                  <p-tag [value]="'admin.count' | transloco: { count: item.count }" severity="warn" />
+                </div>
+                <ul class="mt-3 mb-0 flex flex-col gap-1 pl-5 text-sm">
+                  @for (r of item.reports; track $index) {
+                    <li>
+                      <strong>{{ 'report.reasons.' + r.reason | transloco }}</strong>
+                      · {{ r.reporter ? '@' + r.reporter : ('community.card.deletedAuthor' | transloco) }}
+                      · {{ date(r.createdAt) }}
+                      @if (r.detail) {
+                        <div class="whitespace-pre-line break-words text-surface-600 dark:text-surface-300">{{ r.detail }}</div>
+                      }
+                    </li>
+                  }
+                </ul>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  <p-button
+                    [label]="'admin.hide' | transloco"
+                    icon="pi pi-eye-slash"
+                    severity="danger"
+                    size="small"
+                    [loading]="busy() === key(item, 'hide')"
+                    (onClick)="moderate(item, true)"
+                  />
+                  <p-button
+                    [label]="'admin.keep' | transloco"
+                    icon="pi pi-check"
+                    severity="secondary"
+                    [outlined]="true"
+                    size="small"
+                    [loading]="busy() === key(item, 'keep')"
+                    (onClick)="moderate(item, false)"
+                  />
+                  @if (item.target?.author; as author) {
+                    <p-button
+                      [label]="(author.banned ? 'admin.unban' : 'admin.ban') | transloco"
+                      icon="pi pi-ban"
+                      severity="secondary"
+                      [text]="true"
+                      size="small"
+                      [loading]="busy() === key(item, 'ban')"
+                      (onClick)="setBanned(item, !author.banned)"
+                    />
+                  }
+                </div>
+              </li>
+            } @empty {
+              <li class="text-surface-600 dark:text-surface-400">{{ 'admin.empty' | transloco }}</li>
+            }
+          </ul>
+        } @else {
+          <p-skeleton height="8rem" borderRadius="0.75rem" />
+        }
+      </p-tabpanel>
+
+      <!-- Escondidos -->
+      <p-tabpanel value="hidden">
+        @if (hidden.error()) {
+          <p-message severity="error" [text]="'auth.errors.generic' | transloco" />
+        } @else if (hidden.value(); as list) {
+          <ul class="m-0 flex list-none flex-col gap-4 p-0">
+            @for (item of list; track item.targetType + item.targetId) {
+              <li class="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-surface-200 p-5 dark:border-surface-800">
+                <div class="min-w-0 flex-1">
+                  <ng-container *ngTemplateOutlet="targetView; context: { $implicit: item }" />
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  <p-button
+                    [label]="'admin.restore' | transloco"
+                    icon="pi pi-replay"
+                    severity="secondary"
+                    [outlined]="true"
+                    size="small"
+                    [loading]="busy() === key(item, 'keep')"
+                    (onClick)="moderate(item, false)"
+                  />
+                  @if (item.target?.author; as author) {
+                    <p-button
+                      [label]="(author.banned ? 'admin.unban' : 'admin.ban') | transloco"
+                      icon="pi pi-ban"
+                      severity="secondary"
+                      [text]="true"
+                      size="small"
+                      [loading]="busy() === key(item, 'ban')"
+                      (onClick)="setBanned(item, !author.banned)"
+                    />
+                  }
+                </div>
+              </li>
+            } @empty {
+              <li class="text-surface-600 dark:text-surface-400">{{ 'admin.emptyHidden' | transloco }}</li>
+            }
+          </ul>
+        } @else {
+          <p-skeleton height="8rem" borderRadius="0.75rem" />
+        }
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</section>

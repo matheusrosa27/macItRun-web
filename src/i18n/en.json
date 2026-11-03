@@ -73,6 +73,14 @@
     "communityProfile": {
       "title": "Setup profile",
       "description": "A macItRun setup profile made by the community."
+    },
+    "publish": {
+      "title": "Publish a setup profile",
+      "description": "Share a macItRun setup profile with the community."
+    },
+    "admin": {
+      "title": "Moderation",
+      "description": "Moderation of the macItRun community."
     }
   },
   "home": {
@@ -372,7 +380,14 @@
       "link_expired": "The link expired or was already used. Request a new one.",
       "account_incomplete": "Choose your username and accept the terms in My account to take part.",
       "comment_invalid": "Comments must have 1 to 2,000 characters, with no special control characters.",
-      "not_found": "This setup profile is no longer available."
+      "not_found": "This setup profile is no longer available.",
+      "text_invalid": "The text is too long or has characters that are not allowed.",
+      "own_content": "You can't do that with your own content.",
+      "daily_limit": "You've reached today's limit. Try again tomorrow.",
+      "rate_limited": "Too many actions in a short time. Wait a minute and try again.",
+      "not_admin": "Only administrators can do that.",
+      "too_large": "The file is larger than 16 KB.",
+      "invalid_json": "The request came in an invalid format."
     }
   },
   "account": {
@@ -419,6 +434,20 @@
         "keep": "Keep them in the community, as “deleted author”",
         "remove": "Delete them with the account"
       }
+    },
+    "profiles": {
+      "title": "Your setup profiles",
+      "empty": "You haven't published any setup profile yet.",
+      "status": {
+        "published": "Published",
+        "hidden": "Hidden by moderation",
+        "removed": "Unpublished"
+      },
+      "editNotes": "Edit notes",
+      "notesSaved": "Notes saved",
+      "unpublish": "Unpublish",
+      "unpublishConfirm": "Unpublish this setup profile? It leaves the community for good; to share it again, publish it again.",
+      "unpublished": "Setup profile unpublished"
     }
   },
   "community": {
@@ -533,5 +562,99 @@
       "more": "Show more comments",
       "error": "Couldn't load the comments."
     }
+  },
+  "publish": {
+    "title": "Publish a setup profile",
+    "subtitle": "Share the settings that worked for you. The profile comes from the app's Publish button or from the .macitrun-profile file it exports.",
+    "fromAppHint": "In the app, the bottle's Publish button opens this page with the profile already in it.",
+    "fromApp": "Setup profile received from macItRun.",
+    "file": {
+      "label": "Upload the file",
+      "hint": "The .macitrun-profile file exported by the app (up to 16 KB).",
+      "choose": "Choose file"
+    },
+    "paste": {
+      "label": "Or paste the file's contents",
+      "check": "Check"
+    },
+    "change": "Use another profile",
+    "invalid": {
+      "title": "This setup profile can't be published",
+      "body": "Fix it in the app and export it again. What was refused:"
+    },
+    "notes": {
+      "placeholder": "Tell how the game or app ran with this profile: what works, what still fails, where you tested."
+    },
+    "rules": "The profile can't be changed after publishing (publishing again creates a new one); the notes can be edited in My account. By publishing, you agree to the",
+    "submit": "Publish",
+    "login": "Sign in to publish",
+    "setup": "To publish, choose your username in My account.",
+    "published": "Setup profile published",
+    "issues": {
+      "invalid_json": "The content isn't a valid .macitrun-profile file.",
+      "too_large": "The file is larger than 16 KB.",
+      "id_invalid": "The id may only have lowercase letters, numbers and hyphens.",
+      "name_invalid": "The name must have 1 to 100 characters.",
+      "executables_empty": "At least one executable is required.",
+      "executable_invalid": "Invalid executable: use only the .exe file name, with no folder.",
+      "executable_reserved": "macItRun configures this executable itself.",
+      "invalid_value": "Value not accepted.",
+      "invalid_type": "Wrong type of value.",
+      "unrecognized_keys": "Unknown field.",
+      "dll_invalid": "Invalid DLL name (lowercase, without .dll).",
+      "load_order_invalid": "Invalid DLL load order.",
+      "environment_bottle_wide": "WINEMSYNC and WINEESYNC apply to the whole bottle and can't go in a profile.",
+      "environment_not_allowed": "Environment variable not allowed: only those starting with DXVK_, DXMT_, MVK_CONFIG_ or MTL_HUD_.",
+      "environment_path": "Variables that point to files (ending in PATH, FILE or DIR) are not allowed.",
+      "environment_value_invalid": "Variable value too long or with a line break.",
+      "arguments_too_many": "At most 20 arguments.",
+      "argument_invalid": "Argument too long or with a line break.",
+      "notes_too_long": "The profile notes are longer than 2,000 characters.",
+      "tested_on_invalid": "Invalid information about where it was tested.",
+      "generic": "Problem in the file."
+    }
+  },
+  "report": {
+    "button": "Report",
+    "comment": "Report comment",
+    "title": "Report",
+    "reasonLabel": "What's the problem?",
+    "reasons": {
+      "spam": "Spam or advertising",
+      "offensive": "Offensive content",
+      "cheating": "Bypassing anti-cheat, copy protection or piracy",
+      "unsafe": "Dangerous or misleading settings",
+      "other": "Something else"
+    },
+    "detail": "Details (optional)",
+    "submit": "Send report",
+    "done": "Report sent. Thank you!"
+  },
+  "admin": {
+    "title": "Moderation",
+    "subtitle": "Open reports and hidden items. With 3 reports from different people, an item is hidden until you decide.",
+    "open": "Open reports",
+    "hidden": "Hidden",
+    "empty": "No open reports.",
+    "emptyHidden": "Nothing hidden.",
+    "count": "{{ count }} reports",
+    "profile": "Setup profile",
+    "comment": "Comment on {{ name }}",
+    "banned": "Banned",
+    "gone": "Item deleted.",
+    "status": {
+      "published": "Published",
+      "hidden": "Hidden",
+      "removed": "Unpublished",
+      "visible": "Visible"
+    },
+    "hide": "Hide",
+    "keep": "Keep published",
+    "restore": "Restore",
+    "ban": "Ban author",
+    "unban": "Unban author",
+    "done": "Done",
+    "bannedDone": "Author banned",
+    "unbannedDone": "Author unbanned"
   }
 }

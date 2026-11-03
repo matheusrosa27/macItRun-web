@@ -17,6 +17,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { isValidUsername, normalizeUsername, suggestUsername, USERNAME_MAX } from '../../core/auth/username';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { TERMS_ACCEPTED_FLAG } from '../auth/oauth-buttons';
+import { MyProfiles } from './my-profiles';
 
 type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
 
@@ -34,6 +35,7 @@ type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
     ProgressSpinnerModule,
     RadioButtonModule,
     TagModule,
+    MyProfiles,
   ],
   templateUrl: './account.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

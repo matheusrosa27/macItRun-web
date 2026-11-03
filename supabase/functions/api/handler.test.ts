@@ -44,6 +44,9 @@ beforeEach(async () => {
     reader: rpcOn(db, 'anon'),
     writer: rpcOn(db, 'service'),
     user: (token) => rpcOn(db, { userId: token }),
+    // Nos testes, o "token" é o id da pessoa.
+    authenticate: async (token) =>
+      (await db.query<{ id: string }>('select id from auth.users where id::text = $1', [token])).rows[0]?.id ?? null,
   };
 });
 
@@ -159,10 +162,11 @@ describe('rotas e métodos', () => {
     }
   });
 
-  test('publicar ainda não existe nesta fase', async () => {
-    const response = await get('/v1/profiles', 'POST');
+  test('método não aceito dá 405 com os aceitos', async () => {
+    const response = await get('/v1/profiles/darksouls3', 'POST');
     assert.equal(response.status, 405);
     assert.equal(response.headers.get('Allow'), 'GET, HEAD, OPTIONS');
+    assert.equal((await get('/v1/reports')).status, 405);
   });
 
   test('erro no banco dá 500 sem detalhes', async () => {
@@ -242,5 +246,105 @@ describe('filtros', () => {
     assert.equal((await body(await get('/v1/profiles?windowsVersion=win7'))).total, 0);
     assert.equal((await get('/v1/profiles?windowsVersion=win95')).status, 400);
     assert.deepEqual(await body(await get('/v1/profile-filters')), { macs: ['Mac17,5'] });
+  });
+});
+
+describe('publicar pela API', () => {
+  let ana: string;
+  beforeEach(async () => {
+    ana = await signUp(db, { email: 'ana@example.com', metadata: { username: 'ana', terms_accepted: 'true' } });
+  });
+  const post = (path: string, body: unknown, token?: string, headers: Record<string, string> = {}) =>
+    get(path, 'POST', {
+      headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...headers },
+      body: typeof body === 'string' ? body : JSON.stringify(body),
+    });
+
+  test('publica o perfil do Dark Souls 3 e ele aparece na comunidade, igual ao arquivo', async () => {
+    const response = await post('/v1/profiles', { file: EXAMPLE, notes: 'Roda liso.' }, ana);
+    assert.equal(response.status, 201);
+    const { id, slug } = await body(response);
+    assert.equal(slug, 'dark-souls-iii');
+    const download = await get(`/v1/profiles/${id}/download`);
+    assert.equal(await download.text(), EXAMPLE);
+    const list = await body(await get('/v1/profiles?q=dark%20souls'));
+    assert.equal(list.total, 2);
+    const { community } = await body(await get(`/v1/profiles/${id}`));
+    assert.deepEqual(community.author, { username: 'ana' });
+    assert.equal(community.notes, 'Roda liso.');
+  });
+
+  test('aceita o arquivo como objeto', async () => {
+    assert.equal((await post('/v1/profiles', { file: JSON.parse(EXAMPLE) }, ana)).status, 201);
+  });
+
+  test('um perfil com DYLD_INSERT_LIBRARIES é recusado', async () => {
+    const file = JSON.parse(EXAMPLE);
+    file.profile.environment = { DYLD_INSERT_LIBRARIES: '/tmp/evil.dylib' };
+    const response = await post('/v1/profiles', { file }, ana);
+    assert.equal(response.status, 400);
+    assert.deepEqual(await body(response), {
+      error: 'invalid_profile',
+      issues: [{ path: 'profile.environment.DYLD_INSERT_LIBRARIES', code: 'environment_not_allowed' }],
+    });
+    assert.equal((await body(await get('/v1/profiles'))).total, 1);
+  });
+
+  for (const [name, payload, status, code] of [
+    ['texto que não é JSON', { file: '{"format":' }, 400, 'invalid_profile'],
+    ['sem arquivo', {}, 400, 'invalid_profile'],
+    ['notas que não são texto', { file: EXAMPLE, notes: 5 }, 400, 'text_invalid'],
+    ['notas longas demais', { file: EXAMPLE, notes: 'n'.repeat(2001) }, 400, 'text_invalid'],
+    ['arquivo grande demais', { file: 'x'.repeat(17_000) }, 413, 'too_large'],
+  ] as const) {
+    test(`recusa: ${name}`, async () => {
+      const response = await post('/v1/profiles', payload, ana);
+      assert.equal(response.status, status);
+      assert.equal((await body(response)).error, code);
+    });
+  }
+
+  test('sem login ou com token que não vale, 401', async () => {
+    assert.equal((await post('/v1/profiles', { file: EXAMPLE })).status, 401);
+    assert.equal((await post('/v1/profiles', { file: EXAMPLE }, '00000000-0000-0000-0000-000000000000')).status, 401);
+  });
+
+  test('conta banida 403; limite diário 429', async () => {
+    for (let i = 0; i < 10; i++) assert.equal((await post('/v1/profiles', { file: EXAMPLE }, ana)).status, 201);
+    const limited = await post('/v1/profiles', { file: EXAMPLE }, ana);
+    assert.equal(limited.status, 429);
+    assert.deepEqual(await body(limited), { error: 'daily_limit' });
+    await db.query('update public.users_public set banned = true where id = $1', [ana]);
+    assert.equal((await post('/v1/profiles', { file: EXAMPLE }, ana)).status, 403);
+  });
+
+  test('3 denúncias escondem o perfil', async () => {
+    const { id } = await body(await post('/v1/profiles', { file: EXAMPLE }, ana));
+    for (const name of ['bia', 'caio', 'duda']) {
+      const who = await signUp(db, { email: `${name}@example.com`, metadata: { username: name, terms_accepted: 'true' } });
+      const response = await post('/v1/reports', { targetType: 'profile', targetId: id, reason: 'unsafe' }, who);
+      assert.equal(response.status, 201);
+    }
+    assert.equal((await get(`/v1/profiles/${id}`)).status, 404);
+  });
+
+  test('denúncia inválida', async () => {
+    assert.equal((await post('/v1/reports', { targetType: 'profile', targetId: 'darksouls3', reason: 'spam' })).status, 401);
+    assert.equal((await post('/v1/reports', { targetType: 'profile' }, ana)).status, 400);
+    assert.equal((await post('/v1/reports', '[]', ana)).status, 400);
+  });
+
+  test('limite de escritas por IP', async () => {
+    const headers = { 'x-forwarded-for': '203.0.113.7, 10.0.0.1' };
+    for (let i = 0; i < 30; i++) {
+      await post('/v1/profiles/darksouls3/like', {}, ana, headers);
+    }
+    const limited = await post('/v1/profiles/darksouls3/like', {}, ana, headers);
+    assert.equal(limited.status, 429);
+    assert.deepEqual(await body(limited), { error: 'rate_limited' });
+    // Outro IP segue normal; o banco só guarda o hash.
+    assert.equal((await post('/v1/profiles/darksouls3/like', {}, ana, { 'x-forwarded-for': '198.51.100.1' })).status, 200);
+    const keys = await db.query<{ key: string }>('select key from private.rate_limits');
+    assert.ok(keys.rows.every((r) => !r.key.includes('203.0.113.7')));
   });
 });

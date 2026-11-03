@@ -6,6 +6,10 @@ import { AuthService } from '../auth/auth.service';
 import {
   API_BASE,
   ListParams,
+  MyProfile,
+  PublishError,
+  ReportReason,
+  ReportTarget,
   Page,
   ProfileComment,
   ProfileDetail,
@@ -94,6 +98,42 @@ export class CommunityService {
     } finally {
       done();
     }
+  }
+
+  /**
+   * Publica pela API, que valida o arquivo com o schema do perfil antes de gravar.
+   * Erros vêm como PublishError (com os problemas do arquivo, se for o caso).
+   */
+  async publish(file: string, notes: string): Promise<{ id: string; slug: string }> {
+    const token = await this.auth.accessToken();
+    try {
+      return await firstValueFrom(
+        this.http.post<{ id: string; slug: string }>(
+          `${API_BASE}/profiles`,
+          { file, notes },
+          { headers: { Authorization: `Bearer ${token}` } },
+        ),
+      );
+    } catch (error) {
+      const body = error instanceof HttpErrorResponse ? error.error : null;
+      throw new PublishError(typeof body?.error === 'string' ? body.error : 'generic', body?.issues ?? []);
+    }
+  }
+
+  myProfiles(): Promise<MyProfile[]> {
+    return this.auth.rpc('my_profiles');
+  }
+
+  updateNotes(profileId: string, notes: string): Promise<void> {
+    return this.auth.rpc('update_profile_notes', { profile_id: profileId, notes });
+  }
+
+  unpublish(profileId: string): Promise<void> {
+    return this.auth.rpc('unpublish_profile', { profile_id: profileId });
+  }
+
+  report(target: ReportTarget, reason: ReportReason, detail: string): Promise<{ reported: boolean; hidden: boolean }> {
+    return this.auth.rpc('report', { target_type: target.type, target_id: target.id, reason, detail });
   }
 
   /** Se a pessoa conectada já curtiu o perfil (cada um só lê as próprias curtidas). */

@@ -73,6 +73,14 @@
     "communityProfile": {
       "title": "Perfil de configuración",
       "description": "Perfil de configuración de macItRun hecho por la comunidad."
+    },
+    "publish": {
+      "title": "Publicar perfil de configuración",
+      "description": "Comparte con la comunidad un perfil de configuración de macItRun."
+    },
+    "admin": {
+      "title": "Moderación",
+      "description": "Moderación de la comunidad de macItRun."
     }
   },
   "home": {
@@ -372,7 +380,14 @@
       "link_expired": "El enlace venció o ya se usó. Pide uno nuevo.",
       "account_incomplete": "Elige tu nombre de usuario y acepta los términos en Mi cuenta para participar.",
       "comment_invalid": "El comentario debe tener de 1 a 2.000 caracteres, sin caracteres especiales de control.",
-      "not_found": "Este perfil de configuración ya no está disponible."
+      "not_found": "Este perfil de configuración ya no está disponible.",
+      "text_invalid": "El texto supera el límite o tiene caracteres no permitidos.",
+      "own_content": "No puedes hacer eso con tu propio contenido.",
+      "daily_limit": "Llegaste al límite de hoy. Inténtalo de nuevo mañana.",
+      "rate_limited": "Demasiadas acciones en poco tiempo. Espera un minuto e inténtalo de nuevo.",
+      "not_admin": "Solo los administradores pueden hacer eso.",
+      "too_large": "El archivo supera los 16 KB.",
+      "invalid_json": "El envío llegó en un formato no válido."
     }
   },
   "account": {
@@ -419,6 +434,20 @@
         "keep": "Mantenerlos en la comunidad, como “autor eliminado”",
         "remove": "Eliminarlos junto con la cuenta"
       }
+    },
+    "profiles": {
+      "title": "Tus perfiles de configuración",
+      "empty": "Todavía no publicaste ningún perfil de configuración.",
+      "status": {
+        "published": "Publicado",
+        "hidden": "Oculto por moderación",
+        "removed": "Despublicado"
+      },
+      "editNotes": "Editar notas",
+      "notesSaved": "Notas guardadas",
+      "unpublish": "Despublicar",
+      "unpublishConfirm": "¿Despublicar este perfil de configuración? Sale de la comunidad para siempre; para compartirlo otra vez, vuelve a publicarlo.",
+      "unpublished": "Perfil de configuración despublicado"
     }
   },
   "community": {
@@ -533,5 +562,99 @@
       "more": "Ver más comentarios",
       "error": "No se pudieron cargar los comentarios."
     }
+  },
+  "publish": {
+    "title": "Publicar perfil de configuración",
+    "subtitle": "Comparte la configuración que te funcionó. El perfil viene del botón Publicar de la app o del archivo .macitrun-profile que exporta.",
+    "fromAppHint": "En la app, el botón Publicar de la botella abre esta página con el perfil ya cargado.",
+    "fromApp": "Perfil de configuración recibido de macItRun.",
+    "file": {
+      "label": "Subir el archivo",
+      "hint": "El archivo .macitrun-profile exportado por la app (hasta 16 KB).",
+      "choose": "Elegir archivo"
+    },
+    "paste": {
+      "label": "O pega el contenido del archivo",
+      "check": "Comprobar"
+    },
+    "change": "Usar otro perfil",
+    "invalid": {
+      "title": "Este perfil de configuración no se puede publicar",
+      "body": "Corrígelo en la app y vuelve a exportarlo. Lo que se rechazó:"
+    },
+    "notes": {
+      "placeholder": "Cuenta cómo funcionó el juego o la app con este perfil: qué funciona, qué falla, dónde lo probaste."
+    },
+    "rules": "El perfil no se puede cambiar después de publicarlo (publicar de nuevo crea otro); las notas se pueden editar en Mi cuenta. Al publicar, aceptas los",
+    "submit": "Publicar",
+    "login": "Inicia sesión para publicar",
+    "setup": "Para publicar, elige tu nombre de usuario en Mi cuenta.",
+    "published": "Perfil de configuración publicado",
+    "issues": {
+      "invalid_json": "El contenido no es un archivo .macitrun-profile válido.",
+      "too_large": "El archivo supera los 16 KB.",
+      "id_invalid": "El id solo puede tener letras minúsculas, números y guiones.",
+      "name_invalid": "El nombre debe tener de 1 a 100 caracteres.",
+      "executables_empty": "Falta al menos un ejecutable.",
+      "executable_invalid": "Ejecutable no válido: usa solo el nombre del archivo .exe, sin carpeta.",
+      "executable_reserved": "macItRun configura este ejecutable por su cuenta.",
+      "invalid_value": "Valor no aceptado.",
+      "invalid_type": "Tipo de valor incorrecto.",
+      "unrecognized_keys": "Campo desconocido.",
+      "dll_invalid": "Nombre de DLL no válido (minúsculas, sin .dll).",
+      "load_order_invalid": "Orden de carga de DLL no válido.",
+      "environment_bottle_wide": "WINEMSYNC y WINEESYNC valen para toda la botella y no pueden ir en un perfil.",
+      "environment_not_allowed": "Variable de entorno no permitida: solo las que empiezan por DXVK_, DXMT_, MVK_CONFIG_ o MTL_HUD_.",
+      "environment_path": "No se permiten variables que apunten a archivos (terminadas en PATH, FILE o DIR).",
+      "environment_value_invalid": "Valor de variable demasiado largo o con salto de línea.",
+      "arguments_too_many": "Como máximo 20 argumentos.",
+      "argument_invalid": "Argumento demasiado largo o con salto de línea.",
+      "notes_too_long": "Las notas del perfil superan los 2.000 caracteres.",
+      "tested_on_invalid": "Información de dónde se probó no válida.",
+      "generic": "Problema en el archivo."
+    }
+  },
+  "report": {
+    "button": "Denunciar",
+    "comment": "Denunciar comentario",
+    "title": "Denunciar",
+    "reasonLabel": "¿Cuál es el problema?",
+    "reasons": {
+      "spam": "Spam o publicidad",
+      "offensive": "Contenido ofensivo",
+      "cheating": "Eludir anti-cheat, protección anticopia o piratería",
+      "unsafe": "Configuración peligrosa o engañosa",
+      "other": "Otro motivo"
+    },
+    "detail": "Detalles (opcional)",
+    "submit": "Enviar denuncia",
+    "done": "Denuncia enviada. ¡Gracias!"
+  },
+  "admin": {
+    "title": "Moderación",
+    "subtitle": "Denuncias abiertas y elementos ocultos. Con 3 denuncias de personas distintas, el elemento se oculta hasta que decidas.",
+    "open": "Denuncias abiertas",
+    "hidden": "Ocultos",
+    "empty": "No hay denuncias abiertas.",
+    "emptyHidden": "Nada oculto.",
+    "count": "{{ count }} denuncias",
+    "profile": "Perfil de configuración",
+    "comment": "Comentario en {{ name }}",
+    "banned": "Expulsado",
+    "gone": "Elemento eliminado.",
+    "status": {
+      "published": "Publicado",
+      "hidden": "Oculto",
+      "removed": "Despublicado",
+      "visible": "Visible"
+    },
+    "hide": "Ocultar",
+    "keep": "Mantener publicado",
+    "restore": "Restaurar",
+    "ban": "Expulsar autor",
+    "unban": "Readmitir autor",
+    "done": "Hecho",
+    "bannedDone": "Autor expulsado",
+    "unbannedDone": "Autor readmitido"
   }
 }

@@ -25,23 +25,20 @@ import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { authErrorKey } from '../../core/auth/auth-errors';
 import { AuthService } from '../../core/auth/auth.service';
-import { COMMUNITY_ENABLED, downloadUrl, importUrl, ProfileComment } from '../../core/community/community';
+import {
+  COMMUNITY_ENABLED,
+  downloadUrl,
+  importUrl,
+  ProfileComment,
+  ReportTarget,
+} from '../../core/community/community';
 import { CommunityService } from '../../core/community/community.service';
-import { isKnownMac, macName } from '../../core/community/macs';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { SeoService } from '../../core/seo.service';
+import { ProfileChanges } from './profile-changes';
+import { ReportDialog } from './report-dialog';
 
 const COMMENT_MAX = 2000;
-
-/** Chave de tradução da ordem de carga de uma DLL ("" e "disabled" desligam a DLL). */
-const LOAD_ORDER_KEY: Record<string, string> = {
-  native: 'native',
-  builtin: 'builtin',
-  'native,builtin': 'nativeBuiltin',
-  'builtin,native': 'builtinNative',
-  disabled: 'disabled',
-  '': 'disabled',
-};
 
 /**
  * Página de um perfil: o que ele muda, onde foi testado, abrir no app ou baixar, curtir e
@@ -58,6 +55,8 @@ const LOAD_ORDER_KEY: Record<string, string> = {
     SkeletonModule,
     TagModule,
     TextareaModule,
+    ProfileChanges,
+    ReportDialog,
   ],
   templateUrl: './profile.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,27 +118,17 @@ export class ProfilePage {
   protected readonly commentError = signal<string | null>(null);
   protected readonly deleting = signal<number | null>(null);
 
+  protected readonly reportTarget = signal<ReportTarget | null>(null);
+  protected readonly reportOpen = signal(false);
+  /** O perfil é da pessoa conectada (não tem por que denunciar). */
+  protected readonly ownProfile = computed(() => {
+    const me = this.auth.account()?.username;
+    return !!me && this.info()?.author?.username === me;
+  });
+
   /** Link macitrun:// (o Angular bloqueia esquemas desconhecidos sem esta liberação). */
   protected readonly openUrl = computed(() => this.sanitizer.bypassSecurityTrustUrl(importUrl(this.id())));
   protected readonly downloadUrl = computed(() => downloadUrl(this.id()));
-
-  protected readonly dlls = computed(() =>
-    Object.entries(this.profile()?.dllOverrides ?? {}).map(([dll, order]) => ({
-      dll,
-      order: `community.profile.loadOrder.${LOAD_ORDER_KEY[order] ?? 'disabled'}`,
-    })),
-  );
-  protected readonly environment = computed(() => Object.entries(this.profile()?.environment ?? {}));
-  protected readonly testedOn = computed(() => {
-    const tested = this.data.value()?.testedOn ?? {};
-    return (['mac', 'macOS', 'runtime', 'app'] as const).map((key) => {
-      const value = tested[key];
-      // O Mac aparece pelo nome, com o identificador ao lado (é o que o app grava).
-      return key === 'mac' && value && isKnownMac(value)
-        ? { key, value: macName(value), detail: value }
-        : { key, value, detail: undefined };
-    });
-  });
 
   protected readonly published = computed(() => {
     const date = this.info()?.createdAt;
@@ -252,6 +241,20 @@ export class ProfilePage {
     } finally {
       this.liking.set(false);
     }
+  }
+
+  /** Denunciar pede login e conta completa, como curtir e comentar. */
+  protected async openReport(target: ReportTarget): Promise<void> {
+    if (!this.auth.user()) {
+      await this.goToLogin();
+      return;
+    }
+    if (this.auth.needsSetup()) {
+      await this.router.navigate(['/', this.lang(), 'account']);
+      return;
+    }
+    this.reportTarget.set(target);
+    this.reportOpen.set(true);
   }
 
   protected async goToLogin(): Promise<void> {

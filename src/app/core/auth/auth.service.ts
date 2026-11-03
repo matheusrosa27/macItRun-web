@@ -211,6 +211,14 @@ export class AuthService {
     return data as T;
   }
 
+  /** O token de acesso da sessão, para chamar a API em nome da pessoa (publicar). */
+  async accessToken(): Promise<string> {
+    const client = await this.api();
+    const { data } = await client.auth.getSession();
+    if (!data.session) throw new AuthError('not_authenticated');
+    return data.session.access_token;
+  }
+
   /** Se a pessoa conectada curtiu o perfil (o RLS só mostra as próprias curtidas). */
   async hasLiked(profileId: string): Promise<boolean> {
     const client = await this.client;

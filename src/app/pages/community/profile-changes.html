@@ -1,0 +1,78 @@
+<div class="grid gap-6 md:grid-cols-[2fr_1fr]">
+  <!-- O que muda -->
+  <section class="rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+    <h2 class="m-0 text-xl font-semibold">{{ 'community.profile.changes.title' | transloco }}</h2>
+    <dl class="m-0 mt-4 grid gap-4">
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.executables' | transloco }}</dt>
+        <dd class="m-0 mt-1 font-mono text-sm break-all">{{ profile().executables.join(', ') }}</dd>
+      </div>
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.graphics' | transloco }}</dt>
+        <dd class="m-0 mt-1">
+          {{ (profile().graphics ? 'community.graphics.' + profile().graphics : 'community.profile.changes.bottleDefault') | transloco }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.windows' | transloco }}</dt>
+        <dd class="m-0 mt-1">
+          {{ (profile().windowsVersion ? 'community.windows.' + profile().windowsVersion : 'community.profile.changes.bottleDefault') | transloco }}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.dlls' | transloco }}</dt>
+        <dd class="m-0 mt-1">
+          @for (row of dlls(); track row.dll) {
+            <div class="flex flex-wrap gap-x-2"><span class="font-mono text-sm">{{ row.dll }}</span><span>{{ row.order | transloco }}</span></div>
+          } @empty {
+            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+          }
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.environment' | transloco }}</dt>
+        <dd class="m-0 mt-1">
+          @for (pair of environment(); track pair[0]) {
+            <div class="font-mono text-sm break-all">{{ pair[0] }}={{ pair[1] }}</div>
+          } @empty {
+            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+          }
+        </dd>
+      </div>
+      <div>
+        <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.arguments' | transloco }}</dt>
+        <dd class="m-0 mt-1">
+          @if (profile().arguments?.length) {
+            <span class="font-mono text-sm break-all">{{ profile().arguments!.join(' ') }}</span>
+          } @else {
+            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+          }
+        </dd>
+      </div>
+      @if (profile().notes) {
+        <div>
+          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.notes' | transloco }}</dt>
+          <dd class="m-0 mt-1 whitespace-pre-line break-words">{{ profile().notes }}</dd>
+        </div>
+      }
+    </dl>
+  </section>
+
+  <!-- Onde foi testado -->
+  <section class="h-fit rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+    <h2 class="m-0 text-xl font-semibold">{{ 'community.profile.tested.title' | transloco }}</h2>
+    <dl class="m-0 mt-4 grid gap-3">
+      @for (row of testedRows(); track row.key) {
+        <div>
+          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.tested.' + row.key | transloco }}</dt>
+          <dd class="m-0 mt-0.5 break-words">
+            {{ row.value ?? ('community.profile.tested.unknown' | transloco) }}
+            @if (row.detail) {
+              <span class="block font-mono text-xs text-surface-500 dark:text-surface-400">{{ row.detail }}</span>
+            }
+          </dd>
+        </div>
+      }
+    </dl>
+  </section>
+</div>

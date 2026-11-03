@@ -20,6 +20,13 @@ const KNOWN = new Set([
   'account_incomplete',
   'comment_invalid',
   'not_found',
+  'text_invalid',
+  'own_content',
+  'daily_limit',
+  'rate_limited',
+  'not_admin',
+  'too_large',
+  'invalid_json',
 ]);
 
 interface ErrorLike {

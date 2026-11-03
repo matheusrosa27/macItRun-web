@@ -81,6 +81,8 @@ server redirects based on `Accept-Language` (Portuguese as the fallback).
 | `/:lang/download` | SSR, cached for 10 min on the CDN (current release version) |
 | `/:lang/community`, `/:lang/community/:id/:slug` | SSR, cached for 1 min on the CDN; likes and comments of the signed-in user happen in the browser |
 | `/:lang/account` | browser only (needs the session) |
+| `/:lang/community/publish` | browser only (reads the profile from `#data=` or a file) |
+| `/:lang/admin` | browser only, admins (moderation) |
 | `/:lang/**` | SSR, 404 |
 | `/api/v1/**` | proxied to the Supabase Edge Function `api` (see below) |
 
@@ -113,6 +115,8 @@ The Mac app depends on this contract (it only reads); the site uses it too.
 | `POST` / `DELETE /api/v1/profiles/{id}/like` | like / unlike (login): `{ liked, likes }`; liking twice counts once |
 | `POST /api/v1/profiles/{id}/comments` | comment (login), body `{ "body": "..." }`: the new comment (201) |
 | `GET /api/v1/profile-filters` | values for the community filters: `{ macs }` |
+| `POST /api/v1/profiles` | publish (login), body `{ "file": <.macitrun-profile text or object>, "notes": "..." }`: `{ id, slug }` (201) |
+| `POST /api/v1/reports` | report (login), body `{ "targetType": "profile"\|"comment", "targetId", "reason", "detail" }` |
 
 The list also takes `windowsVersion=` and `mac=` (the community page's filters). Login is
 `Authorization: Bearer <Supabase access token>`; writes run as that user through database
@@ -120,8 +124,14 @@ functions that validate everything again (signed in, username and terms set, not
 profile published, plain-text comment of 1 to 2,000 characters).
 
 Errors: `{ "error": "not_found" }` (404), `{ "error": "invalid_parameter", "parameter": "sort" }`
-(400), `comment_invalid` / `invalid_json` (400), `not_authenticated` (401), `account_incomplete` /
-`user_banned` (403), `method_not_allowed` (405), `internal_error` (500). The API validates every profile with
+(400), `{ "error": "invalid_profile", "issues": [{ "path", "code" }] }` (400), `comment_invalid` /
+`text_invalid` / `invalid_json` (400), `not_authenticated` (401), `account_incomplete` /
+`user_banned` / `own_content` (403), `too_large` (413), `daily_limit` / `rate_limited` (429),
+`method_not_allowed` (405), `internal_error` (500).
+
+Limits: 10 profiles, 60 comments and 20 reports per person per day (in the database); 30 writes
+per minute per IP in the API (the database only sees a hash of the IP, kept for a day). Three
+reports from different people hide a profile or comment until an admin reviews it. The API validates every profile with
 the shared schema before serving it.
 
 It runs as the Supabase Edge Function `api` (`supabase/functions/api`). `vercel.json` proxies
@@ -136,6 +146,24 @@ npx supabase login
 
 ```bash
 npx supabase functions deploy api --project-ref fcrrcxelhbdiihxxggur --no-verify-jwt --use-api
+```
+
+## Publishing from the app
+
+The app's Publish button opens `/<lang>/community/publish#data=<.macitrun-profile file in
+base64url>`. The fragment never reaches the server. To try it without the app:
+
+```bash
+echo "https://mac-it-run.vercel.app/pt/community/publish#data=$(base64 < packages/profile-schema/examples/dark-souls-3.macitrun-profile | tr '+/' '-_' | tr -d '=\n')"
+```
+
+## Moderation
+
+Admins see `/<lang>/admin` (a link appears in My account): open reports (hide or keep), hidden
+items (restore) and ban/unban the author. To make someone an admin, in the SQL Editor:
+
+```sql
+update public.users_public set role = 'admin' where username = '<username>';
 ```
 
 ## Supabase setup

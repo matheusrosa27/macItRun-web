@@ -26,4 +26,14 @@ const clients = {
     createClient(url, publishable, { ...options, global: { headers: { Authorization: `Bearer ${token}` } } }),
 };
 
-Deno.serve((request) => handle(request, clients));
+const auth = createClient(url, publishable, options).auth;
+const handlerClients = {
+  ...clients,
+  // O Supabase Auth confere o token e diz de quem é.
+  authenticate: async (token: string) => {
+    const { data, error } = await auth.getUser(token);
+    return error ? null : (data.user?.id ?? null);
+  },
+};
+
+Deno.serve((request) => handle(request, handlerClients));

@@ -1,0 +1,113 @@
+<section class="mx-auto max-w-4xl px-4 py-10 md:py-14">
+  <a
+    [routerLink]="['/', lang(), 'community']"
+    class="inline-flex items-center gap-2 text-sm text-surface-600 no-underline hover:text-primary dark:text-surface-300"
+  >
+    <i class="pi pi-arrow-left text-xs" aria-hidden="true"></i>
+    {{ 'community.profile.back' | transloco }}
+  </a>
+
+  <h1 class="mt-6 mb-0 text-3xl font-bold md:text-4xl">{{ 'publish.title' | transloco }}</h1>
+  <p class="mt-3 mb-0 max-w-2xl text-surface-600 dark:text-surface-300">{{ 'publish.subtitle' | transloco }}</p>
+
+  @if (!enabled || !auth.enabled) {
+    <p-message class="mt-8 block" severity="info" [text]="'community.unavailable' | transloco" />
+  } @else if (!text()) {
+    <!-- Escolher o perfil -->
+    <div class="mt-8 grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+        <h2 class="m-0 text-lg font-semibold">{{ 'publish.file.label' | transloco }}</h2>
+        <p class="mt-2 mb-4 text-sm text-surface-600 dark:text-surface-300">{{ 'publish.file.hint' | transloco }}</p>
+        <label class="p-button p-component p-button-outlined p-button-secondary inline-flex cursor-pointer items-center gap-2">
+          <i class="pi pi-upload" aria-hidden="true"></i>
+          <span>{{ 'publish.file.choose' | transloco }}</span>
+          <input type="file" accept=".macitrun-profile,application/json" class="sr-only" (change)="readFile($event)" />
+        </label>
+      </div>
+      <form
+        [formGroup]="pasteForm"
+        (ngSubmit)="checkPasted()"
+        class="flex flex-col gap-3 rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900"
+        novalidate
+      >
+        <label for="publish-paste" class="text-lg font-semibold">{{ 'publish.paste.label' | transloco }}</label>
+        <textarea pTextarea id="publish-paste" formControlName="text" rows="6" class="font-mono text-xs" spellcheck="false" fluid></textarea>
+        <p-button type="submit" [label]="'publish.paste.check' | transloco" severity="secondary" [disabled]="pasteForm.invalid" />
+      </form>
+    </div>
+    <p class="mt-6 mb-0 text-sm text-surface-500 dark:text-surface-400">{{ 'publish.fromAppHint' | transloco }}</p>
+  } @else {
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3">
+      @if (fromApp()) {
+        <p-message severity="info" icon="pi pi-desktop" [text]="'publish.fromApp' | transloco" />
+      } @else {
+        <span></span>
+      }
+      <p-button [label]="'publish.change' | transloco" icon="pi pi-refresh" severity="secondary" [text]="true" (onClick)="reset()" />
+    </div>
+
+    @let problems = issues().length ? issues() : serverIssues();
+    @if (problems.length) {
+      <div class="mt-6 rounded-2xl border border-red-300 p-6 dark:border-red-900" role="alert">
+        <h2 class="m-0 text-lg font-semibold">{{ 'publish.invalid.title' | transloco }}</h2>
+        <p class="mt-2 mb-3 text-surface-600 dark:text-surface-300">{{ 'publish.invalid.body' | transloco }}</p>
+        <ul class="m-0 flex flex-col gap-2 pl-5">
+          @for (issue of problems; track $index) {
+            <li>
+              {{ issueKey(issue) | transloco }}
+              @if (issue.path) {
+                <code class="ml-1 text-xs break-all text-surface-500">{{ issue.path }}</code>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    }
+
+    @if (file(); as f) {
+      <h2 class="mt-8 mb-0 text-2xl font-semibold break-words">{{ f.profile.name }}</h2>
+      <app-profile-changes class="mt-4 block" [profile]="f.profile" [testedOn]="f.testedOn" />
+
+      <form [formGroup]="notesForm" (ngSubmit)="publish()" class="mt-8 flex flex-col gap-2" novalidate>
+        <label for="publish-notes" class="text-lg font-semibold">{{ 'community.profile.notes.title' | transloco }}</label>
+        <textarea
+          pTextarea
+          id="publish-notes"
+          formControlName="notes"
+          rows="5"
+          [maxlength]="notesMax"
+          [placeholder]="'publish.notes.placeholder' | transloco"
+          [autoResize]="true"
+          fluid
+        ></textarea>
+        <small class="text-surface-500 dark:text-surface-400">
+          {{ 'community.comments.counter' | transloco: { count: notesForm.controls.notes.value.length, max: notesMax } }}
+        </small>
+
+        @if (error(); as error) {
+          <p-message severity="error" [text]="error | transloco" />
+        }
+
+        <p class="mt-2 mb-0 text-sm text-surface-500 dark:text-surface-400">
+          {{ 'publish.rules' | transloco }}
+          <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary">{{ 'auth.signup.terms.terms' | transloco }}</a>
+        </p>
+
+        <div class="mt-2">
+          @if (!auth.ready()) {
+            <p-button [label]="'publish.submit' | transloco" [loading]="true" />
+          } @else if (!auth.user()) {
+            <p-button [label]="'publish.login' | transloco" icon="pi pi-sign-in" (onClick)="goToLogin()" />
+          } @else if (auth.needsSetup()) {
+            <p class="m-0">
+              {{ 'publish.setup' | transloco }}
+              <a [routerLink]="['/', lang(), 'account']" class="text-primary">{{ 'community.comments.setupLink' | transloco }}</a>
+            </p>
+          } @else {
+            <p-button type="submit" [label]="'publish.submit' | transloco" icon="pi pi-send" [loading]="publishing()" />
+          }
+        </div>
+      </form>
+    }
+  }
+</section>
