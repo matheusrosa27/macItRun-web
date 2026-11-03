@@ -51,10 +51,10 @@
       </a>
       <p-button
         [icon]="liked() ? 'pi pi-heart-fill' : 'pi pi-heart'"
-        [label]="likes() + ''"
+        [label]="likesReady() ? likes() + '' : ''"
         [severity]="liked() ? 'danger' : 'secondary'"
         [outlined]="!liked()"
-        [loading]="liking()"
+        [loading]="liking() || !likesReady()"
         [ariaLabel]="(liked() ? 'community.profile.liked' : auth.user() ? 'community.profile.like' : 'community.profile.loginToLike') | transloco"
         [attr.aria-pressed]="liked()"
         (onClick)="toggleLike()"
@@ -152,48 +152,59 @@
     <!-- Comentários -->
     <section class="mt-10" aria-labelledby="comments-title">
       <h2 id="comments-title" class="m-0 text-2xl font-semibold">
-        {{ 'community.comments.title' | transloco: { count: commentsTotal() } }}
+        @if (commentsReady()) {
+          {{ 'community.comments.title' | transloco: { count: commentsTotal() } }}
+        } @else {
+          {{ 'community.card.comments' | transloco }}
+        }
       </h2>
 
       @if (commentsError()) {
         <p-message class="mt-4 block" severity="error" [text]="'community.comments.error' | transloco" />
       }
 
-      <ol class="m-0 mt-4 flex list-none flex-col gap-4 p-0">
-        @for (comment of comments(); track comment.id) {
-          <li class="rounded-xl border border-surface-200 p-4 dark:border-surface-800">
-            <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-surface-500 dark:text-surface-400">
-              <span>
-                @if (comment.author?.username; as username) {
-                  <span class="font-medium text-surface-800 dark:text-surface-100">{{ '@' + username }}</span>
-                } @else {
-                  <span class="italic">{{ 'community.card.deletedAuthor' | transloco }}</span>
+      @if (!commentsReady()) {
+        <div class="mt-4 flex flex-col gap-4" [attr.aria-busy]="true">
+          <p-skeleton height="5rem" borderRadius="0.75rem" />
+          <p-skeleton height="5rem" borderRadius="0.75rem" />
+        </div>
+      } @else {
+        <ol class="m-0 mt-4 flex list-none flex-col gap-4 p-0">
+          @for (comment of comments(); track comment.id) {
+            <li class="rounded-xl border border-surface-200 p-4 dark:border-surface-800">
+              <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-surface-500 dark:text-surface-400">
+                <span>
+                  @if (comment.author?.username; as username) {
+                    <span class="font-medium text-surface-800 dark:text-surface-100">{{ '@' + username }}</span>
+                  } @else {
+                    <span class="italic">{{ 'community.card.deletedAuthor' | transloco }}</span>
+                  }
+                  · <time [attr.datetime]="comment.createdAt">{{ commentDate(comment.createdAt) }}</time>
+                </span>
+                @if (isMine(comment)) {
+                  <p-button
+                    icon="pi pi-trash"
+                    severity="secondary"
+                    [text]="true"
+                    [rounded]="true"
+                    size="small"
+                    [loading]="deleting() === comment.id"
+                    [ariaLabel]="'community.comments.delete' | transloco"
+                    (onClick)="deleteComment(comment)"
+                  />
                 }
-                · <time [attr.datetime]="comment.createdAt">{{ commentDate(comment.createdAt) }}</time>
-              </span>
-              @if (isMine(comment)) {
-                <p-button
-                  icon="pi pi-trash"
-                  severity="secondary"
-                  [text]="true"
-                  [rounded]="true"
-                  size="small"
-                  [loading]="deleting() === comment.id"
-                  [ariaLabel]="'community.comments.delete' | transloco"
-                  (onClick)="deleteComment(comment)"
-                />
-              }
-            </div>
-            <p class="mt-2 mb-0 whitespace-pre-line break-words">{{ comment.body }}</p>
-          </li>
-        } @empty {
-          @if (!commentsError()) {
-            <li class="text-surface-500 dark:text-surface-400">{{ 'community.comments.empty' | transloco }}</li>
+              </div>
+              <p class="mt-2 mb-0 whitespace-pre-line break-words">{{ comment.body }}</p>
+            </li>
+          } @empty {
+            @if (!commentsError()) {
+              <li class="text-surface-500 dark:text-surface-400">{{ 'community.comments.empty' | transloco }}</li>
+            }
           }
-        }
-      </ol>
+        </ol>
+      }
 
-      @if (comments().length < commentsTotal()) {
+      @if (commentsReady() && comments().length < commentsTotal()) {
         <p-button
           class="mt-4 block"
           [label]="'community.comments.more' | transloco"

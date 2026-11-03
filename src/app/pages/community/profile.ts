@@ -101,6 +101,16 @@ export class ProfilePage {
   protected readonly liked = signal(false);
   protected readonly liking = signal(false);
 
+  /**
+   * Curtidas e comentários já lidos de novo no navegador. Até lá, o que veio com a página pode
+   * estar atrasado (CDN), então o número e a lista ficam em "carregando" em vez de piscar.
+   */
+  private readonly fresh = signal(false);
+  /** Já se sabe se a pessoa curtiu (ou que não há ninguém conectado). */
+  private readonly likedKnown = signal(false);
+  protected readonly likesReady = computed(() => this.fresh() && this.likedKnown());
+  protected readonly commentsReady = this.fresh.asReadonly();
+
   protected readonly commentForm = inject(FormBuilder).nonNullable.group({
     body: ['', [Validators.required, Validators.maxLength(COMMENT_MAX), Validators.pattern(/\S/)]],
   });
@@ -156,15 +166,20 @@ export class ProfilePage {
     effect(() => {
       const user = this.auth.user();
       const id = this.info()?.id;
-      if (!this.browser || !id) return;
+      if (!this.browser || !id || !this.auth.ready()) return;
       if (!user) {
         this.liked.set(false);
+        this.likedKnown.set(true);
         return;
       }
-      this.community.liked(id).then(
-        (liked) => this.liked.set(liked),
-        () => this.liked.set(false),
-      );
+      this.likedKnown.set(false);
+      this.community
+        .liked(id)
+        .then(
+          (liked) => this.liked.set(liked),
+          () => this.liked.set(false),
+        )
+        .finally(() => this.likedKnown.set(true));
     });
 
     // A página pode ter vindo da CDN (até 1 minuto de atraso): no navegador, curtidas e
@@ -178,6 +193,7 @@ export class ProfilePage {
   }
 
   private async refreshLive(id: string): Promise<void> {
+    this.fresh.set(false);
     try {
       const [profile, comments] = await Promise.all([
         this.community.get(id, true),
@@ -194,6 +210,8 @@ export class ProfilePage {
       }
     } catch {
       // Fica o que veio com a página.
+    } finally {
+      if (id === this.info()?.id) this.fresh.set(true);
     }
   }
 
