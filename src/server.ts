@@ -11,7 +11,14 @@ import { fetchLatestRelease, RELEASE_CACHE_MS, RELEASE_ENDPOINT } from './app/co
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
+/**
+ * A Vercel sempre envia X-Forwarded-For/Host/Proto/Port e sobrescreve os que vêm do
+ * cliente. Sem confiar neles, o Angular desiste do SSR e entrega só a casca (CSR).
+ * X-Forwarded-Prefix fica de fora: ele muda o caminho dos redirecionamentos.
+ */
+const angularApp = new AngularNodeAppEngine({
+  trustProxyHeaders: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port'],
+});
 
 /**
  * Release mais recente do app (versão, notas e .zip), com cache de 10 minutos no

@@ -1,7 +1,7 @@
 /** Endereços e dados fixos do projeto, num só lugar. */
 
 /** Endereço público do site (sem barra no fim). Troca quando houver domínio próprio. */
-export const SITE_URL = 'https://macitrun-web.vercel.app';
+export const SITE_URL = 'https://mac-it-run.vercel.app';
 
 export const RUNTIME_REPO = 'matheusrosa27/macItRun-runtime';
 export const RUNTIME_REPO_URL = `https://github.com/${RUNTIME_REPO}`;
