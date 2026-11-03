@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:vercel": "ng build && rm -f dist/macItRun-web/browser/index.csr.html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
