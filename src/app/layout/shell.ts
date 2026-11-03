@@ -45,7 +45,10 @@ export class Shell {
     { initialValue: this.route.snapshot.paramMap.get('lang') as Lang },
   );
   protected readonly langOptions = LANGS.map((value) => ({ value, label: LANG_LABEL[value] }));
-  protected readonly nav: NavItem[] = [{ path: 'download', label: 'nav.download' }];
+  protected readonly nav: NavItem[] = [
+    { path: 'community', label: 'nav.community' },
+    { path: 'download', label: 'nav.download' },
+  ];
   protected readonly kofiUrl = KOFI_URL;
   protected readonly releasesUrl = RELEASES_URL;
   protected readonly year = new Date().getFullYear();

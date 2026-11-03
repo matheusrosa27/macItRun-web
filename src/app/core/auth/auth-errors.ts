@@ -17,6 +17,9 @@ const KNOWN = new Set([
   'username_invalid',
   'not_authenticated',
   'unavailable',
+  'account_incomplete',
+  'comment_invalid',
+  'not_found',
 ]);
 
 interface ErrorLike {

@@ -16,7 +16,8 @@
     "terms": "Terms of use",
     "licenses": "Licenses",
     "login": "Sign in",
-    "account": "My account"
+    "account": "My account",
+    "community": "Community"
   },
   "footer": {
     "label": "Footer links",
@@ -64,6 +65,14 @@
     "account": {
       "title": "My account",
       "description": "Username, your data and account deletion on macItRun."
+    },
+    "community": {
+      "title": "Community",
+      "description": "Community setup profiles for running Windows apps and games on your Mac with macItRun: search by game, see what each profile changes and import it into the app."
+    },
+    "communityProfile": {
+      "title": "Setup profile",
+      "description": "A macItRun setup profile made by the community."
     }
   },
   "home": {
@@ -360,7 +369,10 @@
       "username_invalid": "Use 3 to 20 characters: lowercase letters, numbers, - and _, starting with a letter or number.",
       "not_authenticated": "Your session ended. Please sign in again.",
       "unavailable": "Accounts aren't available at this address yet.",
-      "link_expired": "The link expired or was already used. Request a new one."
+      "link_expired": "The link expired or was already used. Request a new one.",
+      "account_incomplete": "Choose your username and accept the terms in My account to take part.",
+      "comment_invalid": "Comments must have 1 to 2,000 characters, with no special control characters.",
+      "not_found": "This profile is no longer available."
     }
   },
   "account": {
@@ -407,6 +419,119 @@
         "keep": "Keep them in the community, as “deleted author”",
         "remove": "Delete them with the account"
       }
+    }
+  },
+  "community": {
+    "title": "Community",
+    "subtitle": "Setup profiles shared by macItRun users. Search by game or app, see what each profile changes and import it into the app.",
+    "unavailable": "The community isn't available at this address yet.",
+    "error": "Couldn't load the profiles right now. Try again in a moment.",
+    "search": {
+      "label": "Search profiles",
+      "placeholder": "Game, executable or author",
+      "submit": "Search"
+    },
+    "filters": {
+      "graphics": "Graphics layer",
+      "windows": "Windows version",
+      "mac": "Tested Mac",
+      "sort": "Sort by",
+      "anyGraphics": "All layers",
+      "anyWindows": "All versions",
+      "anyMac": "All Macs",
+      "clear": "Clear filters"
+    },
+    "sort": {
+      "likes": "Most liked",
+      "recent": "Most recent",
+      "downloads": "Most downloaded"
+    },
+    "results": "Profiles found: {{ count }}",
+    "empty": {
+      "title": "No profiles found",
+      "body": "Try other terms or clear the filters."
+    },
+    "card": {
+      "by": "by {{ username }}",
+      "deletedAuthor": "deleted author",
+      "likes": "Likes",
+      "comments": "Comments",
+      "downloads": "Downloads",
+      "testedOn": "Tested on {{ mac }}"
+    },
+    "graphics": {
+      "dxmt": "DXMT",
+      "dxvk": "DXVK",
+      "wine": "Wine's DirectX"
+    },
+    "windows": {
+      "win11": "Windows 11",
+      "win10": "Windows 10",
+      "win81": "Windows 8.1",
+      "win8": "Windows 8",
+      "win7": "Windows 7",
+      "winxp": "Windows XP"
+    },
+    "profile": {
+      "back": "Community",
+      "seoDescription": "macItRun setup profile for {{ name }}: graphics layer, Windows version and settings tested by the community.",
+      "published": "Published on {{ date }}",
+      "open": "Open in macItRun",
+      "download": "Download profile",
+      "importHelp": "Open in macItRun needs the app installed. If nothing happens, download the profile and, in the app, use File → Import Profile… or drag the file onto the window.",
+      "like": "Like",
+      "liked": "Liked",
+      "loginToLike": "Sign in to like",
+      "notFound": {
+        "title": "Profile not found",
+        "body": "This profile doesn't exist or is no longer published."
+      },
+      "changes": {
+        "title": "What this profile changes",
+        "executables": "Executables",
+        "graphics": "Graphics layer",
+        "windows": "Windows version",
+        "dlls": "DLLs",
+        "environment": "Environment variables",
+        "arguments": "Arguments",
+        "notes": "Profile notes",
+        "none": "No changes",
+        "bottleDefault": "Bottle's default"
+      },
+      "loadOrder": {
+        "native": "Native (the game's)",
+        "builtin": "Wine's",
+        "nativeBuiltin": "Native; if missing, Wine's",
+        "builtinNative": "Wine's; if missing, native",
+        "disabled": "Disabled"
+      },
+      "tested": {
+        "title": "Where it was tested",
+        "mac": "Mac",
+        "macOS": "macOS",
+        "runtime": "Wine runtime",
+        "app": "App version",
+        "unknown": "Not given"
+      },
+      "notes": {
+        "title": "How it went"
+      }
+    },
+    "comments": {
+      "title": "Comments ({{ count }})",
+      "empty": "No comments yet.",
+      "label": "Your comment",
+      "placeholder": "Tell how it went with this profile",
+      "counter": "{{ count }}/{{ max }}",
+      "submit": "Comment",
+      "posted": "Comment posted",
+      "login": "Sign in to comment",
+      "setup": "To comment, choose your username in My account.",
+      "setupLink": "Go to My account",
+      "delete": "Delete comment",
+      "deleted": "Comment deleted",
+      "more": "Show more comments",
+      "error": "Couldn't load the comments."
     }
   }
 }

@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, test } from 'node:test';
 import type { PGlite, Transaction } from '@electric-sql/pglite';
-import { as, asService, createDb } from '../../tests/db.mjs';
+import { as, asService, createDb, signUp } from '../../tests/db.mjs';
 import { handle, type Clients, type Rpc } from './handler.ts';
 
 const EXAMPLE = readFileSync(
@@ -13,15 +13,21 @@ const EXAMPLE = readFileSync(
   'utf8',
 );
 
-/** Faz o papel do supabase-js: chama a função SQL com argumentos nomeados. */
-function rpcOn(db: PGlite, run: typeof as | typeof asService, role: 'anon' | 'service'): Rpc {
+/**
+ * Faz o papel do supabase-js: chama a função SQL com argumentos nomeados, como visitante,
+ * como a pessoa (o "token" dos testes é o id dela) ou como service_role.
+ */
+function rpcOn(db: PGlite, role: 'anon' | 'service' | { userId: string }): Rpc {
   return {
     async rpc(fn, args = {}) {
       const names = Object.keys(args);
       const sql = `select public.${fn}(${names.map((n, i) => `${n} => $${i + 1}`).join(', ')}) as r`;
       const query = (tx: Transaction) => tx.query<{ r: unknown }>(sql, Object.values(args));
       try {
-        const result = role === 'anon' ? await as(db, null, query) : await asService(db, query);
+        const result =
+          role === 'service'
+            ? await asService(db, query)
+            : await as(db, role === 'anon' ? null : role.userId, query);
         return { data: result.rows[0].r, error: null };
       } catch (error) {
         return { data: null, error: { message: (error as Error).message } };
@@ -34,11 +40,18 @@ let db: PGlite;
 let clients: Clients;
 beforeEach(async () => {
   db = await createDb({ seed: true });
-  clients = { reader: rpcOn(db, as, 'anon'), writer: rpcOn(db, asService, 'service') };
+  clients = {
+    reader: rpcOn(db, 'anon'),
+    writer: rpcOn(db, 'service'),
+    user: (token) => rpcOn(db, { userId: token }),
+  };
 });
 
-const get = (path: string, method = 'GET') =>
-  handle(new Request(`https://fcrrcxelhbdiihxxggur.supabase.co/functions/v1/api${path}`, { method }), clients);
+const get = (path: string, method = 'GET', init: RequestInit = {}) =>
+  handle(
+    new Request(`https://fcrrcxelhbdiihxxggur.supabase.co/functions/v1/api${path}`, { method, ...init }),
+    clients,
+  );
 const body = async (response: Response) => JSON.parse(await response.text());
 
 describe('GET /api/v1/profiles/{id}', () => {
@@ -146,7 +159,7 @@ describe('rotas e métodos', () => {
     }
   });
 
-  test('escrita ainda não existe nesta fase', async () => {
+  test('publicar ainda não existe nesta fase', async () => {
     const response = await get('/v1/profiles', 'POST');
     assert.equal(response.status, 405);
     assert.equal(response.headers.get('Allow'), 'GET, HEAD, OPTIONS');
@@ -157,5 +170,77 @@ describe('rotas e métodos', () => {
     const response = await get('/v1/profiles');
     assert.equal(response.status, 500);
     assert.deepEqual(await body(response), { error: 'internal_error' });
+  });
+});
+
+describe('curtir e comentar pela API', () => {
+  let ana: string;
+  beforeEach(async () => {
+    ana = await signUp(db, { email: 'ana@example.com', metadata: { username: 'ana', terms_accepted: 'true' } });
+  });
+  const auth = (token: string) => ({ headers: { Authorization: `Bearer ${token}` } });
+
+  test('sem login, curtir pede login', async () => {
+    const response = await get('/v1/profiles/darksouls3/like', 'POST');
+    assert.equal(response.status, 401);
+    assert.deepEqual(await body(response), { error: 'not_authenticated' });
+  });
+
+  test('curtir duas vezes conta uma; descurtir tira', async () => {
+    assert.deepEqual(await body(await get('/v1/profiles/darksouls3/like', 'POST', auth(ana))), { liked: true, likes: 1 });
+    assert.deepEqual(await body(await get('/v1/profiles/darksouls3/like', 'POST', auth(ana))), { liked: true, likes: 1 });
+    assert.deepEqual(await body(await get('/v1/profiles/darksouls3/like', 'DELETE', auth(ana))), { liked: false, likes: 0 });
+    assert.equal((await get('/v1/profiles/nada/like', 'POST', auth(ana))).status, 404);
+    assert.equal((await get('/v1/profiles/darksouls3/like')).status, 405);
+  });
+
+  test('comentar', async () => {
+    const response = await get('/v1/profiles/darksouls3/comments', 'POST', {
+      ...auth(ana),
+      body: JSON.stringify({ body: 'Roda liso.' }),
+    });
+    assert.equal(response.status, 201);
+    assert.equal((await body(response)).body, 'Roda liso.');
+    const list = await body(await get('/v1/profiles/darksouls3/comments'));
+    assert.equal(list.total, 1);
+  });
+
+  for (const [name, init, status, code] of [
+    ['sem login', {}, 401, 'not_authenticated'],
+    ['corpo que não é JSON', { body: 'oi' }, 400, 'invalid_json'],
+    ['sem texto', { body: '{}' }, 400, 'comment_invalid'],
+    ['texto vazio', { body: '{"body":"   "}' }, 400, 'comment_invalid'],
+    ['corpo grande demais', { body: JSON.stringify({ body: 'x'.repeat(17_000) }) }, 413, 'too_large'],
+  ] as const) {
+    test(`comentário recusado: ${name}`, async () => {
+      const init2 = name === 'sem login' ? { body: '{"body":"oi"}' } : { ...auth(ana), ...init };
+      const response = await get('/v1/profiles/darksouls3/comments', 'POST', init2);
+      assert.equal(response.status, status);
+      assert.deepEqual(await body(response), { error: code });
+    });
+  }
+
+  test('conta incompleta ou banida recebe 403', async () => {
+    const gh = await signUp(db, { email: 'gh@example.com', providers: ['github'] });
+    assert.equal((await get('/v1/profiles/darksouls3/like', 'POST', auth(gh))).status, 403);
+    await db.query('update public.users_public set banned = true where id = $1', [ana]);
+    const response = await get('/v1/profiles/darksouls3/like', 'POST', auth(ana));
+    assert.equal(response.status, 403);
+    assert.deepEqual(await body(response), { error: 'user_banned' });
+  });
+
+  test('token inválido dá 401', async () => {
+    clients.user = () => ({ rpc: async () => ({ data: null, error: { message: 'JWT expired' } }) });
+    assert.equal((await get('/v1/profiles/darksouls3/like', 'POST', auth('velho'))).status, 401);
+  });
+});
+
+describe('filtros', () => {
+  test('lista por Windows e Mac, e os valores dos filtros', async () => {
+    const list = await body(await get('/v1/profiles?windowsVersion=win10&mac=Mac17%2C5'));
+    assert.equal(list.total, 1);
+    assert.equal((await body(await get('/v1/profiles?windowsVersion=win7'))).total, 0);
+    assert.equal((await get('/v1/profiles?windowsVersion=win95')).status, 400);
+    assert.deepEqual(await body(await get('/v1/profile-filters')), { macs: ['Mac17,5'] });
   });
 });

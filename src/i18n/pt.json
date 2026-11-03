@@ -16,7 +16,8 @@
     "terms": "Termos de uso",
     "licenses": "Licenças",
     "login": "Entrar",
-    "account": "Minha conta"
+    "account": "Minha conta",
+    "community": "Comunidade"
   },
   "footer": {
     "label": "Links do rodapé",
@@ -64,6 +65,14 @@
     "account": {
       "title": "Minha conta",
       "description": "Nome de usuário, seus dados e exclusão da conta no macItRun."
+    },
+    "community": {
+      "title": "Comunidade",
+      "description": "Perfis de configuração da comunidade para rodar apps e jogos de Windows no Mac com o macItRun: busque pelo jogo, veja o que cada perfil muda e importe no app."
+    },
+    "communityProfile": {
+      "title": "Perfil de configuração",
+      "description": "Perfil de configuração do macItRun feito pela comunidade."
     }
   },
   "home": {
@@ -360,7 +369,10 @@
       "username_invalid": "Use de 3 a 20 caracteres: letras minúsculas, números, - e _, começando por letra ou número.",
       "not_authenticated": "Sua sessão terminou. Entre de novo.",
       "unavailable": "As contas ainda não estão disponíveis neste endereço.",
-      "link_expired": "O link venceu ou já foi usado. Peça um novo."
+      "link_expired": "O link venceu ou já foi usado. Peça um novo.",
+      "account_incomplete": "Escolha seu nome de usuário e aceite os termos em Minha conta para participar.",
+      "comment_invalid": "O comentário precisa ter de 1 a 2.000 caracteres, sem caracteres especiais de controle.",
+      "not_found": "Este perfil não está mais disponível."
     }
   },
   "account": {
@@ -407,6 +419,119 @@
         "keep": "Manter na comunidade, como “autor removido”",
         "remove": "Apagar junto com a conta"
       }
+    }
+  },
+  "community": {
+    "title": "Comunidade",
+    "subtitle": "Perfis de configuração compartilhados por quem usa o macItRun. Busque pelo jogo ou app, veja o que cada perfil muda e importe no app.",
+    "unavailable": "A comunidade ainda não está disponível neste endereço.",
+    "error": "Não foi possível carregar os perfis agora. Tente de novo em instantes.",
+    "search": {
+      "label": "Buscar perfis",
+      "placeholder": "Jogo, executável ou autor",
+      "submit": "Buscar"
+    },
+    "filters": {
+      "graphics": "Camada gráfica",
+      "windows": "Versão do Windows",
+      "mac": "Mac testado",
+      "sort": "Ordenar por",
+      "anyGraphics": "Todas as camadas",
+      "anyWindows": "Todas as versões",
+      "anyMac": "Todos os Macs",
+      "clear": "Limpar filtros"
+    },
+    "sort": {
+      "likes": "Mais curtidos",
+      "recent": "Mais recentes",
+      "downloads": "Mais baixados"
+    },
+    "results": "Perfis encontrados: {{ count }}",
+    "empty": {
+      "title": "Nenhum perfil encontrado",
+      "body": "Tente outros termos ou tire os filtros."
+    },
+    "card": {
+      "by": "por {{ username }}",
+      "deletedAuthor": "autor removido",
+      "likes": "Curtidas",
+      "comments": "Comentários",
+      "downloads": "Downloads",
+      "testedOn": "Testado em {{ mac }}"
+    },
+    "graphics": {
+      "dxmt": "DXMT",
+      "dxvk": "DXVK",
+      "wine": "DirectX do Wine"
+    },
+    "windows": {
+      "win11": "Windows 11",
+      "win10": "Windows 10",
+      "win81": "Windows 8.1",
+      "win8": "Windows 8",
+      "win7": "Windows 7",
+      "winxp": "Windows XP"
+    },
+    "profile": {
+      "back": "Comunidade",
+      "seoDescription": "Perfil de configuração do macItRun para {{ name }}: camada gráfica, versão do Windows e ajustes testados pela comunidade.",
+      "published": "Publicado em {{ date }}",
+      "open": "Abrir no macItRun",
+      "download": "Baixar perfil",
+      "importHelp": "Abrir no macItRun precisa do app instalado. Se nada acontecer, baixe o perfil e, no app, use Arquivo → Importar perfil… ou arraste o arquivo para a janela.",
+      "like": "Curtir",
+      "liked": "Curtido",
+      "loginToLike": "Entre para curtir",
+      "notFound": {
+        "title": "Perfil não encontrado",
+        "body": "Este perfil não existe ou não está mais publicado."
+      },
+      "changes": {
+        "title": "O que este perfil muda",
+        "executables": "Executáveis",
+        "graphics": "Camada gráfica",
+        "windows": "Versão do Windows",
+        "dlls": "DLLs",
+        "environment": "Variáveis de ambiente",
+        "arguments": "Argumentos",
+        "notes": "Notas do perfil",
+        "none": "Nenhum ajuste",
+        "bottleDefault": "Padrão da garrafa"
+      },
+      "loadOrder": {
+        "native": "Nativa (a do jogo)",
+        "builtin": "A do Wine",
+        "nativeBuiltin": "Nativa; se faltar, a do Wine",
+        "builtinNative": "A do Wine; se faltar, a nativa",
+        "disabled": "Desligada"
+      },
+      "tested": {
+        "title": "Onde foi testado",
+        "mac": "Mac",
+        "macOS": "macOS",
+        "runtime": "Runtime do Wine",
+        "app": "Versão do app",
+        "unknown": "Não informado"
+      },
+      "notes": {
+        "title": "Como foi"
+      }
+    },
+    "comments": {
+      "title": "Comentários ({{ count }})",
+      "empty": "Ninguém comentou ainda.",
+      "label": "Seu comentário",
+      "placeholder": "Conte como foi com este perfil",
+      "counter": "{{ count }}/{{ max }}",
+      "submit": "Comentar",
+      "posted": "Comentário publicado",
+      "login": "Entre para comentar",
+      "setup": "Para comentar, escolha seu nome de usuário em Minha conta.",
+      "setupLink": "Ir para Minha conta",
+      "delete": "Apagar comentário",
+      "deleted": "Comentário apagado",
+      "more": "Ver mais comentários",
+      "error": "Não foi possível carregar os comentários."
     }
   }
 }

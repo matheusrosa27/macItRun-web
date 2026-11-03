@@ -8,6 +8,8 @@
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    // Node roda o TypeScript só apagando os tipos: nada de enum nem propriedade no construtor.
+    "erasableSyntaxOnly": true,
     "skipLibCheck": true,
     "types": ["node"]
   },

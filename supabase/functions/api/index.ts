@@ -17,9 +17,13 @@ function key(newName: string, legacyName: string): string {
   return legacy;
 }
 
+const publishable = key('SUPABASE_PUBLISHABLE_KEYS', 'SUPABASE_ANON_KEY');
 const clients = {
-  reader: createClient(url, key('SUPABASE_PUBLISHABLE_KEYS', 'SUPABASE_ANON_KEY'), options),
+  reader: createClient(url, publishable, options),
   writer: createClient(url, key('SUPABASE_SECRET_KEYS', 'SUPABASE_SERVICE_ROLE_KEY'), options),
+  // O token da pessoa vai para o PostgREST, que o valida e preenche auth.uid().
+  user: (token: string) =>
+    createClient(url, publishable, { ...options, global: { headers: { Authorization: `Bearer ${token}` } } }),
 };
 
 Deno.serve((request) => handle(request, clients));

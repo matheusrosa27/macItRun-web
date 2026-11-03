@@ -51,7 +51,9 @@ and test, and refuses secret keys. Without them the site works, but accounts are
 ```
 src/app/core/        languages, SEO, theme, GitHub release, URLs (site.ts), auth (Supabase)
 src/app/layout/      header, footer, language and theme switchers
-src/app/pages/       home, download, auth (signup, login, reset-password), account, legal, not-found
+src/app/core/community/  community API client and types
+src/app/pages/       home, download, community (list, profile), auth (signup, login, reset-password),
+                     account, legal, not-found
 src/app/shared/      Turnstile captcha
 src/i18n/            translations pt.json, en.json, es.json (same keys, tested)
 src/server.ts        Express server: SSR + GET /api/site/release
@@ -77,6 +79,7 @@ server redirects based on `Accept-Language` (Portuguese as the fallback).
 | `/:lang`, `/:lang/privacy`, `/:lang/terms`, `/:lang/licenses` | prerendered at build time |
 | `/:lang/signup`, `/:lang/login`, `/:lang/reset-password` | prerendered; sign-in happens in the browser |
 | `/:lang/download` | SSR, cached for 10 min on the CDN (current release version) |
+| `/:lang/community`, `/:lang/community/:id/:slug` | SSR, cached for 1 min on the CDN; likes and comments of the signed-in user happen in the browser |
 | `/:lang/account` | browser only (needs the session) |
 | `/:lang/**` | SSR, 404 |
 | `/api/v1/**` | proxied to the Supabase Edge Function `api` (see below) |
@@ -99,7 +102,7 @@ Vercel deploys on every push. Project settings: Framework "Other", default comma
 
 ## Public API (`/api/v1`)
 
-Read-only in this phase. The Mac app depends on this contract.
+The Mac app depends on this contract (it only reads); the site uses it too.
 
 | Request | Response |
 | --- | --- |
@@ -107,9 +110,18 @@ Read-only in this phase. The Mac app depends on this contract.
 | `GET /api/v1/profiles/{id}` | the `.macitrun-profile` file plus `community` (id, slug, author, notes, likes, comments, downloads, dates) |
 | `GET /api/v1/profiles/{id}/download` | the `.macitrun-profile` file as an attachment; counts one download |
 | `GET /api/v1/profiles/{id}/comments?page=` | visible comments, `{ items, page, pageSize, total }` |
+| `POST` / `DELETE /api/v1/profiles/{id}/like` | like / unlike (login): `{ liked, likes }`; liking twice counts once |
+| `POST /api/v1/profiles/{id}/comments` | comment (login), body `{ "body": "..." }`: the new comment (201) |
+| `GET /api/v1/profile-filters` | values for the community filters: `{ macs }` |
+
+The list also takes `windowsVersion=` and `mac=` (the community page's filters). Login is
+`Authorization: Bearer <Supabase access token>`; writes run as that user through database
+functions that validate everything again (signed in, username and terms set, not banned,
+profile published, plain-text comment of 1 to 2,000 characters).
 
 Errors: `{ "error": "not_found" }` (404), `{ "error": "invalid_parameter", "parameter": "sort" }`
-(400), `method_not_allowed` (405), `internal_error` (500). The API validates every profile with
+(400), `comment_invalid` / `invalid_json` (400), `not_authenticated` (401), `account_incomplete` /
+`user_banned` (403), `method_not_allowed` (405), `internal_error` (500). The API validates every profile with
 the shared schema before serving it.
 
 It runs as the Supabase Edge Function `api` (`supabase/functions/api`). `vercel.json` proxies

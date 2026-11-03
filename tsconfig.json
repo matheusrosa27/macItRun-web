@@ -14,7 +14,10 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "preserve",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "@macitrun/profile-schema": ["./packages/profile-schema/src/index.ts"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

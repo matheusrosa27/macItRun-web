@@ -48,6 +48,20 @@ export class SeoService {
     this.setLink('alternate', this.url('pt', path), 'x-default');
   }
 
+  /** Título e descrição vindos da própria página (ex.: o nome do jogo de um perfil). */
+  setPageText(pageTitle: string, description: string): void {
+    const title = `${pageTitle} · ${this.transloco.translate('app.name')}`;
+    this.title.setTitle(title);
+    this.setName('description', description);
+    this.setProperty('og:title', title);
+    this.setProperty('og:description', description);
+  }
+
+  /** Tira a página dos buscadores (ex.: perfil que não existe mais). */
+  setNoindex(): void {
+    this.setName('robots', 'noindex');
+  }
+
   private url(lang: Lang, path: string): string {
     return `${SITE_URL}/${lang}${path ? `/${path}` : ''}`;
   }

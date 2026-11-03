@@ -190,8 +190,10 @@ export class AuthService {
     return this.call('export_my_data');
   }
 
-  /** Apaga a conta no banco e encerra a sessão local (a do servidor já não existe). */
-  /** `keepProfiles`: os perfis publicados ficam na comunidade como "autor removido". */
+  /**
+   * Apaga a conta no banco e encerra a sessão local (a do servidor já não existe).
+   * `keepProfiles`: os perfis publicados ficam na comunidade como "autor removido".
+   */
   async deleteAccount(keepProfiles: boolean): Promise<void> {
     // Sem call(): recarregar a conta depois de apagá-la só daria erro.
     const client = await this.api();
@@ -199,6 +201,26 @@ export class AuthService {
     if (error) throw error;
     await client.auth.signOut({ scope: 'local' });
     this._account.set(null);
+  }
+
+  /** Chama uma função do banco como a pessoa conectada (curtir, comentar...). */
+  async rpc<T>(fn: string, args?: Record<string, unknown>): Promise<T> {
+    const client = await this.api();
+    const { data, error } = await client.rpc(fn, args);
+    if (error) throw error;
+    return data as T;
+  }
+
+  /** Se a pessoa conectada curtiu o perfil (o RLS só mostra as próprias curtidas). */
+  async hasLiked(profileId: string): Promise<boolean> {
+    const client = await this.client;
+    if (!client || !this._session()) return false;
+    const { count, error } = await client
+      .from('likes')
+      .select('profile_id', { count: 'exact', head: true })
+      .eq('profile_id', profileId);
+    if (error) throw error;
+    return (count ?? 0) > 0;
   }
 
   private async call(fn: string, args?: Record<string, unknown>): Promise<unknown> {

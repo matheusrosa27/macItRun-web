@@ -15,7 +15,7 @@
     "notes": "Com DXMT a GPU falha no efeito de morte dos inimigos."
   },
   "testedOn": {
-    "mac": "Mac17,1",
+    "mac": "Mac17,5",
     "macOS": "26.1",
     "runtime": "macitrun-wine-26.3.0",
     "app": "0.5.2"

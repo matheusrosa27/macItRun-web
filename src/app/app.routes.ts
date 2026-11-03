@@ -27,6 +27,22 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/download/download').then((m) => m.Download),
       },
       {
+        path: 'community',
+        data: { page: 'community' },
+        loadComponent: () => import('./pages/community/community').then((m) => m.Community),
+      },
+      {
+        // O slug é só para ler; o id basta para achar o perfil.
+        path: 'community/:id/:slug',
+        data: { page: 'communityProfile' },
+        loadComponent: () => import('./pages/community/profile').then((m) => m.ProfilePage),
+      },
+      {
+        path: 'community/:id',
+        data: { page: 'communityProfile' },
+        loadComponent: () => import('./pages/community/profile').then((m) => m.ProfilePage),
+      },
+      {
         path: 'signup',
         canActivate: [guestOnly],
         data: { page: 'signup' },

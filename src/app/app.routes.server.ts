@@ -3,6 +3,7 @@ import { LANGS } from './core/i18n/langs';
 import { RELEASE_CACHE_MS } from './core/release/release';
 
 const eachLang = async () => LANGS.map((lang) => ({ lang }));
+const COMMUNITY_CACHE = 'public, max-age=0, s-maxage=60, stale-while-revalidate=60';
 
 export const serverRoutes: ServerRoute[] = [
   // Páginas fixas: geradas no build, uma por idioma.
@@ -23,6 +24,15 @@ export const serverRoutes: ServerRoute[] = [
     headers: {
       'Cache-Control': `public, max-age=0, s-maxage=${RELEASE_CACHE_MS / 1000}, stale-while-revalidate=60`,
     },
+  },
+  // Comunidade: renderiza no servidor (busca e perfis entram no HTML) e a CDN guarda por 1 minuto.
+  // Curtidas e comentários de quem está conectado acontecem no navegador.
+  { path: ':lang/community', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
+  { path: ':lang/community/:id', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
+  {
+    path: ':lang/community/:id/:slug',
+    renderMode: RenderMode.Server,
+    headers: { 'Cache-Control': COMMUNITY_CACHE },
   },
   { path: ':lang/**', renderMode: RenderMode.Server, status: 404 },
   { path: '**', renderMode: RenderMode.Server },

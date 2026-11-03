@@ -1,0 +1,267 @@
+import { isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  linkedSignal,
+  PLATFORM_ID,
+  resource,
+  RESPONSE_INIT,
+  signal,
+} from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Router, RouterLink } from '@angular/router';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TagModule } from 'primeng/tag';
+import { TextareaModule } from 'primeng/textarea';
+import { authErrorKey } from '../../core/auth/auth-errors';
+import { AuthService } from '../../core/auth/auth.service';
+import { COMMUNITY_ENABLED, downloadUrl, importUrl, ProfileComment } from '../../core/community/community';
+import { CommunityService } from '../../core/community/community.service';
+import { isKnownMac, macName } from '../../core/community/macs';
+import { HTML_LANG, Lang } from '../../core/i18n/langs';
+import { SeoService } from '../../core/seo.service';
+
+const COMMENT_MAX = 2000;
+
+/** Chave de tradução da ordem de carga de uma DLL ("" e "disabled" desligam a DLL). */
+const LOAD_ORDER_KEY: Record<string, string> = {
+  native: 'native',
+  builtin: 'builtin',
+  'native,builtin': 'nativeBuiltin',
+  'builtin,native': 'builtinNative',
+  disabled: 'disabled',
+  '': 'disabled',
+};
+
+/**
+ * Página de um perfil: o que ele muda, onde foi testado, abrir no app ou baixar, curtir e
+ * comentar. Todo texto vindo de usuário (nome, notas, comentários) sai como texto puro.
+ */
+@Component({
+  selector: 'app-profile-page',
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    TranslocoPipe,
+    ButtonModule,
+    MessageModule,
+    SkeletonModule,
+    TagModule,
+    TextareaModule,
+  ],
+  templateUrl: './profile.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class ProfilePage {
+  protected readonly auth = inject(AuthService);
+  private readonly community = inject(CommunityService);
+  private readonly router = inject(Router);
+  private readonly seo = inject(SeoService);
+  private readonly transloco = inject(TranslocoService);
+  private readonly messages = inject(MessageService);
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly responseInit = inject(RESPONSE_INIT, { optional: true });
+  private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
+
+  readonly lang = input.required<Lang>();
+  readonly id = input.required<string>();
+
+  protected readonly enabled = COMMUNITY_ENABLED;
+  protected readonly commentMax = COMMENT_MAX;
+
+  protected readonly data = resource({
+    params: () => (this.enabled ? this.id() : undefined),
+    loader: ({ params }) => this.community.get(params),
+  });
+  protected readonly profile = computed(() => this.data.value()?.profile);
+  protected readonly info = computed(() => this.data.value()?.community);
+
+  /** O primeiro lote de comentários vem com a página; os seguintes, ao pedir mais. */
+  private readonly firstComments = resource({
+    params: () => (this.enabled ? this.id() : undefined),
+    loader: ({ params }) => this.community.comments(params, 1),
+  });
+  protected readonly commentsError = computed(() => !!this.firstComments.error());
+  protected readonly comments = linkedSignal<ProfileComment[]>(() => this.firstComments.value()?.items ?? []);
+  protected readonly commentsTotal = linkedSignal(() => this.firstComments.value()?.total ?? 0);
+  private readonly commentsPage = linkedSignal<number>(() => (this.firstComments.value() ? 1 : 0));
+  protected readonly loadingMore = signal(false);
+
+  protected readonly likes = linkedSignal(() => this.info()?.likes ?? 0);
+  protected readonly liked = signal(false);
+  protected readonly liking = signal(false);
+
+  protected readonly commentForm = inject(FormBuilder).nonNullable.group({
+    body: ['', [Validators.required, Validators.maxLength(COMMENT_MAX), Validators.pattern(/\S/)]],
+  });
+  protected readonly commentLength = signal(0);
+  protected readonly posting = signal(false);
+  protected readonly commentError = signal<string | null>(null);
+  protected readonly deleting = signal<number | null>(null);
+
+  /** Link macitrun:// (o Angular bloqueia esquemas desconhecidos sem esta liberação). */
+  protected readonly openUrl = computed(() => this.sanitizer.bypassSecurityTrustUrl(importUrl(this.id())));
+  protected readonly downloadUrl = computed(() => downloadUrl(this.id()));
+
+  protected readonly dlls = computed(() =>
+    Object.entries(this.profile()?.dllOverrides ?? {}).map(([dll, order]) => ({
+      dll,
+      order: `community.profile.loadOrder.${LOAD_ORDER_KEY[order] ?? 'disabled'}`,
+    })),
+  );
+  protected readonly environment = computed(() => Object.entries(this.profile()?.environment ?? {}));
+  protected readonly testedOn = computed(() => {
+    const tested = this.data.value()?.testedOn ?? {};
+    return (['mac', 'macOS', 'runtime', 'app'] as const).map((key) => {
+      const value = tested[key];
+      // O Mac aparece pelo nome, com o identificador ao lado (é o que o app grava).
+      return key === 'mac' && value && isKnownMac(value)
+        ? { key, value: macName(value), detail: value }
+        : { key, value, detail: undefined };
+    });
+  });
+
+  protected readonly published = computed(() => {
+    const date = this.info()?.createdAt;
+    return date ? new Intl.DateTimeFormat(HTML_LANG[this.lang()], { dateStyle: 'long' }).format(new Date(date)) : '';
+  });
+
+  constructor() {
+    // Título e descrição com o nome do jogo; 404 se o perfil não existe.
+    effect(() => {
+      if (this.data.isLoading()) return;
+      const profile = this.profile();
+      if (profile) {
+        this.seo.setPageText(
+          profile.name,
+          this.transloco.translate('community.profile.seoDescription', { name: profile.name }, this.lang()),
+        );
+      } else if (this.data.value() === null) {
+        this.seo.setNoindex();
+        if (this.responseInit) this.responseInit.status = 404;
+      }
+    });
+
+    // Se a pessoa conectada já curtiu (só no navegador, que é onde há sessão).
+    effect(() => {
+      const user = this.auth.user();
+      const id = this.info()?.id;
+      if (!this.browser || !id) return;
+      if (!user) {
+        this.liked.set(false);
+        return;
+      }
+      this.community.liked(id).then(
+        (liked) => this.liked.set(liked),
+        () => this.liked.set(false),
+      );
+    });
+
+    this.commentForm.controls.body.valueChanges.subscribe((value) => this.commentLength.set(value.length));
+  }
+
+  protected commentDate(date: string): string {
+    return new Intl.DateTimeFormat(HTML_LANG[this.lang()], { dateStyle: 'medium', timeStyle: 'short' }).format(
+      new Date(date),
+    );
+  }
+
+  protected isMine(comment: ProfileComment): boolean {
+    const me = this.auth.account()?.username;
+    return !!me && comment.author?.username === me;
+  }
+
+  /** Para quem não está conectado, curtir leva ao login e volta para cá. */
+  protected async toggleLike(): Promise<void> {
+    if (!this.auth.user()) {
+      await this.goToLogin();
+      return;
+    }
+    if (this.auth.needsSetup()) {
+      await this.router.navigate(['/', this.lang(), 'account']);
+      return;
+    }
+    const next = !this.liked();
+    this.liking.set(true);
+    // Mostra na hora; o banco devolve o total certo.
+    this.liked.set(next);
+    this.likes.update((n) => Math.max(0, n + (next ? 1 : -1)));
+    try {
+      const result = await this.community.like(this.id(), next);
+      this.liked.set(result.liked);
+      this.likes.set(result.likes);
+    } catch (error) {
+      this.liked.set(!next);
+      this.likes.update((n) => Math.max(0, n + (next ? -1 : 1)));
+      this.toastError(error);
+    } finally {
+      this.liking.set(false);
+    }
+  }
+
+  protected async goToLogin(): Promise<void> {
+    await this.router.navigate(['/', this.lang(), 'login'], { queryParams: { next: this.router.url } });
+  }
+
+  protected async postComment(): Promise<void> {
+    this.commentForm.markAllAsTouched();
+    if (this.commentForm.invalid) return;
+    this.commentError.set(null);
+    this.posting.set(true);
+    try {
+      const created = await this.community.addComment(this.id(), this.commentForm.getRawValue().body);
+      this.comments.update((list) => [...list, created]);
+      this.commentsTotal.update((n) => n + 1);
+      this.commentForm.reset();
+      this.messages.add({ severity: 'success', summary: this.transloco.translate('community.comments.posted'), life: 2500 });
+    } catch (error) {
+      this.commentError.set(authErrorKey(error));
+    } finally {
+      this.posting.set(false);
+    }
+  }
+
+  protected async deleteComment(comment: ProfileComment): Promise<void> {
+    this.deleting.set(comment.id);
+    try {
+      await this.community.deleteComment(comment.id);
+      this.comments.update((list) => list.filter((c) => c.id !== comment.id));
+      this.commentsTotal.update((n) => Math.max(0, n - 1));
+      this.messages.add({ severity: 'success', summary: this.transloco.translate('community.comments.deleted'), life: 2500 });
+    } catch (error) {
+      this.toastError(error);
+    } finally {
+      this.deleting.set(null);
+    }
+  }
+
+  protected async loadMore(): Promise<void> {
+    this.loadingMore.set(true);
+    try {
+      const next = await this.community.comments(this.id(), this.commentsPage() + 1);
+      if (next) {
+        const known = new Set(this.comments().map((c) => c.id));
+        this.comments.update((list) => [...list, ...next.items.filter((c) => !known.has(c.id))]);
+        this.commentsTotal.set(next.total);
+        this.commentsPage.set(next.page);
+      }
+    } catch (error) {
+      this.toastError(error);
+    } finally {
+      this.loadingMore.set(false);
+    }
+  }
+
+  private toastError(error: unknown): void {
+    this.messages.add({ severity: 'error', summary: this.transloco.translate(authErrorKey(error)), life: 4000 });
+  }
+}
