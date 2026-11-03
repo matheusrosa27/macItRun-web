@@ -62,7 +62,7 @@ describe('GET /api/v1/profiles/{id}', () => {
     assert.equal(`${JSON.stringify(file, null, 2)}\n`, EXAMPLE);
     assert.equal(community.id, 'darksouls3');
     assert.equal(community.author, null);
-    assert.equal(response.headers.get('Cache-Control'), 'public, max-age=60, s-maxage=60');
+    assert.equal(response.headers.get('Cache-Control'), 'public, max-age=0, s-maxage=60');
   });
 
   test('perfil inexistente ou escondido dá 404', async () => {

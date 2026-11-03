@@ -45,7 +45,7 @@ describe('perfil semeado', () => {
     assert.deepEqual(file, EXAMPLE);
     assert.equal(community.slug, 'dark-souls-iii');
     assert.equal(community.author, null);
-    assert.equal(community.notes, 'Perfil de exemplo, igual ao que vem no app.');
+    assert.equal(community.notes, '');
   });
 });
 

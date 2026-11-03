@@ -11,6 +11,7 @@ import {
   resource,
   RESPONSE_INIT,
   signal,
+  untracked,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -166,7 +167,34 @@ export class ProfilePage {
       );
     });
 
+    // A página pode ter vindo da CDN (até 1 minuto de atraso): no navegador, curtidas e
+    // comentários são lidos de novo, para quem acabou de curtir ou comentar ver o que fez.
+    effect(() => {
+      const id = this.info()?.id;
+      if (this.browser && id) untracked(() => void this.refreshLive(id));
+    });
+
     this.commentForm.controls.body.valueChanges.subscribe((value) => this.commentLength.set(value.length));
+  }
+
+  private async refreshLive(id: string): Promise<void> {
+    try {
+      const [profile, comments] = await Promise.all([
+        this.community.get(id, true),
+        this.community.comments(id, 1, true),
+      ]);
+      if (id !== this.info()?.id) return;
+      if (profile && !this.liking()) this.likes.set(profile.community.likes);
+      if (comments) {
+        // Mantém os comentários já carregados além da primeira página.
+        const fresh = new Set(comments.items.map((c) => c.id));
+        const later = this.comments().filter((c) => !fresh.has(c.id) && this.commentsPage() > 1);
+        this.comments.set([...comments.items, ...later]);
+        this.commentsTotal.set(comments.total);
+      }
+    } catch {
+      // Fica o que veio com a página.
+    }
   }
 
   protected commentDate(date: string): string {

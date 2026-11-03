@@ -48,7 +48,9 @@ const MAX_BODY_BYTES = 16 * 1024;
 const ROUTE =
   /\/v1\/(?:profiles(?:\/([a-z0-9-]{1,32})(?:\/(download|comments|like))?)?|(profile-filters))\/?$/;
 
-const LIST_CACHE = 'public, max-age=60, s-maxage=60';
+// A CDN (o atalho /api/v1 na Vercel) guarda por 60 s; o navegador sempre pergunta de novo, para
+// quem acabou de curtir ou comentar ver o número certo.
+const LIST_CACHE = 'public, max-age=0, s-maxage=60';
 
 /** Erros das funções do banco que viram resposta para quem chamou. */
 const DB_ERRORS: Record<string, number> = {
