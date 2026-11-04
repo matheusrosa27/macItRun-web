@@ -108,7 +108,7 @@ export class Community {
   });
 
   /** O texto da busca (ou o perfil escolhido nas sugestões); acompanha a URL. */
-  protected readonly query = linkedSignal<string | ProfileSummary>(() => this.params().q ?? '');
+  protected readonly query = linkedSignal<string | ProfileSummary | null>(() => this.params().q ?? '');
   protected readonly suggestions = signal<ProfileSummary[]>([]);
 
   constructor() {
@@ -134,8 +134,9 @@ export class Community {
   }
 
   protected search(): void {
+    // O AutoComplete devolve texto, o perfil escolhido ou null (campo limpo).
     const value = this.query();
-    const q = typeof value === 'string' ? value.trim() : value.name;
+    const q = typeof value === 'string' ? value.trim() : (value?.name ?? '');
     this.navigate({ q: q || undefined, page: undefined });
   }
 

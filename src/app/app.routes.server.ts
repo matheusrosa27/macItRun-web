@@ -3,7 +3,9 @@ import { LANGS } from './core/i18n/langs';
 import { RELEASE_CACHE_MS } from './core/release/release';
 
 const eachLang = async () => LANGS.map((lang) => ({ lang }));
-const COMMUNITY_CACHE = 'public, max-age=0, s-maxage=60, stale-while-revalidate=60';
+// Até 1 minuto de atraso; depois disso a CDN ainda entrega a versão guardada (rápida) por até
+// 10 minutos enquanto busca a nova. Curtidas e comentários do perfil são relidos no navegador.
+const COMMUNITY_CACHE = 'public, max-age=0, s-maxage=60, stale-while-revalidate=600';
 
 export const serverRoutes: ServerRoute[] = [
   // Páginas fixas: geradas no build, uma por idioma.
