@@ -1,0 +1,4 @@
+# Arquivos locais do Supabase CLI (projeto vinculado, segredos do ambiente local)
+.branches
+.temp
+.env

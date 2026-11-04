@@ -177,6 +177,22 @@ base64url>`. The fragment never reaches the server. To try it without the app:
 echo "https://mac-it-run.vercel.app/pt/community/publish#data=$(base64 < packages/profile-schema/examples/dark-souls-3.macitrun-profile | tr '+/' '-_' | tr -d '=\n')"
 ```
 
+## Signing in from the app
+
+The Mac app signs in through the browser with PKCE, so it never sees the password and gets a
+session of its own:
+
+1. The app opens `/<lang>/app-login?challenge=<SHA-256 of a secret, base64url>&state=<random>`.
+2. The page (login required) asks the person to authorize; `POST /api/v1/app-login { challenge }`
+   with their token stores a one-time code (`private.app_logins`, 5 minutes) bound to a magic-link
+   token hash made with `auth.admin.generateLink` (no email is sent).
+3. The page opens `macitrun://auth-callback?code=…&state=…`.
+4. The app calls `POST /api/v1/app-login/redeem { code, verifier }`; the code works once and only
+   with the secret whose hash was the challenge. It then exchanges the token hash at
+   `/auth/v1/verify` for its own session.
+
+Side effect: generating the magic link replaces a pending "forgot password" link of that account.
+
 ## Moderation
 
 Admins see `/<lang>/admin` (a link appears in My account): open reports (hide or keep), hidden
@@ -188,8 +204,11 @@ update public.users_public set role = 'admin' where username = '<username>';
 
 ## Supabase setup
 
-1. Run the files in `supabase/migrations/` in order in the SQL Editor (or `npx supabase db push`),
-   then `supabase/seed.sql` for the example profile.
+1. Run the files in `supabase/migrations/` in order in the SQL Editor (or `npx supabase db push --remote`),
+   then `supabase/seed.sql` for the example profile. Pick one of the two and keep to it: migrations
+   run in the SQL Editor are not recorded, so a later `db push` tries to run them all again. To
+   switch to `db push`, first mark the ones already run:
+   `npx supabase migration repair --status applied <version>... --remote`.
 2. Authentication → URL Configuration:
    - Site URL: `https://mac-it-run.vercel.app`
    - Redirect URLs: `https://mac-it-run.vercel.app/**`, `https://*-matheusmemphis-7207.vercel.app/**`
