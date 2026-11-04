@@ -35,6 +35,7 @@ import {
 import { CommunityService } from '../../core/community/community.service';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { SeoService } from '../../core/seo.service';
+import { AuthorName } from './author';
 import { ProfileChanges } from './profile-changes';
 import { ReportDialog } from './report-dialog';
 
@@ -57,6 +58,7 @@ const COMMENT_MAX = 2000;
     TextareaModule,
     ProfileChanges,
     ReportDialog,
+    AuthorName,
   ],
   templateUrl: './profile.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

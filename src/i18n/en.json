@@ -486,7 +486,8 @@
       "likes": "Likes",
       "comments": "Comments",
       "downloads": "Downloads",
-      "testedOn": "Tested on {{ mac }}"
+      "testedOn": "Tested on {{ mac }}",
+      "byLabel": "by"
     },
     "graphics": {
       "dxmt": "DXMT",
@@ -656,5 +657,33 @@
     "done": "Done",
     "bannedDone": "Author banned",
     "unbannedDone": "Author unbanned"
+  },
+  "badges": {
+    "title": "Badges",
+    "how": "How to earn badges",
+    "admin": {
+      "label": "Admin",
+      "description": "Runs the community: moderates reports and content."
+    },
+    "legend": {
+      "label": "Legend",
+      "description": "20 or more published setup profiles, or 100 likes received."
+    },
+    "veteran": {
+      "label": "Veteran",
+      "description": "5 or more published setup profiles, or 25 likes received."
+    },
+    "contributor": {
+      "label": "Contributor",
+      "description": "Published at least one setup profile."
+    },
+    "newcomer": {
+      "label": "Newcomer",
+      "description": "Hasn't published a setup profile yet."
+    },
+    "pioneer": {
+      "label": "Pioneer",
+      "description": "One of the first 100 accounts on the site."
+    }
   }
 }

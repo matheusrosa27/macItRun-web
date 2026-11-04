@@ -5,11 +5,12 @@ import { TagModule } from 'primeng/tag';
 import { ProfileSummary } from '../../core/community/community';
 import { macName } from '../../core/community/macs';
 import { Lang } from '../../core/i18n/langs';
+import { AuthorName } from './author';
 
 /** Um perfil na lista da Comunidade. Todo texto vindo de usuário sai como texto puro. */
 @Component({
   selector: 'app-profile-card',
-  imports: [RouterLink, TranslocoPipe, TagModule],
+  imports: [RouterLink, TranslocoPipe, TagModule, AuthorName],
   template: `
     @let p = profile();
     <a
@@ -40,12 +41,11 @@ import { Lang } from '../../core/i18n/langs';
       </div>
 
       <div class="mt-auto flex flex-wrap items-center justify-between gap-3 text-sm text-surface-600 dark:text-surface-300">
-        <span class="truncate">
-          @if (p.author?.username; as username) {
-            {{ 'community.card.by' | transloco: { username: '@' + username } }}
-          } @else {
-            <span class="italic">{{ 'community.card.deletedAuthor' | transloco }}</span>
+        <span class="min-w-0">
+          @if (p.author?.username) {
+            {{ 'community.card.byLabel' | transloco }}
           }
+          <app-author [author]="p.author" />
         </span>
         <span class="flex items-center gap-3">
           <span [title]="'community.card.likes' | transloco">

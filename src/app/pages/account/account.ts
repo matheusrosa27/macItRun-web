@@ -17,6 +17,8 @@ import { AuthService } from '../../core/auth/auth.service';
 import { isValidUsername, normalizeUsername, suggestUsername, USERNAME_MAX } from '../../core/auth/username';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { TERMS_ACCEPTED_FLAG } from '../auth/oauth-buttons';
+import { BADGE_STYLE, BADGES } from '../../core/community/badges';
+import { AuthorName } from '../community/author';
 import { MyProfiles } from './my-profiles';
 
 type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
@@ -36,6 +38,7 @@ type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
     RadioButtonModule,
     TagModule,
     MyProfiles,
+    AuthorName,
   ],
   templateUrl: './account.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,6 +55,8 @@ export class Account {
 
   protected readonly account = this.auth.account;
   protected readonly usernameMax = USERNAME_MAX;
+  protected readonly allBadges = BADGES;
+  protected readonly badgeStyle = BADGE_STYLE;
 
   protected readonly memberSince = computed(() => {
     const date = this.account()?.createdAt;

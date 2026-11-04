@@ -20,6 +20,8 @@ export const PAGE_SIZE = 20;
 
 export interface Author {
   username: string | null;
+  /** Tags públicas (admin, legend, veteran, contributor, newcomer, pioneer). */
+  badges?: string[];
 }
 
 /** Um perfil na lista (GET /profiles). */

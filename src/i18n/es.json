@@ -486,7 +486,8 @@
       "likes": "Me gusta",
       "comments": "Comentarios",
       "downloads": "Descargas",
-      "testedOn": "Probado en {{ mac }}"
+      "testedOn": "Probado en {{ mac }}",
+      "byLabel": "por"
     },
     "graphics": {
       "dxmt": "DXMT",
@@ -656,5 +657,33 @@
     "done": "Hecho",
     "bannedDone": "Autor expulsado",
     "unbannedDone": "Autor readmitido"
+  },
+  "badges": {
+    "title": "Insignias",
+    "how": "Cómo ganar insignias",
+    "admin": {
+      "label": "Admin",
+      "description": "Administra la comunidad: modera denuncias y contenido."
+    },
+    "legend": {
+      "label": "Leyenda",
+      "description": "20 o más perfiles de configuración publicados, o 100 me gusta recibidos."
+    },
+    "veteran": {
+      "label": "Veterano",
+      "description": "5 o más perfiles de configuración publicados, o 25 me gusta recibidos."
+    },
+    "contributor": {
+      "label": "Colaborador",
+      "description": "Publicó al menos un perfil de configuración."
+    },
+    "newcomer": {
+      "label": "Novato",
+      "description": "Todavía no publicó ningún perfil de configuración."
+    },
+    "pioneer": {
+      "label": "Pionero",
+      "description": "Una de las 100 primeras cuentas del sitio."
+    }
   }
 }

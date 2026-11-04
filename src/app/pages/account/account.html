@@ -129,6 +129,28 @@
           <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'account.profile.memberSince' | transloco }}</dt>
           <dd class="m-0 mt-1">{{ memberSince() }}</dd>
         </div>
+        <div>
+          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'badges.title' | transloco }}</dt>
+          <dd class="m-0 mt-1">
+            <app-author [author]="{ username: current.username, badges: current.badges }" />
+            <details class="mt-3 text-sm">
+              <summary class="cursor-pointer text-primary">{{ 'badges.how' | transloco }}</summary>
+              <ul class="m-0 mt-3 flex list-none flex-col gap-2 p-0">
+                @for (badge of allBadges; track badge) {
+                  <li class="flex flex-wrap items-center gap-2">
+                    <p-tag
+                      [value]="'badges.' + badge + '.label' | transloco"
+                      [icon]="badgeStyle[badge].icon"
+                      [severity]="badgeStyle[badge].severity"
+                      styleClass="!px-1.5 !py-0 !text-xs"
+                    />
+                    <span class="text-surface-600 dark:text-surface-300">{{ 'badges.' + badge + '.description' | transloco }}</span>
+                  </li>
+                }
+              </ul>
+            </details>
+          </dd>
+        </div>
       </dl>
 
       @if (error() && !deleteOpen()) {

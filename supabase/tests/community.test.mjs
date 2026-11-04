@@ -78,7 +78,7 @@ describe('comentar', () => {
       rpc(tx, 'add_comment', { profile_id: profile, body: '  <script>alert(1)</script>\r\nRoda liso.  ' }),
     );
     assert.equal(created.body, '<script>alert(1)</script>\nRoda liso.');
-    assert.deepEqual(created.author, { username: 'ana' });
+    assert.deepEqual(created.author, { username: 'ana', badges: ['newcomer', 'pioneer'] });
     const list = await as(db, null, (tx) => rpc(tx, 'api_list_comments', { profile_id: profile }));
     assert.deepEqual(list.items.map((c) => c.body), [created.body]);
     const { comments_count } = (

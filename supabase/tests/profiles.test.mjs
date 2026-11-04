@@ -303,7 +303,7 @@ describe('lista e busca', () => {
       'author', 'comments', 'createdAt', 'downloads', 'executables', 'graphics', 'id', 'likes',
       'name', 'slug', 'testedOn', 'updatedAt', 'windowsVersion',
     ]);
-    assert.deepEqual(items[0].author, { username: 'ana_mac' });
+    assert.deepEqual(items[0].author, { username: 'ana_mac', badges: ['contributor', 'pioneer'] });
     assert.equal(items[0].slug, 'jogo');
   });
 });

@@ -150,7 +150,7 @@ describe('GET /api/v1/profiles/{id}/comments', () => {
     assert.equal(list.total, 1);
     // Texto puro: chega como foi escrito; quem exibe trata como texto.
     assert.equal(list.items[0].body, '<b>roda</b>');
-    assert.deepEqual(list.items[0].author, { username: 'ana' });
+    assert.deepEqual(list.items[0].author, { username: 'ana', badges: ['newcomer', 'pioneer'] });
     assert.equal((await get('/v1/profiles/nada/comments')).status, 404);
   });
 });
@@ -270,7 +270,7 @@ describe('publicar pela API', () => {
     const list = await body(await get('/v1/profiles?q=dark%20souls'));
     assert.equal(list.total, 2);
     const { community } = await body(await get(`/v1/profiles/${id}`));
-    assert.deepEqual(community.author, { username: 'ana' });
+    assert.deepEqual(community.author, { username: 'ana', badges: ['contributor', 'pioneer'] });
     assert.equal(community.notes, 'Roda liso.');
   });
 

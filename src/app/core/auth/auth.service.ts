@@ -14,6 +14,8 @@ export interface Account {
   banned: boolean;
   termsAcceptedAt: string | null;
   createdAt: string;
+  /** Tags públicas da pessoa (ver core/community/badges.ts). */
+  badges?: string[];
 }
 
 /** Logins por outras contas, na ordem dos botões. */

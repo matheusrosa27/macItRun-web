@@ -41,7 +41,7 @@ describe('publicar', () => {
     const found = await as(db, null, (tx) => rpc(tx, 'api_get_profile', { profile_id: id }));
     assert.deepEqual(found.profile, PAYLOAD);
     assert.equal(found.community.notes, 'Roda liso com DXVK.');
-    assert.deepEqual(found.community.author, { username: 'ana' });
+    assert.deepEqual(found.community.author, { username: 'ana', badges: ['contributor', 'pioneer'] });
   });
 
   test('ninguém publica pelo navegador, nem logado', async () => {

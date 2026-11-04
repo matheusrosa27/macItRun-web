@@ -486,7 +486,8 @@
       "likes": "Curtidas",
       "comments": "Comentários",
       "downloads": "Downloads",
-      "testedOn": "Testado em {{ mac }}"
+      "testedOn": "Testado em {{ mac }}",
+      "byLabel": "por"
     },
     "graphics": {
       "dxmt": "DXMT",
@@ -656,5 +657,33 @@
     "done": "Feito",
     "bannedDone": "Autor banido",
     "unbannedDone": "Autor desbanido"
+  },
+  "badges": {
+    "title": "Tags",
+    "how": "Como ganhar tags",
+    "admin": {
+      "label": "Admin",
+      "description": "Administra a comunidade: modera denúncias e conteúdo."
+    },
+    "legend": {
+      "label": "Lenda",
+      "description": "20 ou mais perfis de configuração publicados, ou 100 curtidas recebidas."
+    },
+    "veteran": {
+      "label": "Veterano",
+      "description": "5 ou mais perfis de configuração publicados, ou 25 curtidas recebidas."
+    },
+    "contributor": {
+      "label": "Colaborador",
+      "description": "Publicou pelo menos um perfil de configuração."
+    },
+    "newcomer": {
+      "label": "Novato",
+      "description": "Ainda não publicou nenhum perfil de configuração."
+    },
+    "pioneer": {
+      "label": "Pioneiro",
+      "description": "Uma das 100 primeiras contas do site."
+    }
   }
 }
