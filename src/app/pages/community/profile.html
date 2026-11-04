@@ -183,7 +183,7 @@
         } @else if (auth.needsSetup()) {
           <p class="m-0 text-surface-600 dark:text-surface-300">
             {{ 'community.comments.setup' | transloco }}
-            <a [routerLink]="['/', lang(), 'account']" class="text-primary">{{ 'community.comments.setupLink' | transloco }}</a>
+            <a [routerLink]="['/', lang(), 'account']" class="text-primary underline underline-offset-2">{{ 'community.comments.setupLink' | transloco }}</a>
           </p>
         } @else {
           <form [formGroup]="commentForm" (ngSubmit)="postComment()" class="flex flex-col gap-2" novalidate>

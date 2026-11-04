@@ -60,7 +60,7 @@ type Status = (typeof STATUSES)[number];
             <div class="flex flex-col gap-2">
               <label for="admin-author" class="text-sm font-medium">{{ 'adminEdit.author' | transloco }}</label>
               <input pInputText id="admin-author" formControlName="author" autocapitalize="none" spellcheck="false" fluid />
-              <small class="text-surface-500">{{ 'adminEdit.authorHint' | transloco }}</small>
+              <small class="text-surface-500 dark:text-surface-400">{{ 'adminEdit.authorHint' | transloco }}</small>
             </div>
             <div class="flex flex-col gap-2">
               <label for="admin-status" class="text-sm font-medium">{{ 'adminEdit.status' | transloco }}</label>
@@ -82,7 +82,7 @@ type Status = (typeof STATUSES)[number];
           @if (issues().length) {
             <ul class="m-0 flex flex-col gap-1 rounded-lg border border-red-300 p-3 pl-7 text-sm dark:border-red-900" role="alert">
               @for (issue of issues(); track $index) {
-                <li>{{ issueKey(issue) | transloco }} <code class="text-xs text-surface-500">{{ issue.path }}</code></li>
+                <li>{{ issueKey(issue) | transloco }} <code class="text-xs text-surface-500 dark:text-surface-400">{{ issue.path }}</code></li>
               }
             </ul>
           }

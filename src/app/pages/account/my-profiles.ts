@@ -104,7 +104,7 @@ const NOTES_MAX = 2000;
       <form [formGroup]="notesForm" (ngSubmit)="saveNotes()" class="flex flex-col gap-3" novalidate>
         <label for="my-notes" class="text-sm font-medium">{{ 'community.profile.notes.title' | transloco }}</label>
         <textarea pTextarea id="my-notes" formControlName="notes" rows="6" [maxlength]="notesMax" fluid></textarea>
-        <small class="text-surface-500">
+        <small class="text-surface-500 dark:text-surface-400">
           {{ 'community.comments.counter' | transloco: { count: notesForm.controls.notes.value.length, max: notesMax } }}
         </small>
         @if (error(); as error) {

@@ -38,9 +38,9 @@
             <p-checkbox inputId="setup-terms" formControlName="terms" [binary]="true" />
             <label for="setup-terms" class="text-sm leading-relaxed">
               {{ 'auth.signup.terms.accept' | transloco }}
-              <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary">{{ 'auth.signup.terms.terms' | transloco }}</a>
+              <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.terms' | transloco }}</a>
               {{ 'auth.signup.terms.and' | transloco }}
-              <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
+              <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
             </label>
           </div>
           @if (setupForm.controls.terms.touched && setupForm.controls.terms.invalid) {

@@ -76,7 +76,7 @@
             <li>
               {{ issueKey(issue) | transloco }}
               @if (issue.path) {
-                <code class="ml-1 text-xs break-all text-surface-500">{{ issue.path }}</code>
+                <code class="ml-1 text-xs break-all text-surface-500 dark:text-surface-400">{{ issue.path }}</code>
               }
             </li>
           }
@@ -110,7 +110,7 @@
 
         <p class="mt-2 mb-0 text-sm text-surface-500 dark:text-surface-400">
           {{ 'publish.rules' | transloco }}
-          <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary">{{ 'auth.signup.terms.terms' | transloco }}</a>
+          <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.terms' | transloco }}</a>
         </p>
 
         <div class="mt-2">
@@ -121,7 +121,7 @@
           } @else if (auth.needsSetup()) {
             <p class="m-0">
               {{ 'publish.setup' | transloco }}
-              <a [routerLink]="['/', lang(), 'account']" class="text-primary">{{ 'community.comments.setupLink' | transloco }}</a>
+              <a [routerLink]="['/', lang(), 'account']" class="text-primary underline underline-offset-2">{{ 'community.comments.setupLink' | transloco }}</a>
             </p>
           } @else {
             <p-button type="submit" [label]="'publish.submit' | transloco" icon="pi pi-send" [loading]="publishing()" />

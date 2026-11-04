@@ -25,7 +25,7 @@
           @for (row of dlls(); track row.dll) {
             <div class="flex flex-wrap gap-x-2"><span class="font-mono text-sm">{{ row.dll }}</span><span>{{ row.order | transloco }}</span></div>
           } @empty {
-            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+            <span class="text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.none' | transloco }}</span>
           }
         </dd>
       </div>
@@ -35,7 +35,7 @@
           @for (pair of environment(); track pair[0]) {
             <div class="font-mono text-sm break-all">{{ pair[0] }}={{ pair[1] }}</div>
           } @empty {
-            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+            <span class="text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.none' | transloco }}</span>
           }
         </dd>
       </div>
@@ -45,7 +45,7 @@
           @if (profile().arguments?.length) {
             <span class="font-mono text-sm break-all">{{ profile().arguments!.join(' ') }}</span>
           } @else {
-            <span class="text-surface-500">{{ 'community.profile.changes.none' | transloco }}</span>
+            <span class="text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.none' | transloco }}</span>
           }
         </dd>
       </div>

@@ -38,9 +38,8 @@ export class SeoService {
     this.setProperty('og:title', title);
     this.setProperty('og:description', description);
     this.setProperty('og:url', url);
-    this.setProperty('og:image', DEFAULT_IMAGE);
+    this.setImage(DEFAULT_IMAGE, 512, 512);
     this.setProperty('og:locale', OG_LOCALE[lang]);
-    this.setName('twitter:card', 'summary');
     this.setName('robots', noindex ? 'noindex' : 'index, follow');
 
     this.setLink('canonical', url);
@@ -55,6 +54,17 @@ export class SeoService {
     this.setName('description', description);
     this.setProperty('og:title', title);
     this.setProperty('og:description', description);
+  }
+
+  /**
+   * Imagem de compartilhamento. Quadrada (o logo) vira cartão pequeno; larga (a do perfil,
+   * 1200×630), cartão grande.
+   */
+  setImage(url: string, width: number, height: number): void {
+    this.setProperty('og:image', url);
+    this.setProperty('og:image:width', String(width));
+    this.setProperty('og:image:height', String(height));
+    this.setName('twitter:card', width > height ? 'summary_large_image' : 'summary');
   }
 
   /** Tira a página dos buscadores (ex.: perfil que não existe mais). */

@@ -35,6 +35,7 @@ import {
 import { CommunityService } from '../../core/community/community.service';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { SeoService } from '../../core/seo.service';
+import { SITE_URL } from '../../core/site';
 import { AdminProfileDialog } from './admin-profile-dialog';
 import { AuthorName } from './author';
 import { ProfileChanges } from './profile-changes';
@@ -152,6 +153,8 @@ export class ProfilePage {
           profile.name,
           this.transloco.translate('community.profile.seoDescription', { name: profile.name }, this.lang()),
         );
+        // Imagem com o nome do jogo, gerada na Vercel (api/og.mjs).
+        this.seo.setImage(`${SITE_URL}/og/profile/${encodeURIComponent(this.id())}?lang=${this.lang()}`, 1200, 630);
       } else if (this.data.value() === null) {
         this.seo.setNoindex();
         if (this.responseInit) this.responseInit.status = 404;

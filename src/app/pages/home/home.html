@@ -25,14 +25,18 @@
         {{ 'home.hero.requirements' | transloco }}
       </p>
     </div>
-    <img
-      src="img/logo-512.png"
-      [alt]="'home.hero.logoAlt' | transloco"
-      width="320"
-      height="320"
-      fetchpriority="high"
-      class="w-56 drop-shadow-2xl md:w-80"
-    />
+    <!-- AVIF (12–30 KB) no lugar do PNG de 430 KB: é o maior elemento da tela. -->
+    <picture class="shrink-0">
+      <source type="image/avif" srcset="img/logo-256.avif 256w, img/logo-512.avif 512w" sizes="(min-width: 768px) 320px, 224px" />
+      <img
+        src="img/logo-512.png"
+        [alt]="'home.hero.logoAlt' | transloco"
+        width="320"
+        height="320"
+        fetchpriority="high"
+        class="w-56 drop-shadow-2xl md:w-80"
+      />
+    </picture>
   </div>
 </section>
 
@@ -84,7 +88,7 @@
       }
     </div>
     <p class="mt-8 text-center">
-      <a [routerLink]="['/', lang(), 'community']" class="text-primary">
+      <a [routerLink]="['/', lang(), 'community']" class="text-primary underline underline-offset-2">
         {{ 'home.tested.community' | transloco }}
         <i class="pi pi-arrow-right ml-1 text-sm" aria-hidden="true"></i>
       </a>

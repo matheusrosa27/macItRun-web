@@ -6,7 +6,7 @@
         <span>{{ 'auth.signup.sent.body' | transloco: { email } }}</span>
       </div>
     </p-message>
-    <a [routerLink]="['/', lang(), 'login']" class="text-primary">{{ 'auth.signup.sent.login' | transloco }}</a>
+    <a [routerLink]="['/', lang(), 'login']" class="text-primary underline underline-offset-2">{{ 'auth.signup.sent.login' | transloco }}</a>
   } @else {
     <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-col gap-5" novalidate>
       <div class="flex flex-col gap-2">
@@ -76,9 +76,9 @@
           <p-checkbox inputId="signup-terms" formControlName="terms" [binary]="true" />
           <label for="signup-terms" class="text-sm leading-relaxed">
             {{ 'auth.signup.terms.accept' | transloco }}
-            <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary">{{ 'auth.signup.terms.terms' | transloco }}</a>
+            <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.terms' | transloco }}</a>
             {{ 'auth.signup.terms.and' | transloco }}
-            <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
+            <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
           </label>
         </div>
         @if (form.controls.terms.touched && form.controls.terms.invalid) {
@@ -99,7 +99,7 @@
       />
     </form>
 
-    <p-divider align="center" styleClass="!my-0"><span class="text-sm text-surface-500">{{ 'auth.or' | transloco }}</span></p-divider>
+    <p-divider align="center" styleClass="!my-0"><span class="text-sm text-surface-500 dark:text-surface-400">{{ 'auth.or' | transloco }}</span></p-divider>
 
     <div class="flex flex-col gap-2">
       <app-oauth-buttons [lang]="lang()" [disabled]="!termsAccepted()" [termsAccepted]="termsAccepted()" />
@@ -110,7 +110,7 @@
 
     <p class="m-0 text-center text-sm">
       {{ 'auth.signup.haveAccount' | transloco }}
-      <a [routerLink]="['/', lang(), 'login']" class="text-primary">{{ 'auth.signup.login' | transloco }}</a>
+      <a [routerLink]="['/', lang(), 'login']" class="text-primary underline underline-offset-2">{{ 'auth.signup.login' | transloco }}</a>
     </p>
   }
 </app-auth-card>

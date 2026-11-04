@@ -1,6 +1,6 @@
 <app-legal-page page="licenses" [sections]="sections">
   <p class="mt-3">
-    <a [href]="wineSourcesUrl" class="text-primary" data-testid="wine-sources">
+    <a [href]="wineSourcesUrl" class="text-primary underline underline-offset-2" data-testid="wine-sources">
       <i class="pi pi-download mr-1" aria-hidden="true"></i>{{ 'legal.licenses.wineSources' | transloco }}
     </a>
   </p>
@@ -24,7 +24,7 @@
             <td>{{ notice.component }}</td>
             <td><code class="text-sm">{{ notice.license }}</code></td>
             <td>
-              <a [href]="notice.source" target="_blank" rel="noopener" class="text-primary">
+              <a [href]="notice.source" target="_blank" rel="noopener" class="text-primary underline underline-offset-2">
                 {{ 'legal.licenses.columns.sourceLink' | transloco }}
               </a>
             </td>

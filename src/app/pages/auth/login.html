@@ -43,12 +43,12 @@
     />
   </form>
 
-  <p-divider align="center"><span class="text-sm text-surface-500">{{ 'auth.or' | transloco }}</span></p-divider>
+  <p-divider align="center"><span class="text-sm text-surface-500 dark:text-surface-400">{{ 'auth.or' | transloco }}</span></p-divider>
 
   <app-oauth-buttons [lang]="lang()" [next]="oauthNext()" />
 
   <p class="m-0 text-center text-sm">
     {{ 'auth.login.noAccount' | transloco }}
-    <a [routerLink]="['/', lang(), 'signup']" class="text-primary">{{ 'auth.login.signup' | transloco }}</a>
+    <a [routerLink]="['/', lang(), 'signup']" class="text-primary underline underline-offset-2">{{ 'auth.login.signup' | transloco }}</a>
   </p>
 </app-auth-card>

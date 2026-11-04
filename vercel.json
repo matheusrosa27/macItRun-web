@@ -7,6 +7,10 @@
     "api/ssr.mjs": {
       "includeFiles": "dist/macItRun-web/**",
       "maxDuration": 10
+    },
+    "api/og.mjs": {
+      "includeFiles": "src/i18n/**",
+      "maxDuration": 10
     }
   },
   "rewrites": [
@@ -14,6 +18,7 @@
       "source": "/api/v1/:path*",
       "destination": "https://fcrrcxelhbdiihxxggur.supabase.co/functions/v1/api/v1/:path*"
     },
+    { "source": "/og/profile/:id", "destination": "/api/og?id=:id" },
     { "source": "/(.*)", "destination": "/api/ssr" }
   ],
   "headers": [

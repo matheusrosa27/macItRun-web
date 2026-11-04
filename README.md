@@ -58,6 +58,7 @@ src/app/shared/      Turnstile captcha
 src/i18n/            translations pt.json, en.json, es.json (same keys, tested)
 src/server.ts        Express server: SSR + GET /api/site/release
 api/ssr.mjs          Vercel function that calls the Angular server
+api/og.mjs           Vercel function that draws the share image of a setup profile
 vercel.json          static files from the CDN, everything else through the function; security headers
 supabase/migrations/ SQL migrations (tables, RLS, functions)
 supabase/seed.sql    example profile (Dark Souls III), the same as the example file
@@ -85,6 +86,8 @@ server redirects based on `Accept-Language` (Portuguese as the fallback).
 | `/:lang/admin` | browser only, admins (moderation) |
 | `/:lang/**` | SSR, 404 |
 | `/api/v1/**` | proxied to the Supabase Edge Function `api` (see below) |
+| `/sitemap.xml`, `/robots.txt` | from the Express server; sitemap has every page in 3 languages plus each published setup profile, cached 1 h |
+| `/og/profile/:id?lang=` | 1200×630 share image with the game name (`api/og.mjs`, `@vercel/og`), cached 1 day |
 
 The release comes from `matheusrosa27/macItRun-runtime` through the GitHub API, cached in the process
 for 10 minutes. The optional `GITHUB_TOKEN` variable (read-only access to public repositories) avoids
@@ -97,6 +100,8 @@ Vercel deploys on every push. Project settings: Framework "Other", default comma
 
 | Variable | Value |
 | --- | --- |
+| `SITE_URL` | optional, the public address (default `https://mac-it-run.vercel.app`); used in canonical links, sitemap and share images |
+| `NG_ALLOWED_HOSTS` | optional, extra host names the SSR server accepts (comma-separated), e.g. the custom domain |
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_PUBLISHABLE_KEY` | publishable (anon) key, never the secret / service_role key |
 | `TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key |
@@ -147,6 +152,21 @@ npx supabase login
 ```bash
 npx supabase functions deploy api --project-ref fcrrcxelhbdiihxxggur --no-verify-jwt --use-api
 ```
+
+## Custom domain
+
+1. Vercel → Settings → Domains: add the domain (e.g. `macitrun.app` and `www.macitrun.app`) and
+   follow the DNS instructions; HTTPS is automatic. Make it the primary domain so
+   `mac-it-run.vercel.app` redirects to it.
+2. Vercel → Environment Variables: `SITE_URL=https://<domain>` and `NG_ALLOWED_HOSTS=<domain>,www.<domain>`,
+   then redeploy (`SITE_URL` is read at build time).
+3. `vercel.json`: change the project ref in the `/api/v1` rewrite only if the Supabase project changes.
+4. Supabase → Authentication → URL Configuration: Site URL `https://<domain>` and add
+   `https://<domain>/**` to the redirect URLs.
+5. Cloudflare Turnstile: add the domain to the widget's hostnames.
+6. Google Cloud (OAuth consent screen): add the domain to the authorized domains and set the home,
+   privacy and terms links; GitHub OAuth app: update the homepage URL.
+7. The Mac app: point its site constant to the new address (it calls `/api/v1` there).
 
 ## Publishing from the app
 

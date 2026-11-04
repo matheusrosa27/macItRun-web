@@ -1,7 +1,11 @@
 /** Endereços e dados fixos do projeto, num só lugar. */
+import { PUBLIC_ENV } from '../../environments/public-env';
 
-/** Endereço público do site (sem barra no fim). Troca quando houver domínio próprio. */
-export const SITE_URL = 'https://mac-it-run.vercel.app';
+/**
+ * Endereço público do site (sem barra no fim), usado em links canônicos, sitemap e imagens
+ * de compartilhamento. Vem da variável SITE_URL no build (domínio próprio); sem ela, o da Vercel.
+ */
+export const SITE_URL = PUBLIC_ENV.siteUrl || 'https://mac-it-run.vercel.app';
 
 export const RUNTIME_REPO = 'matheusrosa27/macItRun-runtime';
 export const RUNTIME_REPO_URL = `https://github.com/${RUNTIME_REPO}`;
