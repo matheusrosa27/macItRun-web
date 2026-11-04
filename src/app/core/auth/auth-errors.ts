@@ -27,6 +27,7 @@ const KNOWN = new Set([
   'not_admin',
   'too_large',
   'invalid_json',
+  'author_not_found',
 ]);
 
 interface ErrorLike {

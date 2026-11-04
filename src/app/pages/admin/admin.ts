@@ -10,7 +10,9 @@ import { TabsModule } from 'primeng/tabs';
 import { TagModule } from 'primeng/tag';
 import { authErrorKey } from '../../core/auth/auth-errors';
 import { AuthService } from '../../core/auth/auth.service';
+import { CommunityService } from '../../core/community/community.service';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
+import { AdminProfileDialog } from '../community/admin-profile-dialog';
 
 interface ModerationTarget {
   profileId: string;
@@ -42,12 +44,23 @@ interface HiddenItem {
  */
 @Component({
   selector: 'app-admin',
-  imports: [NgTemplateOutlet, RouterLink, TranslocoPipe, ButtonModule, MessageModule, SkeletonModule, TabsModule, TagModule],
+  imports: [
+    NgTemplateOutlet,
+    RouterLink,
+    TranslocoPipe,
+    ButtonModule,
+    MessageModule,
+    SkeletonModule,
+    TabsModule,
+    TagModule,
+    AdminProfileDialog,
+  ],
   templateUrl: './admin.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Admin {
   private readonly auth = inject(AuthService);
+  private readonly community = inject(CommunityService);
   private readonly messages = inject(MessageService);
   private readonly transloco = inject(TranslocoService);
 
@@ -58,6 +71,28 @@ export class Admin {
   protected readonly openCount = computed(() => this.reports.value()?.length ?? 0);
   /** Item em ação (para o "carregando" do botão certo). */
   protected readonly busy = signal<string | null>(null);
+  /** Perfil aberto no diálogo de edição. */
+  protected readonly editing = signal<string | null>(null);
+  protected readonly editOpen = signal(false);
+
+  protected edit(item: OpenReport | HiddenItem): void {
+    const id = item.target?.profileId;
+    if (!id) return;
+    this.editing.set(id);
+    this.editOpen.set(true);
+  }
+
+  protected reload(): void {
+    this.reports.reload();
+    this.hidden.reload();
+  }
+
+  /** Apaga o comentário de vez (o perfil, pelo diálogo de edição). */
+  protected async deleteComment(item: OpenReport | HiddenItem): Promise<void> {
+    await this.run(this.key(item, 'delete'), 'adminEdit.deleted', () =>
+      this.community.adminDeleteComment(Number(item.targetId)),
+    );
+  }
 
   protected key(item: { targetType: string; targetId: string }, action: string): string {
     return `${item.targetType}:${item.targetId}:${action}`;

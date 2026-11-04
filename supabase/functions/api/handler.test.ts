@@ -165,7 +165,7 @@ describe('rotas e métodos', () => {
   test('método não aceito dá 405 com os aceitos', async () => {
     const response = await get('/v1/profiles/darksouls3', 'POST');
     assert.equal(response.status, 405);
-    assert.equal(response.headers.get('Allow'), 'GET, HEAD, OPTIONS');
+    assert.equal(response.headers.get('Allow'), 'GET, PATCH, DELETE, HEAD, OPTIONS');
     assert.equal((await get('/v1/reports')).status, 405);
   });
 
@@ -346,5 +346,54 @@ describe('publicar pela API', () => {
     assert.equal((await post('/v1/profiles/darksouls3/like', {}, ana, { 'x-forwarded-for': '198.51.100.1' })).status, 200);
     const keys = await db.query<{ key: string }>('select key from private.rate_limits');
     assert.ok(keys.rows.every((r) => !r.key.includes('203.0.113.7')));
+  });
+});
+
+describe('admin pela API', () => {
+  let admin: string;
+  let ana: string;
+  beforeEach(async () => {
+    admin = await signUp(db, { email: 'chefe@example.com', metadata: { username: 'chefe', terms_accepted: 'true' } });
+    ana = await signUp(db, { email: 'ana@example.com', metadata: { username: 'ana', terms_accepted: 'true' } });
+    await db.query(`update public.users_public set role = 'admin' where id = $1`, [admin]);
+  });
+  const send = (method: string, body: unknown, token: string) =>
+    get('/v1/profiles/darksouls3', method, {
+      headers: { Authorization: `Bearer ${token}` },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+
+  test('edita arquivo, notas, situação e autor', async () => {
+    const file = JSON.parse(EXAMPLE);
+    file.profile.name = 'Dark Souls III (DXMT)';
+    file.profile.graphics = 'dxmt';
+    const response = await send('PATCH', { file, notes: 'Revisado', author: 'ana', status: 'published' }, admin);
+    assert.equal(response.status, 200);
+    assert.deepEqual(await body(response), { id: 'darksouls3', slug: 'dark-souls-iii-dxmt', status: 'published' });
+    const { profile, community } = await body(await get('/v1/profiles/darksouls3'));
+    assert.equal(profile.graphics, 'dxmt');
+    assert.equal(community.notes, 'Revisado');
+    assert.equal(community.author.username, 'ana');
+  });
+
+  test('o arquivo editado passa pelas mesmas regras', async () => {
+    const file = JSON.parse(EXAMPLE);
+    file.profile.environment = { DYLD_INSERT_LIBRARIES: '/tmp/x' };
+    const response = await send('PATCH', { file }, admin);
+    assert.equal(response.status, 400);
+    assert.equal((await body(response)).error, 'invalid_profile');
+  });
+
+  test('quem não é admin não edita nem apaga', async () => {
+    assert.equal((await send('PATCH', { notes: 'x' }, ana)).status, 403);
+    assert.equal((await send('DELETE', undefined, ana)).status, 403);
+    assert.equal((await get('/v1/profiles/darksouls3', 'DELETE')).status, 401);
+    assert.equal((await send('PATCH', { author: 'ninguem' }, admin)).status, 400);
+    assert.equal((await send('PATCH', { status: 'apagado' }, admin)).status, 400);
+  });
+
+  test('apaga', async () => {
+    assert.equal((await send('DELETE', undefined, admin)).status, 204);
+    assert.equal((await get('/v1/profiles/darksouls3')).status, 404);
   });
 });

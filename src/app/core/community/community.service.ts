@@ -1,9 +1,11 @@
 import { isPlatformServer } from '@angular/common';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { inject, Injectable, makeStateKey, PendingTasks, PLATFORM_ID, TransferState } from '@angular/core';
-import { catchError, firstValueFrom, of, throwError } from 'rxjs';
+import { catchError, firstValueFrom, Observable, of, throwError } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import {
+  AdminChanges,
+  AdminProfile,
   API_BASE,
   ListParams,
   MyProfile,
@@ -104,20 +106,45 @@ export class CommunityService {
    * Publica pela API, que valida o arquivo com o schema do perfil antes de gravar.
    * Erros vêm como PublishError (com os problemas do arquivo, se for o caso).
    */
-  async publish(file: string, notes: string): Promise<{ id: string; slug: string }> {
+  publish(file: string, notes: string): Promise<{ id: string; slug: string }> {
+    return this.withToken((headers) =>
+      this.http.post<{ id: string; slug: string }>(`${API_BASE}/profiles`, { file, notes }, { headers }),
+    );
+  }
+
+  /** Chama a API com o login da pessoa; erros viram PublishError (código e problemas do arquivo). */
+  private async withToken<T>(request: (headers: Record<string, string>) => Observable<T>): Promise<T> {
     const token = await this.auth.accessToken();
     try {
-      return await firstValueFrom(
-        this.http.post<{ id: string; slug: string }>(
-          `${API_BASE}/profiles`,
-          { file, notes },
-          { headers: { Authorization: `Bearer ${token}` } },
-        ),
-      );
+      return await firstValueFrom(request({ Authorization: `Bearer ${token}` }));
     } catch (error) {
       const body = error instanceof HttpErrorResponse ? error.error : null;
       throw new PublishError(typeof body?.error === 'string' ? body.error : 'generic', body?.issues ?? []);
     }
+  }
+
+  /** O perfil em qualquer situação, para o admin editar (arquivo, notas, situação, autor). */
+  adminGet(profileId: string): Promise<AdminProfile | null> {
+    return this.auth.rpc('admin_get_profile', { profile_id: profileId });
+  }
+
+  /** Admin edita pela API, que valida o arquivo como na publicação. */
+  async adminUpdate(profileId: string, changes: AdminChanges): Promise<{ id: string; slug: string; status: string }> {
+    return this.withToken((headers) =>
+      this.http.patch<{ id: string; slug: string; status: string }>(
+        `${API_BASE}/profiles/${encodeURIComponent(profileId)}`,
+        changes,
+        { headers },
+      ),
+    );
+  }
+
+  adminDelete(profileId: string): Promise<void> {
+    return this.auth.rpc('admin_delete_profile', { profile_id: profileId });
+  }
+
+  adminDeleteComment(commentId: number): Promise<void> {
+    return this.auth.rpc('admin_delete_comment', { comment_id: commentId });
   }
 
   myProfiles(): Promise<MyProfile[]> {

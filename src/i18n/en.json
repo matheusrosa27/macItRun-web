@@ -387,7 +387,8 @@
       "rate_limited": "Too many actions in a short time. Wait a minute and try again.",
       "not_admin": "Only administrators can do that.",
       "too_large": "The file is larger than 16 KB.",
-      "invalid_json": "The request came in an invalid format."
+      "invalid_json": "The request came in an invalid format.",
+      "author_not_found": "There is no user with that name."
     }
   },
   "account": {
@@ -571,8 +572,9 @@
     "fromApp": "Setup profile received from macItRun.",
     "file": {
       "label": "Upload the file",
-      "hint": "The .macitrun-profile file exported by the app (up to 16 KB).",
-      "choose": "Choose file"
+      "hint": "Drag the .macitrun-profile file exported by the app here (up to 16 KB), or choose it:",
+      "choose": "Choose file",
+      "drop": "Drop the file to check it"
     },
     "paste": {
       "label": "Or paste the file's contents",
@@ -685,5 +687,18 @@
       "label": "Pioneer",
       "description": "One of the first 100 accounts on the site."
     }
+  },
+  "adminEdit": {
+    "button": "Edit (admin)",
+    "title": "Edit setup profile",
+    "author": "Author",
+    "authorHint": "Username. Empty leaves it as \"deleted author\".",
+    "status": "Status",
+    "file": ".macitrun-profile file",
+    "delete": "Delete for good",
+    "deleteConfirm": "Delete this setup profile for good? Its likes, comments and reports go too. This can't be undone.",
+    "deleteComment": "Delete comment",
+    "saved": "Setup profile saved",
+    "deleted": "Deleted"
   }
 }

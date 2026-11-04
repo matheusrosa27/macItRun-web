@@ -35,6 +35,7 @@ import {
 import { CommunityService } from '../../core/community/community.service';
 import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { SeoService } from '../../core/seo.service';
+import { AdminProfileDialog } from './admin-profile-dialog';
 import { AuthorName } from './author';
 import { ProfileChanges } from './profile-changes';
 import { ReportDialog } from './report-dialog';
@@ -59,6 +60,7 @@ const COMMENT_MAX = 2000;
     ProfileChanges,
     ReportDialog,
     AuthorName,
+    AdminProfileDialog,
   ],
   templateUrl: './profile.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -119,6 +121,9 @@ export class ProfilePage {
   protected readonly posting = signal(false);
   protected readonly commentError = signal<string | null>(null);
   protected readonly deleting = signal<number | null>(null);
+
+  protected readonly isAdmin = computed(() => this.auth.account()?.role === 'admin');
+  protected readonly adminEditOpen = signal(false);
 
   protected readonly reportTarget = signal<ReportTarget | null>(null);
   protected readonly reportOpen = signal(false);
@@ -242,6 +247,35 @@ export class ProfilePage {
       this.toastError(error);
     } finally {
       this.liking.set(false);
+    }
+  }
+
+  /** Depois da edição do admin: perfil publicado recarrega (o slug pode ter mudado). */
+  protected async afterAdminSave(result: { id: string; slug: string; status: string }): Promise<void> {
+    if (result.status !== 'published') {
+      await this.router.navigate(['/', this.lang(), 'admin']);
+      return;
+    }
+    await this.router.navigate(['/', this.lang(), 'community', result.id, result.slug], { replaceUrl: true });
+    this.data.reload();
+    void this.refreshLive(result.id);
+  }
+
+  protected async afterAdminDelete(): Promise<void> {
+    await this.router.navigate(['/', this.lang(), 'community']);
+  }
+
+  protected async adminDeleteComment(comment: ProfileComment): Promise<void> {
+    this.deleting.set(comment.id);
+    try {
+      await this.community.adminDeleteComment(comment.id);
+      this.comments.update((list) => list.filter((c) => c.id !== comment.id));
+      this.commentsTotal.update((n) => Math.max(0, n - 1));
+      this.messages.add({ severity: 'success', summary: this.transloco.translate('community.comments.deleted'), life: 2500 });
+    } catch (error) {
+      this.toastError(error);
+    } finally {
+      this.deleting.set(null);
     }
   }
 

@@ -387,7 +387,8 @@
       "rate_limited": "Muitas ações em pouco tempo. Espere um minuto e tente de novo.",
       "not_admin": "Só administradores podem fazer isso.",
       "too_large": "O arquivo passa de 16 KB.",
-      "invalid_json": "O envio veio num formato inválido."
+      "invalid_json": "O envio veio num formato inválido.",
+      "author_not_found": "Não existe usuário com esse nome."
     }
   },
   "account": {
@@ -571,8 +572,9 @@
     "fromApp": "Perfil de configuração recebido do macItRun.",
     "file": {
       "label": "Enviar o arquivo",
-      "hint": "O arquivo .macitrun-profile exportado pelo app (até 16 KB).",
-      "choose": "Escolher arquivo"
+      "hint": "Arraste o arquivo .macitrun-profile exportado pelo app para cá (até 16 KB), ou escolha:",
+      "choose": "Escolher arquivo",
+      "drop": "Solte o arquivo para conferir"
     },
     "paste": {
       "label": "Ou cole o conteúdo do arquivo",
@@ -685,5 +687,18 @@
       "label": "Pioneiro",
       "description": "Uma das 100 primeiras contas do site."
     }
+  },
+  "adminEdit": {
+    "button": "Editar (admin)",
+    "title": "Editar perfil de configuração",
+    "author": "Autor",
+    "authorHint": "Nome de usuário. Vazio deixa como \"autor removido\".",
+    "status": "Situação",
+    "file": "Arquivo .macitrun-profile",
+    "delete": "Apagar de vez",
+    "deleteConfirm": "Apagar este perfil de configuração de vez? Curtidas, comentários e denúncias dele também somem. Não dá para desfazer.",
+    "deleteComment": "Apagar comentário",
+    "saved": "Perfil de configuração salvo",
+    "deleted": "Apagado"
   }
 }

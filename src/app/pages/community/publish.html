@@ -1,4 +1,21 @@
-<section class="mx-auto max-w-4xl px-4 py-10 md:py-14">
+<!-- Soltar um arquivo em qualquer lugar da página carrega o perfil. -->
+<section
+  class="relative mx-auto max-w-4xl px-4 py-10 md:py-14"
+  (dragenter)="dragEnter($event)"
+  (dragover)="dragOver($event)"
+  (dragleave)="dragLeave()"
+  (drop)="drop($event)"
+>
+  @if (dragging()) {
+    <div
+      class="pointer-events-none absolute inset-2 z-10 flex items-center justify-center rounded-3xl border-2 border-dashed border-primary bg-primary-50/90 dark:bg-primary-950/90"
+    >
+      <p class="m-0 flex items-center gap-3 text-xl font-semibold text-primary">
+        <i class="pi pi-file-import text-2xl" aria-hidden="true"></i>{{ 'publish.file.drop' | transloco }}
+      </p>
+    </div>
+  }
+
   <a
     [routerLink]="['/', lang(), 'community']"
     class="inline-flex items-center gap-2 text-sm text-surface-600 no-underline hover:text-primary dark:text-surface-300"
@@ -15,9 +32,12 @@
   } @else if (!text()) {
     <!-- Escolher o perfil -->
     <div class="mt-8 grid gap-6 md:grid-cols-2">
-      <div class="rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+      <div
+        class="flex flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-surface-300 bg-surface-0 p-6 text-center dark:border-surface-700 dark:bg-surface-900"
+      >
+        <i class="pi pi-cloud-upload text-4xl text-surface-400" aria-hidden="true"></i>
         <h2 class="m-0 text-lg font-semibold">{{ 'publish.file.label' | transloco }}</h2>
-        <p class="mt-2 mb-4 text-sm text-surface-600 dark:text-surface-300">{{ 'publish.file.hint' | transloco }}</p>
+        <p class="m-0 text-sm text-surface-600 dark:text-surface-300">{{ 'publish.file.hint' | transloco }}</p>
         <label class="p-button p-component p-button-outlined p-button-secondary inline-flex cursor-pointer items-center gap-2">
           <i class="pi pi-upload" aria-hidden="true"></i>
           <span>{{ 'publish.file.choose' | transloco }}</span>

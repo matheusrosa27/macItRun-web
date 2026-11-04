@@ -81,6 +81,28 @@
                     [loading]="busy() === key(item, 'keep')"
                     (onClick)="moderate(item, false)"
                   />
+                  @if (item.target) {
+                    @if (item.targetType === 'profile') {
+                      <p-button
+                        [label]="'adminEdit.button' | transloco"
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        [text]="true"
+                        size="small"
+                        (onClick)="edit(item)"
+                      />
+                    } @else {
+                      <p-button
+                        [label]="'adminEdit.deleteComment' | transloco"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        size="small"
+                        [loading]="busy() === key(item, 'delete')"
+                        (onClick)="deleteComment(item)"
+                      />
+                    }
+                  }
                   @if (item.target?.author; as author) {
                     <p-button
                       [label]="(author.banned ? 'admin.unban' : 'admin.ban') | transloco"
@@ -124,6 +146,28 @@
                     [loading]="busy() === key(item, 'keep')"
                     (onClick)="moderate(item, false)"
                   />
+                  @if (item.target) {
+                    @if (item.targetType === 'profile') {
+                      <p-button
+                        [label]="'adminEdit.button' | transloco"
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        [text]="true"
+                        size="small"
+                        (onClick)="edit(item)"
+                      />
+                    } @else {
+                      <p-button
+                        [label]="'adminEdit.deleteComment' | transloco"
+                        icon="pi pi-trash"
+                        severity="danger"
+                        [text]="true"
+                        size="small"
+                        [loading]="busy() === key(item, 'delete')"
+                        (onClick)="deleteComment(item)"
+                      />
+                    }
+                  }
                   @if (item.target?.author; as author) {
                     <p-button
                       [label]="(author.banned ? 'admin.unban' : 'admin.ban') | transloco"
@@ -147,4 +191,11 @@
       </p-tabpanel>
     </p-tabpanels>
   </p-tabs>
+
+  <app-admin-profile-dialog
+    [profileId]="editing()"
+    [(visible)]="editOpen"
+    (saved)="reload()"
+    (deleted)="reload()"
+  />
 </section>

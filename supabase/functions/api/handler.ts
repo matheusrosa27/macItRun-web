@@ -10,6 +10,8 @@
 // POST   /api/v1/profiles/{id}/comments      (login) corpo { "body": "..." }
 // POST   /api/v1/profiles                    (login) publicar: { "file": {...}, "notes": "..." }
 // POST   /api/v1/reports                     (login) { "targetType", "targetId", "reason", "detail" }
+// PATCH  /api/v1/profiles/{id}               (admin) { "file"?, "notes"?, "status"?, "author"? }
+// DELETE /api/v1/profiles/{id}               (admin)
 // GET    /api/v1/profile-filters             valores dos filtros (Macs testados)
 //
 // Login: `Authorization: Bearer <access token do Supabase>`. As escritas rodam como a pessoa
@@ -71,6 +73,8 @@ const DB_ERRORS: Record<string, number> = {
   comment_invalid: 400,
   text_invalid: 400,
   own_content: 403,
+  not_admin: 403,
+  author_not_found: 400,
   daily_limit: 429,
 };
 
@@ -102,7 +106,9 @@ export async function handle(request: Request, clients: Clients): Promise<Respon
         ? ['POST']
         : (action === 'comments' && id) || (!id && !filters)
           ? ['GET', 'POST']
-          : ['GET'];
+          : id && !action
+            ? ['GET', 'PATCH', 'DELETE']
+            : ['GET'];
   if (!allowed.includes(method)) {
     return error(405, 'method_not_allowed', { Allow: [...allowed, ...(allowed.includes('GET') ? ['HEAD'] : []), 'OPTIONS'].join(', ') });
   }
@@ -125,6 +131,11 @@ export async function handle(request: Request, clients: Clients): Promise<Respon
       return json(await call(db, 'report', args), 201, NO_STORE);
     }
     if (!id && method === 'POST') return await publishProfile(request, clients);
+    if (id && !action && method === 'PATCH') return await adminUpdate(id, request, clients);
+    if (id && !action && method === 'DELETE') {
+      await call(clients.user(bearer(request)), 'admin_delete_profile', { profile_id: id });
+      return new Response(null, { status: 204, headers: { ...CORS, ...NO_STORE } });
+    }
     if (!id) return await listProfiles(url.searchParams, clients.reader);
     if (action === 'like') {
       const db = clients.user(bearer(request));
@@ -181,6 +192,54 @@ async function publishProfile(request: Request, clients: Clients): Promise<Respo
     notes,
   });
   return json(created, 201, NO_STORE);
+}
+
+const STATUSES = ['published', 'hidden', 'removed'];
+
+/**
+ * Admin edita um perfil: o arquivo (validado como na publicação), as notas, a situação e o
+ * autor (nome de usuário, ou null para "autor removido"). O banco confere se é admin.
+ */
+async function adminUpdate(id: string, request: Request, clients: Clients): Promise<Response> {
+  const admin = await clients.authenticate(bearer(request));
+  if (!admin) throw new ApiError(401, 'not_authenticated');
+  const body = (await jsonBody(request, MAX_PUBLISH_BYTES)) as Record<string, unknown>;
+  const args: Record<string, unknown> = { admin_id: admin, profile_id: id };
+
+  if (body['file'] !== undefined) {
+    let file = body['file'];
+    if (typeof file === 'string') {
+      try {
+        file = JSON.parse(file);
+      } catch {
+        throw new ApiError(400, 'invalid_profile', [{ path: '', code: 'invalid_json' }]);
+      }
+    }
+    if (new TextEncoder().encode(JSON.stringify(file ?? null)).length > MAX_PROFILE_BYTES) {
+      throw new ApiError(413, 'too_large');
+    }
+    const result = parseProfileFile(file);
+    if (!result.ok) throw new ApiError(400, 'invalid_profile', result.issues);
+    args['payload'] = result.file.profile;
+    args['tested_on'] = result.file.testedOn ?? {};
+  }
+  if (body['notes'] !== undefined) {
+    if (typeof body['notes'] !== 'string') throw new ApiError(400, 'text_invalid');
+    args['notes'] = body['notes'];
+  }
+  if (body['status'] !== undefined) {
+    if (typeof body['status'] !== 'string' || !STATUSES.includes(body['status'])) {
+      throw new ApiError(400, 'invalid_parameter');
+    }
+    args['status'] = body['status'];
+  }
+  if ('author' in body) {
+    const author = body['author'];
+    if (author !== null && typeof author !== 'string') throw new ApiError(400, 'author_not_found');
+    args['set_author'] = true;
+    args['author'] = typeof author === 'string' && author.trim() ? author.trim() : null;
+  }
+  return json(await call(clients.writer, 'admin_update_profile', args), 200, NO_STORE);
 }
 
 async function listProfiles(params: URLSearchParams, db: Rpc): Promise<Response> {
@@ -329,7 +388,7 @@ async function call(db: Rpc, fn: string, args: Record<string, unknown>): Promise
 // O app de Mac não precisa de CORS; o site chama a API direto do navegador.
 const CORS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, HEAD, POST, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, HEAD, POST, PATCH, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, Content-Type',
   'Access-Control-Max-Age': '86400',
 };

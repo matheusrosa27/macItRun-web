@@ -21,36 +21,15 @@ import { authErrorKey } from '../../core/auth/auth-errors';
 import { AuthService } from '../../core/auth/auth.service';
 import { COMMUNITY_ENABLED, ProfileIssue, PublishError } from '../../core/community/community';
 import { CommunityService } from '../../core/community/community.service';
+import { issueKey } from '../../core/community/issues';
 import { decodeProfileData, PENDING_PROFILE_KEY } from '../../core/community/publish-data';
 import { Lang } from '../../core/i18n/langs';
 import { ProfileChanges } from './profile-changes';
 
 const NOTES_MAX = 2000;
-const PENDING_NOTES_KEY = 'macitrun.pendingNotes';
 
-/** Problemas do arquivo que têm mensagem própria; os outros usam a genérica. */
-const ISSUE_CODES = new Set([
-  'invalid_json',
-  'too_large',
-  'id_invalid',
-  'name_invalid',
-  'executables_empty',
-  'executable_invalid',
-  'executable_reserved',
-  'invalid_value',
-  'invalid_type',
-  'unrecognized_keys',
-  'dll_invalid',
-  'load_order_invalid',
-  'environment_bottle_wide',
-  'environment_not_allowed',
-  'environment_path',
-  'environment_value_invalid',
-  'arguments_too_many',
-  'argument_invalid',
-  'notes_too_long',
-  'tested_on_invalid',
-]);
+const hasFiles = (event: DragEvent) => !!event.dataTransfer?.types.includes('Files');
+const PENDING_NOTES_KEY = 'macitrun.pendingNotes';
 
 /**
  * Publicar um perfil de configuração. Ele chega pelo botão Publicar do app (#data= na URL),
@@ -120,15 +99,48 @@ export class Publish {
     return true;
   }
 
-  protected issueKey(issue: ProfileIssue): string {
-    return `publish.issues.${ISSUE_CODES.has(issue.code) ? issue.code : 'generic'}`;
-  }
+  protected readonly issueKey = issueKey;
 
   protected async readFile(event: Event): Promise<void> {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
     input.value = '';
-    if (!file) return;
+    if (file) await this.load(file);
+  }
+
+  // Arrastar e soltar: o contador evita que o destaque pisque ao passar por cima dos filhos.
+  protected readonly dragging = signal(false);
+  private dragDepth = 0;
+
+  protected dragEnter(event: DragEvent): void {
+    if (!hasFiles(event)) return;
+    event.preventDefault();
+    this.dragDepth++;
+    this.dragging.set(true);
+  }
+
+  protected dragOver(event: DragEvent): void {
+    if (!hasFiles(event)) return;
+    // Sem isto o navegador abre o arquivo em vez de entregá-lo à página.
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+  }
+
+  protected dragLeave(): void {
+    this.dragDepth = Math.max(0, this.dragDepth - 1);
+    if (this.dragDepth === 0) this.dragging.set(false);
+  }
+
+  protected async drop(event: DragEvent): Promise<void> {
+    if (!hasFiles(event)) return;
+    event.preventDefault();
+    this.dragDepth = 0;
+    this.dragging.set(false);
+    const file = event.dataTransfer?.files[0];
+    if (file && this.enabled && this.auth.enabled) await this.load(file);
+  }
+
+  private async load(file: File): Promise<void> {
     // Mais de 16 KB nem é lido: o arquivo é recusado do mesmo jeito.
     this.setText(file.size > 64 * 1024 ? 'x'.repeat(17 * 1024) : await file.text(), false);
   }

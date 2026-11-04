@@ -237,3 +237,93 @@ describe('limite por IP', () => {
     );
   });
 });
+
+describe('admin edita e apaga', () => {
+  let admin, profile;
+  const update = (args, adminId = admin) =>
+    asService(db, (tx) => rpc(tx, 'admin_update_profile', { admin_id: adminId, profile_id: profile, ...args }));
+
+  beforeEach(async () => {
+    admin = await member(db, 'chefe');
+    await db.query(`update public.users_public set role = 'admin' where id = $1`, [admin]);
+    ({ id: profile } = await publish(db, ana, 'Notas da Ana'));
+  });
+
+  test('troca o arquivo, as notas, a situação e o autor', async () => {
+    const result = await update({
+      payload: { ...PAYLOAD, name: 'Dark Souls Remastered', graphics: 'dxmt' },
+      tested_on: { mac: 'Mac16,12' },
+      notes: 'Revisado',
+      status: 'published',
+      set_author: true,
+      author: 'BIA',
+    });
+    assert.equal(result.slug, 'dark-souls-remastered');
+    const found = await as(db, null, (tx) => rpc(tx, 'api_get_profile', { profile_id: profile }));
+    assert.equal(found.profile.name, 'Dark Souls Remastered');
+    assert.equal(found.testedOn.mac, 'Mac16,12');
+    assert.equal(found.community.notes, 'Revisado');
+    assert.equal(found.community.author.username, 'bia');
+    const byName = await as(db, null, (tx) => rpc(tx, 'api_list_profiles', { q: 'remastered bia' }));
+    assert.equal(byName.total, 1);
+  });
+
+  test('deixa sem autor e só muda o que veio', async () => {
+    await update({ set_author: true, author: null });
+    const found = await as(db, null, (tx) => rpc(tx, 'api_get_profile', { profile_id: profile }));
+    assert.equal(found.community.author, null);
+    assert.equal(found.community.notes, 'Notas da Ana');
+    assert.deepEqual(found.profile, PAYLOAD);
+  });
+
+  test('autor inexistente, perfil inexistente ou quem não é admin', async () => {
+    await rejects(update({ set_author: true, author: 'ninguem' }), 'author_not_found');
+    await rejects(
+      asService(db, (tx) => rpc(tx, 'admin_update_profile', { admin_id: admin, profile_id: 'nada', notes: 'x' })),
+      'not_found',
+    );
+    await rejects(update({ notes: 'x' }, ana), 'not_admin');
+    await rejects(
+      as(db, admin, (tx) => rpc(tx, 'admin_update_profile', { admin_id: admin, profile_id: profile, notes: 'x' })),
+      'permission denied',
+    );
+  });
+
+  test('fora da edição de admin, o perfil continua travado', async () => {
+    await update({ notes: 'ok' });
+    await rejects(
+      db.query(`update public.profiles set payload = payload || '{"name":"Outro"}' where id = $1`, [profile]),
+      'profile_immutable',
+    );
+  });
+
+  test('apaga o perfil com comentários, curtidas e denúncias', async () => {
+    const { id: comment } = await as(db, bia, (tx) => rpc(tx, 'add_comment', { profile_id: profile, body: 'oi' }));
+    await as(db, bia, (tx) => rpc(tx, 'like_profile', { profile_id: profile }));
+    await as(db, caio, (tx) => rpc(tx, 'report', { target_type: 'profile', target_id: profile, reason: 'spam' }));
+    await as(db, caio, (tx) => rpc(tx, 'report', { target_type: 'comment', target_id: String(comment), reason: 'spam' }));
+    await rejects(as(db, ana, (tx) => rpc(tx, 'admin_delete_profile', { profile_id: profile })), 'not_admin');
+    await as(db, admin, (tx) => rpc(tx, 'admin_delete_profile', { profile_id: profile }));
+    for (const [table, column] of [
+      ['public.profiles', 'id'],
+      ['public.comments', 'profile_id'],
+      ['public.likes', 'profile_id'],
+    ]) {
+      assert.equal((await db.query(`select 1 from ${table} where ${column} = $1`, [profile])).rows.length, 0, table);
+    }
+    assert.equal((await db.query('select 1 from public.reports')).rows.length, 0);
+    await rejects(as(db, admin, (tx) => rpc(tx, 'admin_delete_profile', { profile_id: profile })), 'not_found');
+  });
+
+  test('apaga um comentário e vê qualquer perfil', async () => {
+    const { id: comment } = await as(db, bia, (tx) => rpc(tx, 'add_comment', { profile_id: profile, body: 'oi' }));
+    await rejects(as(db, ana, (tx) => rpc(tx, 'admin_delete_comment', { comment_id: comment })), 'not_admin');
+    await as(db, admin, (tx) => rpc(tx, 'admin_delete_comment', { comment_id: comment }));
+    assert.equal((await db.query('select 1 from public.comments where id = $1', [comment])).rows.length, 0);
+
+    await db.query(`update public.profiles set status = 'hidden' where id = $1`, [profile]);
+    const file = await as(db, admin, (tx) => rpc(tx, 'admin_get_profile', { profile_id: profile }));
+    assert.deepEqual([file.status, file.author, file.notes], ['hidden', 'ana', 'Notas da Ana']);
+    await rejects(as(db, ana, (tx) => rpc(tx, 'admin_get_profile', { profile_id: profile })), 'not_admin');
+  });
+});

@@ -121,3 +121,22 @@ export class PublishError extends Error {
     this.issues = issues;
   }
 }
+
+/** O perfil como o admin edita (admin_get_profile). */
+export interface AdminProfile {
+  format: 'macitrun-profile';
+  version: 1;
+  profile: GameProfile;
+  testedOn: TestedOn;
+  notes: string;
+  status: 'published' | 'hidden' | 'removed';
+  author: string | null;
+}
+
+/** O que o admin muda; o que não vier fica como está. `author: null` tira o autor. */
+export interface AdminChanges {
+  file?: string;
+  notes?: string;
+  status?: 'published' | 'hidden' | 'removed';
+  author?: string | null;
+}

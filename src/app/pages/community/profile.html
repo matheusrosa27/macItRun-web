@@ -58,6 +58,15 @@
         [attr.aria-pressed]="liked()"
         (onClick)="toggleLike()"
       />
+      @if (isAdmin()) {
+        <p-button
+          icon="pi pi-pencil"
+          [label]="'adminEdit.button' | transloco"
+          severity="warn"
+          [outlined]="true"
+          (onClick)="adminEditOpen.set(true)"
+        />
+      }
       @if (!ownProfile()) {
         <p-button
           icon="pi pi-flag"
@@ -117,6 +126,18 @@
                   size="small"
                   [ariaLabel]="'report.comment' | transloco"
                   (onClick)="openReport({ type: 'comment', id: comment.id + '' })"
+                />
+              }
+              @if (isAdmin() && !isMine(comment)) {
+                <p-button
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [text]="true"
+                  [rounded]="true"
+                  size="small"
+                  [loading]="deleting() === comment.id"
+                  [ariaLabel]="'adminEdit.deleteComment' | transloco"
+                  (onClick)="adminDeleteComment(comment)"
                 />
               }
               @if (isMine(comment)) {
@@ -191,6 +212,14 @@
       </div>
     </section>
     <app-report-dialog [target]="reportTarget()" [(visible)]="reportOpen" />
+    @if (isAdmin()) {
+      <app-admin-profile-dialog
+        [profileId]="c.id"
+        [(visible)]="adminEditOpen"
+        (saved)="afterAdminSave($event)"
+        (deleted)="afterAdminDelete()"
+      />
+    }
   } @else {
     <!-- Perfil inexistente ou escondido -->
     <div class="mx-auto flex max-w-xl flex-col items-center py-20 text-center">
