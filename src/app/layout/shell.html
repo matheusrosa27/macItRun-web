@@ -13,7 +13,7 @@
       <span>{{ 'app.name' | transloco }}</span>
     </a>
 
-    <nav class="ml-4 hidden items-center gap-1 md:flex" [attr.aria-label]="'nav.main' | transloco">
+    <nav class="ml-4 hidden items-center gap-1 whitespace-nowrap lg:flex" [attr.aria-label]="'nav.main' | transloco">
       @for (item of nav; track item.path) {
         <a
           [routerLink]="link(item.path)"
@@ -73,7 +73,7 @@
         (onClick)="theme.toggle()"
       />
       <p-button
-        class="md:hidden"
+        class="lg:hidden"
         icon="pi pi-bars"
         [text]="true"
         [rounded]="true"

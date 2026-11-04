@@ -17,8 +17,8 @@
     "licenses": "Licenças",
     "login": "Entrar",
     "account": "Minha conta",
-    "community": "Comunidade",
-    "forum": "Fórum"
+    "community": "Perfis de configuração",
+    "forum": "Comunidade"
   },
   "footer": {
     "label": "Links do rodapé",
@@ -68,7 +68,7 @@
       "description": "Nome de usuário, seus dados e exclusão da conta no macItRun."
     },
     "community": {
-      "title": "Comunidade",
+      "title": "Perfis de configuração",
       "description": "Perfis de configuração da comunidade para rodar apps e jogos de Windows no Mac com o macItRun: busque pelo jogo, veja o que cada um muda e importe no app."
     },
     "communityProfile": {
@@ -88,16 +88,16 @@
       "description": "Autorize o app macItRun a usar sua conta."
     },
     "forum": {
-      "title": "Fórum",
-      "description": "Fórum da comunidade do macItRun: dúvidas, problemas e dicas para rodar apps e jogos de Windows no Mac, com links para os perfis de configuração."
+      "title": "Comunidade",
+      "description": "Comunidade do macItRun: dúvidas, problemas e dicas para rodar apps e jogos de Windows no Mac, com links para os perfis de configuração."
     },
     "topic": {
-      "title": "Tópico do fórum",
-      "description": "Uma discussão no fórum da comunidade do macItRun."
+      "title": "Tópico da comunidade",
+      "description": "Uma discussão na comunidade do macItRun."
     },
     "newTopic": {
       "title": "Novo tópico",
-      "description": "Abra uma discussão no fórum do macItRun."
+      "description": "Abra uma discussão na comunidade do macItRun."
     }
   },
   "home": {
@@ -410,7 +410,8 @@
       "title_invalid": "O título precisa ter de 3 a 120 caracteres.",
       "body_invalid": "Escreva o texto (sem passar do limite de caracteres).",
       "tags_invalid": "Use até 5 tags, com até 30 caracteres cada.",
-      "profiles_invalid": "Um dos perfis de configuração citados não está mais publicado. Tire-o e tente de novo."
+      "profiles_invalid": "Um dos perfis de configuração citados não está mais publicado. Tire-o e tente de novo.",
+      "invalid_vote": "Voto inválido."
     }
   },
   "account": {
@@ -453,7 +454,7 @@
       "confirm": "Apagar para sempre",
       "done": "Conta apagada",
       "profiles": {
-        "label": "Seus perfis de configuração publicados e tópicos do fórum:",
+        "label": "Seus perfis de configuração publicados e tópicos da comunidade:",
         "keep": "Manter na comunidade, como “autor removido”",
         "remove": "Apagar junto com a conta"
       }
@@ -474,7 +475,7 @@
     }
   },
   "community": {
-    "title": "Comunidade",
+    "title": "Perfis de configuração",
     "subtitle": "Perfis de configuração compartilhados por quem usa o macItRun. Busque pelo jogo ou app, veja o que cada um muda e importe no app.",
     "unavailable": "A comunidade ainda não está disponível neste endereço.",
     "error": "Não foi possível carregar os perfis de configuração agora. Tente de novo em instantes.",
@@ -528,7 +529,7 @@
       "winxp": "Windows XP"
     },
     "profile": {
-      "back": "Comunidade",
+      "back": "Perfis de configuração",
       "seoDescription": "Perfil de configuração do macItRun para {{ name }}: camada gráfica, versão do Windows e ajustes testados pela comunidade.",
       "published": "Publicado em {{ date }}",
       "open": "Abrir no macItRun",
@@ -575,7 +576,7 @@
         "title": "Como foi"
       },
       "discussions": {
-        "title": "Discussões no fórum",
+        "title": "Discussões na comunidade",
         "start": "Começar uma discussão",
         "empty": "Ninguém abriu uma discussão sobre este perfil de configuração ainda.",
         "all": "Ver as {{ count }} discussões"
@@ -607,11 +608,11 @@
     }
   },
   "forum": {
-    "title": "Fórum",
+    "title": "Comunidade",
     "subtitle": "Pergunte, conte o que funcionou e troque dicas sobre apps e jogos de Windows no Mac. Cite perfis de configuração para os outros testarem.",
     "newTopic": "Novo tópico",
     "search": {
-      "label": "Buscar no fórum",
+      "label": "Buscar na comunidade",
       "placeholder": "Buscar por título, texto ou tag",
       "submit": "Buscar"
     },
@@ -622,7 +623,8 @@
       "label": "Ordem",
       "activity": "Atividade recente",
       "recent": "Mais novos",
-      "replies": "Mais respondidos"
+      "replies": "Mais respondidos",
+      "top": "Mais curtidos"
     },
     "profileFilter": "Tópicos que citam {{ name }}",
     "clearProfile": "Ver todos os tópicos",
@@ -635,10 +637,11 @@
     "card": {
       "activity": "Última atividade",
       "replies": "Respostas",
-      "profiles": "Perfis de configuração citados"
+      "profiles": "Perfis de configuração citados",
+      "likes": "Curtidas"
     },
     "topic": {
-      "back": "Fórum",
+      "back": "Comunidade",
       "edited": "editado",
       "edit": "Editar",
       "saved": "Tópico salvo",
@@ -686,6 +689,18 @@
       "save": "Salvar",
       "created": "Tópico publicado",
       "setup": "Para abrir um tópico, escolha seu nome de usuário em Minha conta."
+    },
+    "votes": {
+      "label": "Votos",
+      "like": "Curtir ({{ count }})",
+      "liked": "Curtido ({{ count }}). Clique para tirar",
+      "dislike": "Não curtir ({{ count }})",
+      "disliked": "Não curtido ({{ count }}). Clique para tirar"
+    },
+    "saved": {
+      "title": "Tópicos salvos",
+      "hint": "Tópicos da comunidade que você guardou para ler depois. Só você vê esta lista.",
+      "empty": "Nenhum tópico salvo ainda. Use o botão Salvar na página de um tópico em"
     }
   },
   "publish": {
@@ -782,7 +797,7 @@
     "done": "Feito",
     "bannedDone": "Autor banido",
     "unbannedDone": "Autor desbanido",
-    "topic": "Tópico do fórum",
+    "topic": "Tópico da comunidade",
     "reply": "Resposta em {{ name }}",
     "deleteTopic": "Apagar tópico",
     "deleteReply": "Apagar resposta"

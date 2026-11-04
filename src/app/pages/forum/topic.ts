@@ -32,6 +32,8 @@ import {
   TopicDetail,
   TopicInput,
   TopicReply,
+  Vote,
+  VoteResult,
 } from '../../core/community/community';
 import { CommunityService } from '../../core/community/community.service';
 import { Lang } from '../../core/i18n/langs';
@@ -41,6 +43,15 @@ import { AuthorName } from '../community/author';
 import { ReportDialog } from '../community/report-dialog';
 import { forumDate, forumDateTime } from './dates';
 import { TopicForm, TopicFormValue } from './topic-form';
+import { VoteButtons } from './vote-buttons';
+
+/** Totais depois de trocar o voto `from` por `to` (para mostrar na hora, antes do banco). */
+function applyVote(counts: { likes: number; dislikes: number }, from: Vote, to: Vote) {
+  return {
+    likes: Math.max(0, counts.likes - (from === 1 ? 1 : 0) + (to === 1 ? 1 : 0)),
+    dislikes: Math.max(0, counts.dislikes - (from === -1 ? 1 : 0) + (to === -1 ? 1 : 0)),
+  };
+}
 
 /**
  * Um tópico do fórum: o texto, os perfis de configuração citados e as respostas, em ordem.
@@ -61,6 +72,7 @@ import { TopicForm, TopicFormValue } from './topic-form';
     AuthorName,
     ReportDialog,
     TopicForm,
+    VoteButtons,
   ],
   templateUrl: './topic.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +137,17 @@ export class TopicPage {
   protected readonly confirmDelete = signal(false);
   protected readonly removing = signal(false);
 
+  /** Totais do tópico, atualizados na hora ao votar. */
+  protected readonly topicLikes = linkedSignal(() => this.topic()?.likes ?? 0);
+  protected readonly topicDislikes = linkedSignal(() => this.topic()?.dislikes ?? 0);
+  /** Votos e favorito da pessoa conectada (lidos no navegador). */
+  protected readonly topicVote = signal<Vote>(0);
+  protected readonly replyVotes = signal<Record<string, Vote>>({});
+  protected readonly saved = signal(false);
+  protected readonly savingTopic = signal(false);
+  /** O que está votando agora: 'topic' ou o id da resposta. */
+  protected readonly voting = signal<string | null>(null);
+
   protected readonly reportTarget = signal<ReportTarget | null>(null);
   protected readonly reportOpen = signal(false);
 
@@ -155,6 +178,30 @@ export class TopicPage {
     effect(() => {
       const id = this.topic()?.id;
       if (this.browser && id) untracked(() => void this.refreshLive(id));
+    });
+
+    // Votos e favorito de quem está conectado (só no navegador, onde há sessão).
+    effect(() => {
+      const id = this.topic()?.id;
+      const user = this.auth.user();
+      if (!this.browser || !id || !this.auth.ready()) return;
+      if (!user) {
+        this.topicVote.set(0);
+        this.replyVotes.set({});
+        this.saved.set(false);
+        return;
+      }
+      untracked(() =>
+        this.community.topicState(id).then(
+          (state) => {
+            if (id !== this.topic()?.id || !state) return;
+            this.topicVote.set(state.vote);
+            this.replyVotes.set(state.replies);
+            this.saved.set(state.saved);
+          },
+          () => undefined,
+        ),
+      );
     });
 
     this.replyForm.controls.body.valueChanges.subscribe((value) => this.replyLength.set(value.length));
@@ -193,16 +240,25 @@ export class TopicPage {
       ...(topic.editedAt ? { dateModified: topic.editedAt } : {}),
       author: person(topic.author),
       ...(topic.tags.length ? { keywords: topic.tags.join(', ') } : {}),
-      interactionStatistic: {
-        '@type': 'InteractionCounter',
-        interactionType: 'https://schema.org/CommentAction',
-        userInteractionCount: topic.replies,
-      },
+      interactionStatistic: [
+        {
+          '@type': 'InteractionCounter',
+          interactionType: 'https://schema.org/CommentAction',
+          userInteractionCount: topic.replies,
+        },
+        {
+          '@type': 'InteractionCounter',
+          interactionType: 'https://schema.org/LikeAction',
+          userInteractionCount: topic.likes,
+        },
+      ],
       comment: replies.map((reply) => ({
         '@type': 'Comment',
         text: reply.body,
         datePublished: reply.createdAt,
         author: person(reply.author),
+        upvoteCount: reply.likes,
+        downvoteCount: reply.dislikes,
       })),
     };
   }
@@ -236,6 +292,93 @@ export class TopicPage {
     }
     this.reportTarget.set(target);
     this.reportOpen.set(true);
+  }
+
+  /** Votar e salvar pedem login e conta completa (tirar o voto ou dos salvos, só login). */
+  private async canParticipate(): Promise<boolean> {
+    if (!this.auth.user()) {
+      await this.goToLogin();
+      return false;
+    }
+    if (this.auth.needsSetup()) {
+      await this.router.navigate(['/', this.lang(), 'account']);
+      return false;
+    }
+    return true;
+  }
+
+  protected async voteTopic(value: Vote): Promise<void> {
+    const current = this.topic();
+    if (!current || this.voting() || !(await this.canParticipate())) return;
+    const before = { vote: this.topicVote(), likes: this.topicLikes(), dislikes: this.topicDislikes() };
+    const shown = applyVote(before, before.vote, value);
+    this.topicVote.set(value);
+    this.topicLikes.set(shown.likes);
+    this.topicDislikes.set(shown.dislikes);
+    this.voting.set('topic');
+    try {
+      const result = await this.community.voteTopic(current.id, value);
+      this.topicVote.set(result.vote);
+      this.topicLikes.set(result.likes);
+      this.topicDislikes.set(result.dislikes);
+    } catch (error) {
+      this.topicVote.set(before.vote);
+      this.topicLikes.set(before.likes);
+      this.topicDislikes.set(before.dislikes);
+      this.toastError(error);
+    } finally {
+      this.voting.set(null);
+    }
+  }
+
+  protected replyVote(reply: TopicReply): Vote {
+    return this.replyVotes()[String(reply.id)] ?? 0;
+  }
+
+  protected async voteReply(reply: TopicReply, value: Vote): Promise<void> {
+    if (this.voting() || !(await this.canParticipate())) return;
+    const key = String(reply.id);
+    const from = this.replyVote(reply);
+    const setReply = (vote: Vote, counts: { likes: number; dislikes: number }) => {
+      this.replyVotes.update((votes) => ({ ...votes, [key]: vote }));
+      this.replies.update((list) => list.map((r) => (r.id === reply.id ? { ...r, ...counts } : r)));
+    };
+    const before = { likes: reply.likes, dislikes: reply.dislikes };
+    setReply(value, applyVote(before, from, value));
+    this.voting.set(key);
+    try {
+      const result: VoteResult = await this.community.voteReply(reply.id, value);
+      setReply(result.vote, { likes: result.likes, dislikes: result.dislikes });
+    } catch (error) {
+      setReply(from, before);
+      this.toastError(error);
+    } finally {
+      this.voting.set(null);
+    }
+  }
+
+  protected async toggleSave(): Promise<void> {
+    const current = this.topic();
+    if (!current) return;
+    const next = !this.saved();
+    if (!this.auth.user() || (next && this.auth.needsSetup())) {
+      await this.canParticipate();
+      return;
+    }
+    this.savingTopic.set(true);
+    try {
+      const result = await this.community.saveTopic(current.id, next);
+      this.saved.set(result.saved);
+      this.messages.add({
+        severity: 'success',
+        summary: this.transloco.translate(result.saved ? 'saved.added' : 'saved.removed'),
+        life: 2500,
+      });
+    } catch (error) {
+      this.toastError(error);
+    } finally {
+      this.savingTopic.set(false);
+    }
   }
 
   protected async save(input: TopicInput): Promise<void> {

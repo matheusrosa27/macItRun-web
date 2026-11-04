@@ -11,6 +11,10 @@ import {
   MyProfile,
   PublishError,
   SavedProfile,
+  SavedTopic,
+  TopicState,
+  Vote,
+  VoteResult,
   TopicDetail,
   TopicInput,
   TopicListParams,
@@ -155,6 +159,28 @@ export class CommunityService {
 
   deleteReply(replyId: number): Promise<void> {
     return this.auth.rpc('delete_reply', { reply_id: replyId });
+  }
+
+  voteTopic(id: string, value: Vote): Promise<VoteResult> {
+    return this.auth.rpc('vote_topic', { topic_id: id, value });
+  }
+
+  voteReply(replyId: number, value: Vote): Promise<VoteResult> {
+    return this.auth.rpc('vote_reply', { reply_id: replyId, value });
+  }
+
+  /** Salvar nos favoritos particulares (separado do voto, que conta no ranking). */
+  saveTopic(id: string, saved: boolean): Promise<{ saved: boolean }> {
+    return this.auth.rpc('save_topic', { topic_id: id, saved });
+  }
+
+  /** Voto no tópico e nas respostas, e se salvou (só da pessoa conectada). */
+  topicState(id: string): Promise<TopicState> {
+    return this.auth.rpc('my_topic_state', { topic_id: id });
+  }
+
+  mySavedTopics(): Promise<SavedTopic[]> {
+    return this.auth.rpc('my_saved_topics');
   }
 
   adminDeleteTopic(id: string): Promise<void> {

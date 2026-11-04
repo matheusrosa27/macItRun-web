@@ -52,6 +52,10 @@ import { forumDate } from './dates';
               <span class="sr-only">{{ 'forum.card.profiles' | transloco }}:</span> {{ t.profiles }}
             </span>
           }
+          <span [title]="'forum.card.likes' | transloco">
+            <i class="pi pi-thumbs-up text-xs" aria-hidden="true"></i>
+            <span class="sr-only">{{ 'forum.card.likes' | transloco }}:</span> {{ t.likes }}
+          </span>
           <span [title]="'forum.card.replies' | transloco">
             <i class="pi pi-comments text-xs" aria-hidden="true"></i>
             <span class="sr-only">{{ 'forum.card.replies' | transloco }}:</span> {{ t.replies }}

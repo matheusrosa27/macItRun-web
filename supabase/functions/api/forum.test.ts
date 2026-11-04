@@ -58,6 +58,9 @@ describe('fórum na API', () => {
     assert.equal(body.items[0].id, topicId);
     assert.equal(body.items[0].replies, 1);
     assert.equal((await (await get('/v1/topics?q=photoshop')).json()).total, 0);
+    const top = await (await get('/v1/topics?sort=top')).json();
+    assert.equal(top.items[0].likes, 0);
+    assert.equal(top.items[0].dislikes, 0);
   });
 
   test('tópico, respostas e tags', async () => {

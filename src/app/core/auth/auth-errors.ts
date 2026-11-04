@@ -33,6 +33,7 @@ const KNOWN = new Set([
   'body_invalid',
   'tags_invalid',
   'profiles_invalid',
+  'invalid_vote',
 ]);
 
 interface ErrorLike {

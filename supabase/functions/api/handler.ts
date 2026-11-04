@@ -15,7 +15,7 @@
 // GET    /api/v1/profile-filters             valores dos filtros (Macs testados)
 // POST   /api/v1/app-login                   (login) { "challenge" } → { "code" }: login do app de Mac
 // POST   /api/v1/app-login/redeem            { "code", "verifier" } → { "tokenHash" }
-// GET    /api/v1/topics?q=&tag=&profile=&sort=activity|recent|replies&page=   fórum
+// GET    /api/v1/topics?q=&tag=&profile=&sort=activity|recent|replies|top&page=   fórum
 // GET    /api/v1/topics/{id}
 // GET    /api/v1/topics/{id}/replies?page=
 // GET    /api/v1/topic-tags                  tags mais usadas no fórum
@@ -65,7 +65,7 @@ export interface Clients {
 }
 
 const SORTS = ['likes', 'recent', 'downloads'];
-const TOPIC_SORTS = ['activity', 'recent', 'replies'];
+const TOPIC_SORTS = ['activity', 'recent', 'replies', 'top'];
 const MAX_TAG = 60;
 const MAX_PAGE = 1000;
 const MAX_QUERY = 100;

@@ -17,8 +17,8 @@
     "licenses": "Licenses",
     "login": "Sign in",
     "account": "My account",
-    "community": "Community",
-    "forum": "Forum"
+    "community": "Setup Profiles",
+    "forum": "Community"
   },
   "footer": {
     "label": "Footer links",
@@ -68,7 +68,7 @@
       "description": "Username, your data and account deletion on macItRun."
     },
     "community": {
-      "title": "Community",
+      "title": "Setup Profiles",
       "description": "Community setup profiles for running Windows apps and games on your Mac with macItRun: search by game, see what each one changes and import it into the app."
     },
     "communityProfile": {
@@ -88,16 +88,16 @@
       "description": "Authorize the macItRun app to use your account."
     },
     "forum": {
-      "title": "Forum",
-      "description": "The macItRun community forum: questions, problems and tips for running Windows apps and games on your Mac, with links to setup profiles."
+      "title": "Community",
+      "description": "The macItRun community: questions, problems and tips for running Windows apps and games on your Mac, with links to setup profiles."
     },
     "topic": {
-      "title": "Forum topic",
-      "description": "A discussion in the macItRun community forum."
+      "title": "Community topic",
+      "description": "A discussion in the macItRun community."
     },
     "newTopic": {
       "title": "New topic",
-      "description": "Start a discussion in the macItRun forum."
+      "description": "Start a discussion in the macItRun community."
     }
   },
   "home": {
@@ -410,7 +410,8 @@
       "title_invalid": "The title must have 3 to 120 characters.",
       "body_invalid": "Write the text (within the character limit).",
       "tags_invalid": "Use up to 5 tags, up to 30 characters each.",
-      "profiles_invalid": "One of the setup profiles mentioned is no longer published. Remove it and try again."
+      "profiles_invalid": "One of the setup profiles mentioned is no longer published. Remove it and try again.",
+      "invalid_vote": "Invalid vote."
     }
   },
   "account": {
@@ -453,7 +454,7 @@
       "confirm": "Delete forever",
       "done": "Account deleted",
       "profiles": {
-        "label": "Your published setup profiles and forum topics:",
+        "label": "Your published setup profiles and community topics:",
         "keep": "Keep them in the community, as “deleted author”",
         "remove": "Delete them with the account"
       }
@@ -474,7 +475,7 @@
     }
   },
   "community": {
-    "title": "Community",
+    "title": "Setup Profiles",
     "subtitle": "Setup profiles shared by macItRun users. Search by game or app, see what each one changes and import it into the app.",
     "unavailable": "The community isn't available at this address yet.",
     "error": "Couldn't load the setup profiles right now. Try again in a moment.",
@@ -528,7 +529,7 @@
       "winxp": "Windows XP"
     },
     "profile": {
-      "back": "Community",
+      "back": "Setup Profiles",
       "seoDescription": "macItRun setup profile for {{ name }}: graphics layer, Windows version and settings tested by the community.",
       "published": "Published on {{ date }}",
       "open": "Open in macItRun",
@@ -575,7 +576,7 @@
         "title": "How it went"
       },
       "discussions": {
-        "title": "Forum discussions",
+        "title": "Community discussions",
         "start": "Start a discussion",
         "empty": "Nobody has started a discussion about this setup profile yet.",
         "all": "See all {{ count }} discussions"
@@ -607,11 +608,11 @@
     }
   },
   "forum": {
-    "title": "Forum",
+    "title": "Community",
     "subtitle": "Ask, share what worked and swap tips about Windows apps and games on the Mac. Mention setup profiles so others can try them.",
     "newTopic": "New topic",
     "search": {
-      "label": "Search the forum",
+      "label": "Search the community",
       "placeholder": "Search by title, text or tag",
       "submit": "Search"
     },
@@ -622,7 +623,8 @@
       "label": "Order",
       "activity": "Recent activity",
       "recent": "Newest",
-      "replies": "Most replies"
+      "replies": "Most replies",
+      "top": "Most liked"
     },
     "profileFilter": "Topics that mention {{ name }}",
     "clearProfile": "See all topics",
@@ -635,10 +637,11 @@
     "card": {
       "activity": "Last activity",
       "replies": "Replies",
-      "profiles": "Setup profiles mentioned"
+      "profiles": "Setup profiles mentioned",
+      "likes": "Likes"
     },
     "topic": {
-      "back": "Forum",
+      "back": "Community",
       "edited": "edited",
       "edit": "Edit",
       "saved": "Topic saved",
@@ -686,6 +689,18 @@
       "save": "Save",
       "created": "Topic posted",
       "setup": "To start a topic, choose your username in My account."
+    },
+    "votes": {
+      "label": "Votes",
+      "like": "Like ({{ count }})",
+      "liked": "Liked ({{ count }}). Click to undo",
+      "dislike": "Dislike ({{ count }})",
+      "disliked": "Disliked ({{ count }}). Click to undo"
+    },
+    "saved": {
+      "title": "Saved topics",
+      "hint": "Community topics you kept to read later. Only you see this list.",
+      "empty": "No saved topics yet. Use the Save button on a topic page in"
     }
   },
   "publish": {
@@ -782,7 +797,7 @@
     "done": "Done",
     "bannedDone": "Author banned",
     "unbannedDone": "Author unbanned",
-    "topic": "Forum topic",
+    "topic": "Community topic",
     "reply": "Reply on {{ name }}",
     "deleteTopic": "Delete topic",
     "deleteReply": "Delete reply"

@@ -171,8 +171,8 @@ export type SavedProfile = (ProfileSummary & { available: true; savedAt: string 
 
 // Fórum -----------------------------------------------------------------------------------
 
-/** Ordem da lista do fórum: última atividade (padrão), mais novos ou mais respondidos. */
-export const TOPIC_SORTS = ['activity', 'recent', 'replies'] as const;
+/** Ordem da lista do fórum: última atividade (padrão), mais novos, mais respondidos ou mais curtidos. */
+export const TOPIC_SORTS = ['activity', 'recent', 'replies', 'top'] as const;
 export type TopicSort = (typeof TOPIC_SORTS)[number];
 
 // Os mesmos limites do banco (migração do fórum).
@@ -195,6 +195,8 @@ export interface TopicSummary {
   /** null: a pessoa apagou a conta e deixou o tópico. */
   author: Author | null;
   replies: number;
+  likes: number;
+  dislikes: number;
   /** Quantos perfis de configuração publicados o tópico cita. */
   profiles: number;
   createdAt: string;
@@ -218,7 +220,35 @@ export interface TopicDetail extends Omit<TopicSummary, 'excerpt' | 'profiles'> 
   profiles: TopicProfile[];
 }
 
-export type TopicReply = ProfileComment;
+export interface TopicReply extends ProfileComment {
+  likes: number;
+  dislikes: number;
+}
+
+/** 1 curtiu, -1 não curtiu, 0 sem voto. */
+export type Vote = -1 | 0 | 1;
+
+export interface VoteResult {
+  vote: Vote;
+  likes: number;
+  dislikes: number;
+}
+
+/** O que a pessoa conectada fez num tópico (my_topic_state). */
+export interface TopicState {
+  vote: Vote;
+  saved: boolean;
+  /** Voto em cada resposta, pelo id. */
+  replies: Record<string, Vote>;
+}
+
+/** Um tópico salvo. Fora do ar (escondido), só id e título. */
+export type SavedTopic = (TopicSummary & { available: true; savedAt: string }) | {
+  id: string;
+  title: string;
+  available: false;
+  savedAt: string;
+};
 
 export interface TopicTag {
   tag: string;

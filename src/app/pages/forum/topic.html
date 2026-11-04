@@ -58,7 +58,24 @@
         <p class="mt-6 mb-0 text-lg leading-relaxed whitespace-pre-line break-words">{{ t.body }}</p>
 
         <!-- Ações do tópico -->
-        <div class="mt-6 flex flex-wrap gap-2">
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <app-vote-buttons
+            [likes]="topicLikes()"
+            [dislikes]="topicDislikes()"
+            [vote]="topicVote()"
+            [busy]="voting() === 'topic'"
+            (voted)="voteTopic($event)"
+          />
+          <p-button
+            [icon]="saved() ? 'pi pi-bookmark-fill' : 'pi pi-bookmark'"
+            [label]="(saved() ? 'saved.saved' : 'saved.save') | transloco"
+            severity="secondary"
+            [outlined]="!saved()"
+            size="small"
+            [loading]="savingTopic()"
+            [attr.aria-pressed]="saved()"
+            (onClick)="toggleSave()"
+          />
           @if (isMine()) {
             <p-button
               icon="pi pi-pencil"
@@ -173,6 +190,15 @@
               </span>
             </div>
             <p class="mt-2 mb-0 whitespace-pre-line break-words">{{ reply.body }}</p>
+            <div class="mt-2 -ml-2">
+              <app-vote-buttons
+                [likes]="reply.likes"
+                [dislikes]="reply.dislikes"
+                [vote]="replyVote(reply)"
+                [busy]="voting() === reply.id + ''"
+                (voted)="voteReply(reply, $event)"
+              />
+            </div>
           </li>
         } @empty {
           @if (!repliesError()) {

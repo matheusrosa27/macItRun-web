@@ -17,8 +17,8 @@
     "licenses": "Licencias",
     "login": "Entrar",
     "account": "Mi cuenta",
-    "community": "Comunidad",
-    "forum": "Foro"
+    "community": "Perfiles de configuración",
+    "forum": "Comunidad"
   },
   "footer": {
     "label": "Enlaces del pie de página",
@@ -68,7 +68,7 @@
       "description": "Nombre de usuario, tus datos y eliminación de la cuenta en macItRun."
     },
     "community": {
-      "title": "Comunidad",
+      "title": "Perfiles de configuración",
       "description": "Perfiles de configuración de la comunidad para ejecutar apps y juegos de Windows en el Mac con macItRun: busca por juego, mira qué cambia cada uno e impórtalo en la app."
     },
     "communityProfile": {
@@ -88,16 +88,16 @@
       "description": "Autoriza a la app macItRun a usar tu cuenta."
     },
     "forum": {
-      "title": "Foro",
-      "description": "El foro de la comunidad de macItRun: dudas, problemas y consejos para ejecutar apps y juegos de Windows en el Mac, con enlaces a los perfiles de configuración."
+      "title": "Comunidad",
+      "description": "La comunidad de macItRun: dudas, problemas y consejos para ejecutar apps y juegos de Windows en el Mac, con enlaces a los perfiles de configuración."
     },
     "topic": {
-      "title": "Tema del foro",
-      "description": "Una discusión en el foro de la comunidad de macItRun."
+      "title": "Tema de la comunidad",
+      "description": "Una discusión en la comunidad de macItRun."
     },
     "newTopic": {
       "title": "Nuevo tema",
-      "description": "Abre una discusión en el foro de macItRun."
+      "description": "Abre una discusión en la comunidad de macItRun."
     }
   },
   "home": {
@@ -410,7 +410,8 @@
       "title_invalid": "El título debe tener de 3 a 120 caracteres.",
       "body_invalid": "Escribe el texto (sin pasar el límite de caracteres).",
       "tags_invalid": "Usa hasta 5 etiquetas, de hasta 30 caracteres cada una.",
-      "profiles_invalid": "Uno de los perfiles de configuración mencionados ya no está publicado. Quítalo e inténtalo de nuevo."
+      "profiles_invalid": "Uno de los perfiles de configuración mencionados ya no está publicado. Quítalo e inténtalo de nuevo.",
+      "invalid_vote": "Voto no válido."
     }
   },
   "account": {
@@ -453,7 +454,7 @@
       "confirm": "Eliminar para siempre",
       "done": "Cuenta eliminada",
       "profiles": {
-        "label": "Tus perfiles de configuración publicados y temas del foro:",
+        "label": "Tus perfiles de configuración publicados y temas de la comunidad:",
         "keep": "Mantenerlos en la comunidad, como “autor eliminado”",
         "remove": "Eliminarlos junto con la cuenta"
       }
@@ -474,7 +475,7 @@
     }
   },
   "community": {
-    "title": "Comunidad",
+    "title": "Perfiles de configuración",
     "subtitle": "Perfiles de configuración compartidos por quienes usan macItRun. Busca por juego o app, mira qué cambia cada uno e impórtalo en la app.",
     "unavailable": "La comunidad aún no está disponible en esta dirección.",
     "error": "No se pudieron cargar los perfiles de configuración ahora. Inténtalo de nuevo en unos instantes.",
@@ -528,7 +529,7 @@
       "winxp": "Windows XP"
     },
     "profile": {
-      "back": "Comunidad",
+      "back": "Perfiles de configuración",
       "seoDescription": "Perfil de configuración de macItRun para {{ name }}: capa gráfica, versión de Windows y ajustes probados por la comunidad.",
       "published": "Publicado el {{ date }}",
       "open": "Abrir en macItRun",
@@ -575,7 +576,7 @@
         "title": "Cómo fue"
       },
       "discussions": {
-        "title": "Discusiones en el foro",
+        "title": "Discusiones en la comunidad",
         "start": "Empezar una discusión",
         "empty": "Nadie abrió todavía una discusión sobre este perfil de configuración.",
         "all": "Ver las {{ count }} discusiones"
@@ -607,11 +608,11 @@
     }
   },
   "forum": {
-    "title": "Foro",
+    "title": "Comunidad",
     "subtitle": "Pregunta, cuenta lo que funcionó e intercambia consejos sobre apps y juegos de Windows en el Mac. Menciona perfiles de configuración para que otros los prueben.",
     "newTopic": "Nuevo tema",
     "search": {
-      "label": "Buscar en el foro",
+      "label": "Buscar en la comunidad",
       "placeholder": "Buscar por título, texto o etiqueta",
       "submit": "Buscar"
     },
@@ -622,7 +623,8 @@
       "label": "Orden",
       "activity": "Actividad reciente",
       "recent": "Más nuevos",
-      "replies": "Más respondidos"
+      "replies": "Más respondidos",
+      "top": "Más gustados"
     },
     "profileFilter": "Temas que mencionan {{ name }}",
     "clearProfile": "Ver todos los temas",
@@ -635,10 +637,11 @@
     "card": {
       "activity": "Última actividad",
       "replies": "Respuestas",
-      "profiles": "Perfiles de configuración mencionados"
+      "profiles": "Perfiles de configuración mencionados",
+      "likes": "Me gusta"
     },
     "topic": {
-      "back": "Foro",
+      "back": "Comunidad",
       "edited": "editado",
       "edit": "Editar",
       "saved": "Tema guardado",
@@ -686,6 +689,18 @@
       "save": "Guardar",
       "created": "Tema publicado",
       "setup": "Para abrir un tema, elige tu nombre de usuario en Mi cuenta."
+    },
+    "votes": {
+      "label": "Votos",
+      "like": "Me gusta ({{ count }})",
+      "liked": "Te gusta ({{ count }}). Haz clic para quitar",
+      "dislike": "No me gusta ({{ count }})",
+      "disliked": "No te gusta ({{ count }}). Haz clic para quitar"
+    },
+    "saved": {
+      "title": "Temas guardados",
+      "hint": "Temas de la comunidad que guardaste para leer después. Solo tú ves esta lista.",
+      "empty": "Todavía no guardaste temas. Usa el botón Guardar en la página de un tema en"
     }
   },
   "publish": {
@@ -782,7 +797,7 @@
     "done": "Hecho",
     "bannedDone": "Autor expulsado",
     "unbannedDone": "Autor readmitido",
-    "topic": "Tema del foro",
+    "topic": "Tema de la comunidad",
     "reply": "Respuesta en {{ name }}",
     "deleteTopic": "Borrar tema",
     "deleteReply": "Borrar respuesta"

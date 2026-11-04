@@ -21,6 +21,7 @@ import { BADGE_STYLE, BADGES } from '../../core/community/badges';
 import { AuthorName } from '../community/author';
 import { MyProfiles } from './my-profiles';
 import { SavedProfiles } from './saved-profiles';
+import { SavedTopics } from './saved-topics';
 
 type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
 
@@ -41,6 +42,7 @@ type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
     MyProfiles,
     AuthorName,
     SavedProfiles,
+    SavedTopics,
   ],
   templateUrl: './account.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
