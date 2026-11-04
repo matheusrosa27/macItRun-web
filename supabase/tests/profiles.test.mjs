@@ -296,12 +296,12 @@ describe('lista e busca', () => {
     await rejects(as(db, null, (tx) => rpc(tx, 'api_list_profiles', { sort: 'nome' })), 'invalid_sort');
   });
 
-  test('o resumo traz autor, contadores e onde foi testado', async () => {
+  test('o resumo traz autor, contadores, requisitos e onde foi testado', async () => {
     await publish(db, { name: 'Jogo', authorId: ana });
     const { items } = await as(db, null, (tx) => rpc(tx, 'api_list_profiles', { q: 'jogo' }));
     assert.deepEqual(Object.keys(items[0]).sort(), [
       'author', 'comments', 'createdAt', 'downloads', 'executables', 'graphics', 'id', 'likes',
-      'name', 'slug', 'testedOn', 'updatedAt', 'windowsVersion',
+      'name', 'requires', 'slug', 'testedOn', 'updatedAt', 'windowsVersion',
     ]);
     assert.deepEqual(items[0].author, { username: 'ana_mac', badges: ['contributor', 'pioneer'] });
     assert.equal(items[0].slug, 'jogo');

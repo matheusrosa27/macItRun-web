@@ -106,6 +106,49 @@
           ]
         }
       }
+    },
+    {
+      "name": "requisitos: uma loja ou outra e um launcher",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": [
+            {
+              "app": "steam",
+              "id": "271590"
+            },
+            {
+              "app": "epic-games",
+              "id": "9d2d0eb64d5c44529cece33fe2a46482"
+            }
+          ],
+          "launchers": [
+            "rockstar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "requisitos: só a loja",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": [
+            {
+              "app": "steam",
+              "id": "374320"
+            }
+          ]
+        }
+      }
     }
   ],
   "invalid": [
@@ -619,6 +662,107 @@
         },
         "testedOn": {
           "macOS": "<b>26</b>"
+        }
+      }
+    },
+    {
+      "name": "requisitos: app fora do catálogo",
+      "code": "requires_app_invalid",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": [
+            {
+              "app": "https://example.com/x.exe",
+              "id": "1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "requisitos: id da loja com caminho",
+      "code": "requires_id_invalid",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": [
+            {
+              "app": "steam",
+              "id": "../../x"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "requisitos: vazio",
+      "code": "requires_empty",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {}
+      }
+    },
+    {
+      "name": "requisitos: lista de lojas vazia",
+      "code": "requires_empty",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": []
+        }
+      }
+    },
+    {
+      "name": "requisitos: launcher repetido",
+      "code": "requires_duplicate",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "launchers": [
+            "rockstar",
+            "rockstar"
+          ]
+        }
+      }
+    },
+    {
+      "name": "requisitos: campo a mais",
+      "code": "unrecognized_keys",
+      "profile": {
+        "id": "gta-v",
+        "name": "GTA V",
+        "executables": [
+          "GTA5.exe"
+        ],
+        "requires": {
+          "stores": [
+            {
+              "app": "steam",
+              "id": "1",
+              "url": "https://x"
+            }
+          ]
         }
       }
     }

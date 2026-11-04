@@ -3,6 +3,31 @@
   <section class="rounded-2xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
     <h2 class="m-0 text-xl font-semibold">{{ 'community.profile.changes.title' | transloco }}</h2>
     <dl class="m-0 mt-4 grid gap-4">
+      @if (profile().requires; as requires) {
+        @if (requires.stores?.length) {
+          <div>
+            <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.stores' | transloco }}</dt>
+            <dd class="m-0 mt-1 flex flex-wrap gap-x-2">
+              @for (store of requires.stores; track store.app; let last = $last) {
+                <span class="font-medium">{{ 'community.apps.' + store.app | transloco }}</span>
+                @if (!last) {
+                  <span class="text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.or' | transloco }}</span>
+                }
+              }
+            </dd>
+          </div>
+        }
+        @if (requires.launchers?.length) {
+          <div>
+            <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.launchers' | transloco }}</dt>
+            <dd class="m-0 mt-1 flex flex-wrap gap-x-3">
+              @for (app of requires.launchers; track app) {
+                <span class="font-medium">{{ 'community.apps.' + app | transloco }}</span>
+              }
+            </dd>
+          </div>
+        }
+      }
       <div>
         <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'community.profile.changes.executables' | transloco }}</dt>
         <dd class="m-0 mt-1 font-mono text-sm break-all">{{ profile().executables.join(', ') }}</dd>

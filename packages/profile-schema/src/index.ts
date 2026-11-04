@@ -12,6 +12,12 @@ export const PROFILE_EXTENSION = '.macitrun-profile';
 export const GRAPHICS = ['dxmt', 'dxvk', 'wine'] as const;
 export const WINDOWS_VERSIONS = ['win11', 'win10', 'win81', 'win8', 'win7', 'winxp'] as const;
 export const LOAD_ORDERS = ['native', 'builtin', 'native,builtin', 'builtin,native', 'disabled', ''] as const;
+/**
+ * Apps do catálogo "Apps prontos" do macItRun (Resources/apps.json no app) que um jogo pode exigir:
+ * a loja onde ele é comprado/instalado ou um launcher obrigatório. O app só instala o que está no
+ * catálogo dele, sempre do site oficial e com a assinatura conferida.
+ */
+export const REQUIRABLE_APPS = ['steam', 'epic-games', 'gog-galaxy', 'ubisoft-connect', 'ea-app', 'rockstar'] as const;
 /** Prefixos das variáveis que só ajustam as camadas gráficas. */
 export const ENVIRONMENT_PREFIXES = ['DXVK_', 'DXMT_', 'MVK_CONFIG_', 'MTL_HUD_'] as const;
 
@@ -53,6 +59,32 @@ const environmentKey = z
     message: 'environment_path',
   });
 
+const requirableApp = z.enum(REQUIRABLE_APPS, { message: 'requires_app_invalid' });
+
+/** Do que o jogo depende: uma das lojas (com o id do jogo nela) e todos os launchers. */
+const requiresSchema = z
+  .strictObject({
+    stores: z
+      .array(
+        z.strictObject({
+          app: requirableApp,
+          id: z.string().regex(/^[A-Za-z0-9._:-]{1,64}$/, { message: 'requires_id_invalid' }),
+        }),
+      )
+      .min(1, { message: 'requires_empty' })
+      .max(6, { message: 'requires_too_many' })
+      .optional(),
+    launchers: z
+      .array(requirableApp)
+      .min(1, { message: 'requires_empty' })
+      .max(6, { message: 'requires_too_many' })
+      .refine((apps) => new Set(apps).size === apps.length, { message: 'requires_duplicate' })
+      .optional(),
+  })
+  .refine((value) => value.stores !== undefined || value.launchers !== undefined, {
+    message: 'requires_empty',
+  });
+
 export const profileSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/, { message: 'id_invalid' }),
   name: z
@@ -73,6 +105,7 @@ export const profileSchema = z.strictObject({
     .max(20, { message: 'arguments_too_many' })
     .optional(),
   notes: maxChars(2000, 'notes_too_long').optional(),
+  requires: requiresSchema.optional(),
 });
 
 const testedValue = z.string().regex(/^[A-Za-z0-9 ._,()+-]{1,64}$/, { message: 'tested_on_invalid' });
@@ -92,6 +125,8 @@ export const profileFileSchema = z.strictObject({
 });
 
 export type GameProfile = z.infer<typeof profileSchema>;
+export type RequirableApp = (typeof REQUIRABLE_APPS)[number];
+export type Requires = z.infer<typeof requiresSchema>;
 export type TestedOn = z.infer<typeof testedOnSchema>;
 export type ProfileFile = z.infer<typeof profileFileSchema>;
 

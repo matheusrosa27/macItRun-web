@@ -45,7 +45,7 @@
     </form>
 
     <!-- Filtros e ordem -->
-    <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+    <div class="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-5">
       <p-select
         [options]="graphicsOptions"
         [ngModel]="params().graphics ?? null"
@@ -81,6 +81,18 @@
         [showClear]="true"
         [fluid]="true"
       />
+      <p-select
+        [options]="storeOptions"
+        [ngModel]="params().store ?? null"
+        (ngModelChange)="setFilter('store', $event)"
+        [placeholder]="'community.filters.anyStore' | transloco"
+        [ariaLabel]="'community.filters.store' | transloco"
+        [showClear]="true"
+        [fluid]="true"
+      >
+        <ng-template #selectedItem let-value>{{ 'community.apps.' + value | transloco }}</ng-template>
+        <ng-template #item let-value>{{ 'community.apps.' + value | transloco }}</ng-template>
+      </p-select>
       <p-select
         [options]="sortOptions"
         [ngModel]="params().sort"

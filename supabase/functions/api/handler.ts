@@ -1,7 +1,7 @@
 // API pública /api/v1 (contrato na seção "API pública e integração" do plano; o app de Mac
 // depende dela).
 //
-// GET    /api/v1/profiles?q=&graphics=&sort=likes|recent|downloads&page=   (+ windowsVersion=, mac=)
+// GET    /api/v1/profiles?q=&graphics=&sort=likes|recent|downloads&page=   (+ windowsVersion=, mac=, store=)
 // GET    /api/v1/profiles/{id}
 // GET    /api/v1/profiles/{id}/download
 // GET    /api/v1/profiles/{id}/comments?page=
@@ -24,6 +24,7 @@ import {
   GRAPHICS,
   MAX_PROFILE_BYTES,
   PROFILE_EXTENSION,
+  REQUIRABLE_APPS,
   WINDOWS_VERSIONS,
   parseProfileFile,
   serializeProfileFile,
@@ -311,6 +312,7 @@ async function listProfiles(params: URLSearchParams, db: Rpc): Promise<Response>
   const graphics = params.get('graphics') ?? '';
   const windowsVersion = params.get('windowsVersion') ?? '';
   const mac = params.get('mac') ?? '';
+  const store = params.get('store') ?? '';
   const sort = params.get('sort') || 'likes';
   const page = pageParam(params);
   if (q.length > MAX_QUERY) return error(400, 'invalid_parameter', {}, 'q');
@@ -321,6 +323,9 @@ async function listProfiles(params: URLSearchParams, db: Rpc): Promise<Response>
     return error(400, 'invalid_parameter', {}, 'windowsVersion');
   }
   if (mac.length > 64) return error(400, 'invalid_parameter', {}, 'mac');
+  if (store && !(REQUIRABLE_APPS as readonly string[]).includes(store)) {
+    return error(400, 'invalid_parameter', {}, 'store');
+  }
   if (!SORTS.includes(sort)) return error(400, 'invalid_parameter', {}, 'sort');
   if (page === null) return error(400, 'invalid_parameter', {}, 'page');
 
@@ -331,6 +336,7 @@ async function listProfiles(params: URLSearchParams, db: Rpc): Promise<Response>
     page,
     windows_version: windowsVersion || null,
     mac: mac || null,
+    store: store || null,
   });
   return json(data, 200, { 'Cache-Control': LIST_CACHE });
 }

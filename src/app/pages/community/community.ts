@@ -24,6 +24,7 @@ import {
   ListParams,
   PAGE_SIZE,
   ProfileSummary,
+  REQUIRABLE_APPS,
   SORTS,
   WINDOWS_VERSIONS,
 } from '../../core/community/community';
@@ -63,11 +64,12 @@ export class Community {
   private readonly community = inject(CommunityService);
 
   readonly lang = input.required<Lang>();
-  // Parâmetros da URL (?q=&graphics=&windowsVersion=&mac=&sort=&page=).
+  // Parâmetros da URL (?q=&graphics=&windowsVersion=&mac=&store=&sort=&page=).
   readonly q = input<string>();
   readonly graphics = input<string>();
   readonly windowsVersion = input<string>();
   readonly mac = input<string>();
+  readonly store = input<string>();
   readonly sort = input<string>();
   readonly page = input<string>();
 
@@ -75,6 +77,7 @@ export class Community {
   protected readonly pageSize = PAGE_SIZE;
   protected readonly graphicsOptions = [...GRAPHICS];
   protected readonly windowsOptions = [...WINDOWS_VERSIONS];
+  protected readonly storeOptions = [...REQUIRABLE_APPS];
   protected readonly sortOptions = [...SORTS];
 
   protected readonly params = computed<ListParams>(() => ({
@@ -82,6 +85,7 @@ export class Community {
     graphics: oneOf(this.graphics(), GRAPHICS),
     windowsVersion: oneOf(this.windowsVersion(), WINDOWS_VERSIONS),
     mac: this.mac()?.slice(0, 64) || undefined,
+    store: oneOf(this.store(), REQUIRABLE_APPS),
     sort: oneOf(this.sort(), SORTS) ?? 'likes',
     page: Math.min(Math.max(Number.parseInt(this.page() ?? '1', 10) || 1, 1), 1000),
   }));
@@ -103,8 +107,8 @@ export class Community {
   });
 
   protected readonly filtered = computed(() => {
-    const { q, graphics, windowsVersion, mac } = this.params();
-    return Boolean(q || graphics || windowsVersion || mac);
+    const { q, graphics, windowsVersion, mac, store } = this.params();
+    return Boolean(q || graphics || windowsVersion || mac || store);
   });
 
   /** O texto da busca (ou o perfil escolhido nas sugestões); acompanha a URL. */
@@ -140,13 +144,20 @@ export class Community {
     this.navigate({ q: q || undefined, page: undefined });
   }
 
-  protected setFilter(key: 'graphics' | 'windowsVersion' | 'mac' | 'sort', value: string | null): void {
+  protected setFilter(key: 'graphics' | 'windowsVersion' | 'mac' | 'store' | 'sort', value: string | null): void {
     this.navigate({ [key]: value || undefined, page: undefined });
   }
 
   protected clearFilters(): void {
     this.query.set('');
-    this.navigate({ q: undefined, graphics: undefined, windowsVersion: undefined, mac: undefined, page: undefined });
+    this.navigate({
+      q: undefined,
+      graphics: undefined,
+      windowsVersion: undefined,
+      mac: undefined,
+      store: undefined,
+      page: undefined,
+    });
   }
 
   protected changePage(event: PaginatorState): void {

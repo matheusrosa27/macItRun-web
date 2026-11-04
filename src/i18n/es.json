@@ -474,7 +474,9 @@
       "anyGraphics": "Todas las capas",
       "anyWindows": "Todas las versiones",
       "anyMac": "Todos los Mac",
-      "clear": "Quitar filtros"
+      "clear": "Quitar filtros",
+      "store": "Tienda",
+      "anyStore": "Todas las tiendas"
     },
     "sort": {
       "likes": "Más gustados",
@@ -532,7 +534,10 @@
         "arguments": "Argumentos",
         "notes": "Notas del perfil de configuración",
         "none": "Ningún ajuste",
-        "bottleDefault": "La de la botella"
+        "bottleDefault": "La de la botella",
+        "stores": "Instalar desde (cualquiera)",
+        "or": "o",
+        "launchers": "También necesita"
       },
       "loadOrder": {
         "native": "Nativa (la del juego)",
@@ -568,6 +573,14 @@
       "deleted": "Comentario eliminado",
       "more": "Ver más comentarios",
       "error": "No se pudieron cargar los comentarios."
+    },
+    "apps": {
+      "steam": "Steam",
+      "epic-games": "Epic Games",
+      "gog-galaxy": "GOG Galaxy",
+      "ubisoft-connect": "Ubisoft Connect",
+      "ea-app": "EA app",
+      "rockstar": "Rockstar Games Launcher"
     }
   },
   "publish": {

@@ -276,6 +276,19 @@ describe('publicar pela API', () => {
     assert.equal(community.notes, 'Roda liso.');
   });
 
+  test('o que o jogo exige vai no resumo e filtra por loja', async () => {
+    const file = JSON.parse(EXAMPLE);
+    file.profile.requires = { stores: [{ app: 'steam', id: '374320' }], launchers: ['rockstar'] };
+    const { id } = await body(await post('/v1/profiles', { file }, ana));
+    const steam = await body(await get('/v1/profiles?store=steam'));
+    assert.deepEqual(steam.items.map((item: { id: string }) => item.id), [id]);
+    assert.deepEqual(steam.items[0].requires, file.profile.requires);
+    assert.equal((await body(await get('/v1/profiles?store=epic-games'))).total, 0);
+    assert.equal((await get('/v1/profiles?store=https%3A%2F%2Fx')).status, 400);
+    const download = await body(await get(`/v1/profiles/${id}/download`));
+    assert.deepEqual(download.profile.requires, file.profile.requires);
+  });
+
   test('aceita o arquivo como objeto', async () => {
     assert.equal((await post('/v1/profiles', { file: JSON.parse(EXAMPLE) }, ana)).status, 201);
   });

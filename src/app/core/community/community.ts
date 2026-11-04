@@ -1,11 +1,28 @@
-import type { GameProfile, Graphics, ProfileIssue, TestedOn, WindowsVersion } from '@macitrun/profile-schema';
+import type {
+  GameProfile,
+  Graphics,
+  ProfileIssue,
+  RequirableApp,
+  Requires,
+  TestedOn,
+  WindowsVersion,
+} from '@macitrun/profile-schema';
 import { PUBLIC_ENV } from '../../../environments/public-env';
 
-export type { GameProfile, Graphics, ProfileIssue, TestedOn, WindowsVersion };
+export type { GameProfile, Graphics, ProfileIssue, RequirableApp, Requires, TestedOn, WindowsVersion };
 
 // Os mesmos valores do pacote do perfil; copiados para não trazer o Zod para estas páginas.
 export const GRAPHICS: readonly Graphics[] = ['dxmt', 'dxvk', 'wine'];
 export const WINDOWS_VERSIONS: readonly WindowsVersion[] = ['win11', 'win10', 'win81', 'win8', 'win7', 'winxp'];
+/** Lojas e launchers que um jogo pode exigir (catálogo "Apps prontos" do app). */
+export const REQUIRABLE_APPS: readonly RequirableApp[] = [
+  'steam',
+  'epic-games',
+  'gog-galaxy',
+  'ubisoft-connect',
+  'ea-app',
+  'rockstar',
+];
 
 /**
  * A API pública (/api/v1), chamada direto na Edge Function do Supabase: funciona igual no
@@ -33,6 +50,8 @@ export interface ProfileSummary {
   graphics: Graphics | null;
   windowsVersion: WindowsVersion | null;
   testedOn: TestedOn;
+  /** Loja(s) onde o jogo é instalado e launchers obrigatórios; null se o perfil não diz. */
+  requires?: Requires | null;
   /** null: a pessoa apagou a conta e deixou o perfil. */
   author: Author | null;
   likes: number;
@@ -82,6 +101,7 @@ export interface ListParams {
   graphics?: string;
   windowsVersion?: string;
   mac?: string;
+  store?: string;
   sort?: string;
   page?: number;
 }
