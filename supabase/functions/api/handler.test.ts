@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { beforeEach, describe, test } from 'node:test';
+import { afterEach, beforeEach, describe, test } from 'node:test';
 import type { PGlite, Transaction } from '@electric-sql/pglite';
 import { as, asService, createDb, signUp } from '../../tests/db.mjs';
 import { handle, type Clients, type Rpc } from './handler.ts';
@@ -51,6 +51,8 @@ beforeEach(async () => {
     loginTokenHash: async (userId) => `hash-${userId}`,
   };
 });
+// Cada teste abre um banco novo; sem fechar, as instâncias do PGlite se acumulam e o arquivo trava.
+afterEach(() => db.close());
 
 const get = (path: string, method = 'GET', init: RequestInit = {}) =>
   handle(

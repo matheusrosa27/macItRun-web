@@ -40,6 +40,11 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Server,
     headers: { 'Cache-Control': COMMUNITY_CACHE },
   },
+  // Fórum: como a comunidade. Novo tópico só faz sentido com a sessão.
+  { path: ':lang/forum/new', renderMode: RenderMode.Client },
+  { path: ':lang/forum', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
+  { path: ':lang/forum/:id', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
+  { path: ':lang/forum/:id/:slug', renderMode: RenderMode.Server, headers: { 'Cache-Control': COMMUNITY_CACHE } },
   { path: ':lang/**', renderMode: RenderMode.Server, status: 404 },
   { path: '**', renderMode: RenderMode.Server },
 ];

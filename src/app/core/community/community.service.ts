@@ -11,6 +11,12 @@ import {
   MyProfile,
   PublishError,
   SavedProfile,
+  TopicDetail,
+  TopicInput,
+  TopicListParams,
+  TopicReply,
+  TopicSummary,
+  TopicTag,
   ReportReason,
   ReportTarget,
   Page,
@@ -80,6 +86,83 @@ export class CommunityService {
           .pipe(catchError(() => of({ macs: [] }))),
       ),
     );
+  }
+
+  // Fórum ----------------------------------------------------------------------------------
+
+  topics(params: TopicListParams): Promise<Page<TopicSummary>> {
+    let query = new HttpParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (value !== undefined && value !== null && value !== '') query = query.set(key, String(value));
+    }
+    return this.read(`topics?${query.toString()}`, () =>
+      firstValueFrom(this.http.get<Page<TopicSummary>>(`${API_BASE}/topics`, { params: query })),
+    );
+  }
+
+  /** O tópico, ou null se não existe ou está escondido. `fresh`: ignora o que veio com a página. */
+  topic(id: string, fresh = false): Promise<TopicDetail | null> {
+    const load = () =>
+      firstValueFrom(
+        this.http.get<TopicDetail>(`${API_BASE}/topics/${encodeURIComponent(id)}`).pipe(catchError(notFoundAsNull)),
+      );
+    return fresh ? load() : this.read(`topic:${id}`, load);
+  }
+
+  replies(id: string, page = 1, fresh = false): Promise<Page<TopicReply> | null> {
+    const load = () =>
+      firstValueFrom(
+        this.http
+          .get<Page<TopicReply>>(`${API_BASE}/topics/${encodeURIComponent(id)}/replies`, { params: { page } })
+          .pipe(catchError(notFoundAsNull)),
+      );
+    return fresh ? load() : this.read(`replies:${id}:${page}`, load);
+  }
+
+  /** As tags mais usadas (filtros e sugestões ao escrever). */
+  topicTags(): Promise<TopicTag[]> {
+    return this.read('topic-tags', () =>
+      firstValueFrom(this.http.get<TopicTag[]>(`${API_BASE}/topic-tags`).pipe(catchError(() => of([])))),
+    );
+  }
+
+  createTopic(input: TopicInput): Promise<{ id: string; slug: string }> {
+    return this.auth.rpc('create_topic', {
+      title: input.title,
+      body: input.body,
+      tags: input.tags,
+      profile_ids: input.profileIds,
+    });
+  }
+
+  updateTopic(id: string, input: TopicInput): Promise<{ id: string; slug: string }> {
+    return this.auth.rpc('update_topic', {
+      topic_id: id,
+      title: input.title,
+      body: input.body,
+      tags: input.tags,
+      profile_ids: input.profileIds,
+    });
+  }
+
+  deleteTopic(id: string): Promise<void> {
+    return this.auth.rpc('delete_topic', { topic_id: id });
+  }
+
+  addReply(topicId: string, body: string): Promise<TopicReply> {
+    return this.auth.rpc('add_reply', { topic_id: topicId, body });
+  }
+
+  deleteReply(replyId: number): Promise<void> {
+    return this.auth.rpc('delete_reply', { reply_id: replyId });
+  }
+
+  adminDeleteTopic(id: string): Promise<void> {
+    return this.auth.rpc('admin_delete_topic', { topic_id: id });
+  }
+
+  adminDeleteReply(replyId: number): Promise<void> {
+    return this.auth.rpc('admin_delete_reply', { reply_id: replyId });
   }
 
   /**

@@ -15,6 +15,13 @@
 // GET    /api/v1/profile-filters             valores dos filtros (Macs testados)
 // POST   /api/v1/app-login                   (login) { "challenge" } → { "code" }: login do app de Mac
 // POST   /api/v1/app-login/redeem            { "code", "verifier" } → { "tokenHash" }
+// GET    /api/v1/topics?q=&tag=&profile=&sort=activity|recent|replies&page=   fórum
+// GET    /api/v1/topics/{id}
+// GET    /api/v1/topics/{id}/replies?page=
+// GET    /api/v1/topic-tags                  tags mais usadas no fórum
+//
+// No fórum, a API só lê; o site escreve (criar, responder, editar, apagar) pelas funções do banco
+// com a sessão da pessoa.
 //
 // Login: `Authorization: Bearer <access token do Supabase>`. As escritas rodam como a pessoa
 // e passam pelas funções do banco, que validam tudo de novo.
@@ -58,6 +65,8 @@ export interface Clients {
 }
 
 const SORTS = ['likes', 'recent', 'downloads'];
+const TOPIC_SORTS = ['activity', 'recent', 'replies'];
+const MAX_TAG = 60;
 const MAX_PAGE = 1000;
 const MAX_QUERY = 100;
 const MAX_BODY_BYTES = 16 * 1024;
@@ -66,6 +75,7 @@ const MAX_PUBLISH_BYTES = MAX_PROFILE_BYTES + 9 * 1024;
 /** Escritas por IP por minuto (publicar, curtir, comentar, denunciar). */
 const WRITES_PER_MINUTE = 30;
 const APP_LOGIN = /\/v1\/app-login(\/redeem)?\/?$/;
+const TOPIC_ROUTE = /\/v1\/(?:topics(?:\/([a-z0-9-]{1,32})(?:\/(replies))?)?|(topic-tags))\/?$/;
 const ROUTE =
   /\/v1\/(?:profiles(?:\/([a-z0-9-]{1,32})(?:\/(download|comments|like))?)?|(profile-filters)|(reports))\/?$/;
 
@@ -85,6 +95,10 @@ const DB_ERRORS: Record<string, number> = {
   not_admin: 403,
   author_not_found: 400,
   daily_limit: 429,
+  title_invalid: 400,
+  body_invalid: 400,
+  tags_invalid: 400,
+  profiles_invalid: 400,
   invalid_request: 400,
   rate_limited: 429,
 };
@@ -106,6 +120,8 @@ export async function handle(request: Request, clients: Clients): Promise<Respon
   const url = new URL(request.url);
   const appLogin = APP_LOGIN.exec(url.pathname);
   if (appLogin) return await appLoginRoute(request, clients, Boolean(appLogin[1]));
+  const topic = TOPIC_ROUTE.exec(url.pathname);
+  if (topic) return await topicRoute(request, url, clients.reader, topic[1], Boolean(topic[2]), Boolean(topic[3]));
   const match = ROUTE.exec(url.pathname);
   if (!match) return error(404, 'not_found');
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
@@ -387,6 +403,55 @@ async function listComments(id: string, params: URLSearchParams, db: Rpc): Promi
   const data = await call(db, 'api_list_comments', { profile_id: id, page });
   if (!data) return error(404, 'not_found');
   return json(data, 200, { 'Cache-Control': LIST_CACHE });
+}
+
+/** Fórum: só leitura (lista, tópico, respostas e tags), com o mesmo cache da comunidade. */
+async function topicRoute(
+  request: Request,
+  url: URL,
+  db: Rpc,
+  id: string | undefined,
+  replies: boolean,
+  tags: boolean,
+): Promise<Response> {
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return error(405, 'method_not_allowed', { Allow: 'GET, HEAD, OPTIONS' });
+  }
+  const params = url.searchParams;
+  const page = pageParam(params);
+  if (page === null) return error(400, 'invalid_parameter', {}, 'page');
+  try {
+    if (tags) return json(await call(db, 'api_topic_tags', {}), 200, { 'Cache-Control': LIST_CACHE });
+    if (id && replies) {
+      const data = await call(db, 'api_list_replies', { topic_id: id, page });
+      return data ? json(data, 200, { 'Cache-Control': LIST_CACHE }) : error(404, 'not_found');
+    }
+    if (id) {
+      const data = await call(db, 'api_get_topic', { topic_id: id });
+      return data ? json(data, 200, { 'Cache-Control': LIST_CACHE }) : error(404, 'not_found');
+    }
+    const q = params.get('q')?.trim() ?? '';
+    const tag = params.get('tag')?.trim() ?? '';
+    const profile = params.get('profile') ?? '';
+    const sort = params.get('sort') || 'activity';
+    if (q.length > MAX_QUERY) return error(400, 'invalid_parameter', {}, 'q');
+    if (tag.length > MAX_TAG) return error(400, 'invalid_parameter', {}, 'tag');
+    if (profile && !/^[a-z0-9-]{1,32}$/.test(profile)) return error(400, 'invalid_parameter', {}, 'profile');
+    if (!TOPIC_SORTS.includes(sort)) return error(400, 'invalid_parameter', {}, 'sort');
+    const data = await call(db, 'api_list_topics', {
+      q: q || null,
+      tag: tag || null,
+      profile_id: profile || null,
+      sort,
+      page,
+    });
+    return json(data, 200, { 'Cache-Control': LIST_CACHE });
+  } catch (cause) {
+    if (cause instanceof ApiError) return error(cause.status, cause.code);
+    console.error(cause);
+    return error(500, 'internal_error');
+  }
 }
 
 /** Página 1 a 1000; null se vier inválida. */

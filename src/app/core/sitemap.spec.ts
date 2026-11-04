@@ -19,6 +19,15 @@ describe('sitemap', () => {
     expect(xml).toContain('<lastmod>2026-11-03</lastmod>');
   });
 
+  it('inclui os tópicos do fórum, com a data da última atividade', () => {
+    const withTopics = buildSitemap('https://example.com', [], [
+      { id: 'xyz', slug: 'steam-nao-abre', activityAt: '2026-11-04T10:00:00Z' },
+    ]);
+    expect(withTopics).toContain('<loc>https://example.com/en/forum/xyz/steam-nao-abre</loc>');
+    expect(withTopics).toContain('<lastmod>2026-11-04</lastmod>');
+    expect(buildRobots('https://example.com')).toContain('Disallow: /pt/forum/new');
+  });
+
   it('escapa o que vier do banco', () => {
     expect(buildSitemap('https://e.com', [{ id: 'a', slug: 'x&y', updatedAt: '2026-01-01' }])).toContain('x&amp;y');
   });

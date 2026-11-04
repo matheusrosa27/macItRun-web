@@ -7,9 +7,9 @@
     @let t = item.target;
     @if (t) {
       <p class="m-0 text-sm text-surface-500 dark:text-surface-400">
-        {{ (item.targetType === 'profile' ? 'admin.profile' : 'admin.comment') | transloco: { name: t.name } }}
+        {{ targetLabel(item.targetType) | transloco: { name: t.name } }}
       </p>
-      <a [routerLink]="['/', lang(), 'community', t.profileId, t.slug]" target="_blank" class="font-medium text-primary break-words">
+      <a [routerLink]="targetLink(t)" target="_blank" class="font-medium text-primary break-words">
         {{ t.name }}
       </a>
       @if (t.body) {
@@ -93,13 +93,13 @@
                       />
                     } @else {
                       <p-button
-                        [label]="'adminEdit.deleteComment' | transloco"
+                        [label]="deleteLabel(item.targetType) | transloco"
                         icon="pi pi-trash"
                         severity="danger"
                         [text]="true"
                         size="small"
                         [loading]="busy() === key(item, 'delete')"
-                        (onClick)="deleteComment(item)"
+                        (onClick)="deleteItem(item)"
                       />
                     }
                   }
@@ -158,13 +158,13 @@
                       />
                     } @else {
                       <p-button
-                        [label]="'adminEdit.deleteComment' | transloco"
+                        [label]="deleteLabel(item.targetType) | transloco"
                         icon="pi pi-trash"
                         severity="danger"
                         [text]="true"
                         size="small"
                         [loading]="busy() === key(item, 'delete')"
-                        (onClick)="deleteComment(item)"
+                        (onClick)="deleteItem(item)"
                       />
                     }
                   }

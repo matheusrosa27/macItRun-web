@@ -29,6 +29,10 @@ const KNOWN = new Set([
   'invalid_json',
   'author_not_found',
   'save_limit',
+  'title_invalid',
+  'body_invalid',
+  'tags_invalid',
+  'profiles_invalid',
 ]);
 
 interface ErrorLike {

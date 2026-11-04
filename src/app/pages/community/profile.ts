@@ -40,6 +40,7 @@ import { AdminProfileDialog } from './admin-profile-dialog';
 import { AuthorName } from './author';
 import { ProfileChanges } from './profile-changes';
 import { ReportDialog } from './report-dialog';
+import { TopicCard } from '../forum/topic-card';
 
 const COMMENT_MAX = 2000;
 
@@ -62,6 +63,7 @@ const COMMENT_MAX = 2000;
     ReportDialog,
     AuthorName,
     AdminProfileDialog,
+    TopicCard,
   ],
   templateUrl: './profile.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -89,6 +91,15 @@ export class ProfilePage {
   });
   protected readonly profile = computed(() => this.data.value()?.profile);
   protected readonly info = computed(() => this.data.value()?.community);
+
+  /** Tópicos do fórum que citam este perfil (os 3 com atividade mais recente). */
+  protected readonly discussions = resource({
+    params: () => (this.enabled ? this.id() : undefined),
+    loader: async ({ params }) => {
+      const page = await this.community.topics({ profile: params, sort: 'activity' });
+      return { items: page.items.slice(0, 3), total: page.total };
+    },
+  });
 
   /** O primeiro lote de comentários vem com a página; os seguintes, ao pedir mais. */
   private readonly firstComments = resource({
@@ -152,9 +163,15 @@ export class ProfilePage {
       if (this.data.isLoading()) return;
       const profile = this.profile();
       if (profile) {
-        this.seo.setPageText(
-          profile.name,
-          this.transloco.translate('community.profile.seoDescription', { name: profile.name }, this.lang()),
+        const lang = this.lang();
+        const t = (key: string) => this.transloco.translate(key, { name: profile.name }, lang);
+        this.seo.setPageText(profile.name, t('community.profile.seoDescription'));
+        this.seo.setJsonLd(
+          this.seo.breadcrumbs(lang, [
+            { name: t('app.name'), path: '' },
+            { name: t('seo.community.title'), path: 'community' },
+            { name: profile.name },
+          ]),
         );
         // Imagem com o nome do jogo, gerada na Vercel (api/og.mjs).
         this.seo.setImage(`${SITE_URL}/og/profile/${encodeURIComponent(this.id())}?lang=${this.lang()}`, 1200, 630);

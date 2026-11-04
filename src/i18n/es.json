@@ -17,7 +17,8 @@
     "licenses": "Licencias",
     "login": "Entrar",
     "account": "Mi cuenta",
-    "community": "Comunidad"
+    "community": "Comunidad",
+    "forum": "Foro"
   },
   "footer": {
     "label": "Enlaces del pie de página",
@@ -85,6 +86,18 @@
     "appLogin": {
       "title": "Iniciar sesión en la app",
       "description": "Autoriza a la app macItRun a usar tu cuenta."
+    },
+    "forum": {
+      "title": "Foro",
+      "description": "El foro de la comunidad de macItRun: dudas, problemas y consejos para ejecutar apps y juegos de Windows en el Mac, con enlaces a los perfiles de configuración."
+    },
+    "topic": {
+      "title": "Tema del foro",
+      "description": "Una discusión en el foro de la comunidad de macItRun."
+    },
+    "newTopic": {
+      "title": "Nuevo tema",
+      "description": "Abre una discusión en el foro de macItRun."
     }
   },
   "home": {
@@ -393,7 +406,11 @@
       "too_large": "El archivo supera los 16 KB.",
       "invalid_json": "El envío llegó en un formato no válido.",
       "author_not_found": "No existe un usuario con ese nombre.",
-      "save_limit": "Llegaste al límite de 500 perfiles guardados. Quita algunos para guardar otros."
+      "save_limit": "Llegaste al límite de 500 perfiles guardados. Quita algunos para guardar otros.",
+      "title_invalid": "El título debe tener de 3 a 120 caracteres.",
+      "body_invalid": "Escribe el texto (sin pasar el límite de caracteres).",
+      "tags_invalid": "Usa hasta 5 etiquetas, de hasta 30 caracteres cada una.",
+      "profiles_invalid": "Uno de los perfiles de configuración mencionados ya no está publicado. Quítalo e inténtalo de nuevo."
     }
   },
   "account": {
@@ -436,7 +453,7 @@
       "confirm": "Eliminar para siempre",
       "done": "Cuenta eliminada",
       "profiles": {
-        "label": "Tus perfiles de configuración publicados:",
+        "label": "Tus perfiles de configuración publicados y temas del foro:",
         "keep": "Mantenerlos en la comunidad, como “autor eliminado”",
         "remove": "Eliminarlos junto con la cuenta"
       }
@@ -556,6 +573,12 @@
       },
       "notes": {
         "title": "Cómo fue"
+      },
+      "discussions": {
+        "title": "Discusiones en el foro",
+        "start": "Empezar una discusión",
+        "empty": "Nadie abrió todavía una discusión sobre este perfil de configuración.",
+        "all": "Ver las {{ count }} discusiones"
       }
     },
     "comments": {
@@ -581,6 +604,88 @@
       "ubisoft-connect": "Ubisoft Connect",
       "ea-app": "EA app",
       "rockstar": "Rockstar Games Launcher"
+    }
+  },
+  "forum": {
+    "title": "Foro",
+    "subtitle": "Pregunta, cuenta lo que funcionó e intercambia consejos sobre apps y juegos de Windows en el Mac. Menciona perfiles de configuración para que otros los prueben.",
+    "newTopic": "Nuevo tema",
+    "search": {
+      "label": "Buscar en el foro",
+      "placeholder": "Buscar por título, texto o etiqueta",
+      "submit": "Buscar"
+    },
+    "tags": {
+      "label": "Etiquetas más usadas"
+    },
+    "sort": {
+      "label": "Orden",
+      "activity": "Actividad reciente",
+      "recent": "Más nuevos",
+      "replies": "Más respondidos"
+    },
+    "profileFilter": "Temas que mencionan {{ name }}",
+    "clearProfile": "Ver todos los temas",
+    "results": "Temas encontrados: {{ count }}",
+    "empty": {
+      "title": "Todavía no hay temas",
+      "filteredTitle": "No se encontraron temas",
+      "body": "Abre el primero: cuenta qué intentas ejecutar y cómo te fue."
+    },
+    "card": {
+      "activity": "Última actividad",
+      "replies": "Respuestas",
+      "profiles": "Perfiles de configuración mencionados"
+    },
+    "topic": {
+      "back": "Foro",
+      "edited": "editado",
+      "edit": "Editar",
+      "saved": "Tema guardado",
+      "delete": "Borrar tema",
+      "confirmDelete": "Borrar definitivamente, con las respuestas",
+      "deleted": "Tema borrado",
+      "profiles": "Perfiles de configuración mencionados",
+      "notFound": {
+        "title": "Tema no encontrado",
+        "body": "Este tema no existe o ya no está visible."
+      }
+    },
+    "replies": {
+      "title": "Respuestas ({{ count }})",
+      "empty": "Nadie respondió todavía.",
+      "label": "Tu respuesta",
+      "placeholder": "Responde, cuenta cómo te fue o sugiere un perfil de configuración",
+      "submit": "Responder",
+      "posted": "Respuesta publicada",
+      "login": "Inicia sesión para responder",
+      "setup": "Para responder, elige tu nombre de usuario en Mi cuenta.",
+      "delete": "Borrar respuesta",
+      "deleted": "Respuesta borrada",
+      "report": "Denunciar respuesta",
+      "more": "Ver más respuestas",
+      "error": "No se pudieron cargar las respuestas."
+    },
+    "form": {
+      "newTitle": "Nuevo tema",
+      "newSubtitle": "Una duda, un problema, un consejo o una app que funcionó: da detalles (Mac, versión de macOS, lo que ya probaste).",
+      "editTitle": "Editar tema",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ej.: Photoshop CS6 abre, pero los menús salen negros",
+      "bodyLabel": "Texto",
+      "bodyPlaceholder": "Cuenta qué pasa, qué ya probaste y en qué Mac.",
+      "bodyHelp": "Texto plano, sin formato",
+      "tagsLabel": "Etiquetas",
+      "tagsPlaceholder": "Escribe y elige, ej.: el nombre de la app o del juego",
+      "tagsHelp": "Hasta {{ max }}. Ayudan a encontrar el tema: el nombre de la app o del juego, la tienda, el problema.",
+      "profilesLabel": "Perfiles de configuración mencionados (opcional)",
+      "profilesPlaceholder": "Buscar perfil de configuración por nombre",
+      "profilesHelp": "Hasta {{ max }}. El tema aparece en la página de cada perfil mencionado.",
+      "removeProfile": "Quitar {{ name }}",
+      "submit": "Publicar tema",
+      "save": "Guardar",
+      "created": "Tema publicado",
+      "setup": "Para abrir un tema, elige tu nombre de usuario en Mi cuenta."
     }
   },
   "publish": {
@@ -676,7 +781,11 @@
     "unban": "Readmitir autor",
     "done": "Hecho",
     "bannedDone": "Autor expulsado",
-    "unbannedDone": "Autor readmitido"
+    "unbannedDone": "Autor readmitido",
+    "topic": "Tema del foro",
+    "reply": "Respuesta en {{ name }}",
+    "deleteTopic": "Borrar tema",
+    "deleteReply": "Borrar respuesta"
   },
   "badges": {
     "title": "Insignias",

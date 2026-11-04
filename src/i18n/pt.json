@@ -17,7 +17,8 @@
     "licenses": "Licenças",
     "login": "Entrar",
     "account": "Minha conta",
-    "community": "Comunidade"
+    "community": "Comunidade",
+    "forum": "Fórum"
   },
   "footer": {
     "label": "Links do rodapé",
@@ -85,6 +86,18 @@
     "appLogin": {
       "title": "Entrar no app",
       "description": "Autorize o app macItRun a usar sua conta."
+    },
+    "forum": {
+      "title": "Fórum",
+      "description": "Fórum da comunidade do macItRun: dúvidas, problemas e dicas para rodar apps e jogos de Windows no Mac, com links para os perfis de configuração."
+    },
+    "topic": {
+      "title": "Tópico do fórum",
+      "description": "Uma discussão no fórum da comunidade do macItRun."
+    },
+    "newTopic": {
+      "title": "Novo tópico",
+      "description": "Abra uma discussão no fórum do macItRun."
     }
   },
   "home": {
@@ -393,7 +406,11 @@
       "too_large": "O arquivo passa de 16 KB.",
       "invalid_json": "O envio veio num formato inválido.",
       "author_not_found": "Não existe usuário com esse nome.",
-      "save_limit": "Você chegou ao limite de 500 perfis salvos. Tire alguns para salvar outros."
+      "save_limit": "Você chegou ao limite de 500 perfis salvos. Tire alguns para salvar outros.",
+      "title_invalid": "O título precisa ter de 3 a 120 caracteres.",
+      "body_invalid": "Escreva o texto (sem passar do limite de caracteres).",
+      "tags_invalid": "Use até 5 tags, com até 30 caracteres cada.",
+      "profiles_invalid": "Um dos perfis de configuração citados não está mais publicado. Tire-o e tente de novo."
     }
   },
   "account": {
@@ -436,7 +453,7 @@
       "confirm": "Apagar para sempre",
       "done": "Conta apagada",
       "profiles": {
-        "label": "Seus perfis de configuração publicados:",
+        "label": "Seus perfis de configuração publicados e tópicos do fórum:",
         "keep": "Manter na comunidade, como “autor removido”",
         "remove": "Apagar junto com a conta"
       }
@@ -556,6 +573,12 @@
       },
       "notes": {
         "title": "Como foi"
+      },
+      "discussions": {
+        "title": "Discussões no fórum",
+        "start": "Começar uma discussão",
+        "empty": "Ninguém abriu uma discussão sobre este perfil de configuração ainda.",
+        "all": "Ver as {{ count }} discussões"
       }
     },
     "comments": {
@@ -581,6 +604,88 @@
       "ubisoft-connect": "Ubisoft Connect",
       "ea-app": "EA app",
       "rockstar": "Rockstar Games Launcher"
+    }
+  },
+  "forum": {
+    "title": "Fórum",
+    "subtitle": "Pergunte, conte o que funcionou e troque dicas sobre apps e jogos de Windows no Mac. Cite perfis de configuração para os outros testarem.",
+    "newTopic": "Novo tópico",
+    "search": {
+      "label": "Buscar no fórum",
+      "placeholder": "Buscar por título, texto ou tag",
+      "submit": "Buscar"
+    },
+    "tags": {
+      "label": "Tags mais usadas"
+    },
+    "sort": {
+      "label": "Ordem",
+      "activity": "Atividade recente",
+      "recent": "Mais novos",
+      "replies": "Mais respondidos"
+    },
+    "profileFilter": "Tópicos que citam {{ name }}",
+    "clearProfile": "Ver todos os tópicos",
+    "results": "Tópicos encontrados: {{ count }}",
+    "empty": {
+      "title": "Nenhum tópico ainda",
+      "filteredTitle": "Nenhum tópico encontrado",
+      "body": "Abra o primeiro: conte o que você está tentando rodar e como foi."
+    },
+    "card": {
+      "activity": "Última atividade",
+      "replies": "Respostas",
+      "profiles": "Perfis de configuração citados"
+    },
+    "topic": {
+      "back": "Fórum",
+      "edited": "editado",
+      "edit": "Editar",
+      "saved": "Tópico salvo",
+      "delete": "Apagar tópico",
+      "confirmDelete": "Apagar de vez, com as respostas",
+      "deleted": "Tópico apagado",
+      "profiles": "Perfis de configuração citados",
+      "notFound": {
+        "title": "Tópico não encontrado",
+        "body": "Este tópico não existe ou não está mais visível."
+      }
+    },
+    "replies": {
+      "title": "Respostas ({{ count }})",
+      "empty": "Ninguém respondeu ainda.",
+      "label": "Sua resposta",
+      "placeholder": "Responda, conte como foi aí ou sugira um perfil de configuração",
+      "submit": "Responder",
+      "posted": "Resposta publicada",
+      "login": "Entre para responder",
+      "setup": "Para responder, escolha seu nome de usuário em Minha conta.",
+      "delete": "Apagar resposta",
+      "deleted": "Resposta apagada",
+      "report": "Denunciar resposta",
+      "more": "Ver mais respostas",
+      "error": "Não foi possível carregar as respostas."
+    },
+    "form": {
+      "newTitle": "Novo tópico",
+      "newSubtitle": "Dúvida, problema, dica ou um app que funcionou: escreva com detalhes (Mac, versão do macOS, o que você já tentou).",
+      "editTitle": "Editar tópico",
+      "titleLabel": "Título",
+      "titlePlaceholder": "Ex.: Photoshop CS6 abre, mas os menus ficam pretos",
+      "bodyLabel": "Texto",
+      "bodyPlaceholder": "Conte o que acontece, o que você já tentou e em qual Mac.",
+      "bodyHelp": "Texto puro, sem formatação",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "Digite e escolha, ex.: o nome do app ou do jogo",
+      "tagsHelp": "Até {{ max }}. Ajudam a achar o tópico: o nome do app ou do jogo, a loja, o problema.",
+      "profilesLabel": "Perfis de configuração citados (opcional)",
+      "profilesPlaceholder": "Buscar perfil de configuração pelo nome",
+      "profilesHelp": "Até {{ max }}. O tópico aparece na página de cada perfil citado.",
+      "removeProfile": "Tirar {{ name }}",
+      "submit": "Publicar tópico",
+      "save": "Salvar",
+      "created": "Tópico publicado",
+      "setup": "Para abrir um tópico, escolha seu nome de usuário em Minha conta."
     }
   },
   "publish": {
@@ -676,7 +781,11 @@
     "unban": "Desbanir autor",
     "done": "Feito",
     "bannedDone": "Autor banido",
-    "unbannedDone": "Autor desbanido"
+    "unbannedDone": "Autor desbanido",
+    "topic": "Tópico do fórum",
+    "reply": "Resposta em {{ name }}",
+    "deleteTopic": "Apagar tópico",
+    "deleteReply": "Apagar resposta"
   },
   "badges": {
     "title": "Tags",

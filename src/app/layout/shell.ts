@@ -47,6 +47,7 @@ export class Shell {
   protected readonly langOptions = LANGS.map((value) => ({ value, label: LANG_LABEL[value] }));
   protected readonly nav: NavItem[] = [
     { path: 'community', label: 'nav.community' },
+    { path: 'forum', label: 'nav.forum' },
     { path: 'download', label: 'nav.download' },
   ];
   protected readonly kofiUrl = KOFI_URL;

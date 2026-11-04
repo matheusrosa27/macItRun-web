@@ -3,10 +3,11 @@ import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { TranslocoService } from '@jsverse/transloco';
 import { HTML_LANG, Lang, LANGS } from './i18n/langs';
-import { SITE_URL } from './site';
+import { LATEST_ZIP_URL, SITE_URL } from './site';
 
 const OG_LOCALE: Record<Lang, string> = { pt: 'pt_BR', en: 'en_US', es: 'es_ES' };
 const DEFAULT_IMAGE = `${SITE_URL}/img/logo-512.png`;
+const JSON_LD_ID = 'seo-json-ld';
 
 /** Título, descrição, Open Graph e links de idioma de cada página. */
 @Injectable({ providedIn: 'root' })
@@ -41,6 +42,8 @@ export class SeoService {
     this.setImage(DEFAULT_IMAGE, 512, 512);
     this.setProperty('og:locale', OG_LOCALE[lang]);
     this.setName('robots', noindex ? 'noindex' : 'index, follow');
+    // Dados estruturados: o app na Home; nas outras, cada página põe os seus (ou nenhum).
+    this.setJsonLd(page === 'home' ? this.appJsonLd(lang, description) : null);
 
     this.setLink('canonical', url);
     for (const other of LANGS) this.setLink('alternate', this.url(other, path), HTML_LANG[other]);
@@ -65,6 +68,56 @@ export class SeoService {
     this.setProperty('og:image:width', String(width));
     this.setProperty('og:image:height', String(height));
     this.setName('twitter:card', width > height ? 'summary_large_image' : 'summary');
+  }
+
+  /**
+   * Dados estruturados (schema.org) da página, num <script type="application/ld+json">.
+   * `null` tira o que havia.
+   */
+  setJsonLd(data: object | null): void {
+    let script = this.document.getElementById(JSON_LD_ID);
+    if (!data) {
+      script?.remove();
+      return;
+    }
+    if (!script) {
+      script = this.document.createElement('script');
+      script.id = JSON_LD_ID;
+      script.setAttribute('type', 'application/ld+json');
+      this.document.head.appendChild(script);
+    }
+    // "<" escapado para nenhum texto de usuário fechar o <script>.
+    script.textContent = JSON.stringify(data).replace(/</g, '\\u003c');
+  }
+
+  /** Migalhas (Início › … › página atual) para o Google mostrar no resultado. */
+  breadcrumbs(lang: Lang, items: { name: string; path?: string }[]): object {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: item.name,
+        ...(item.path !== undefined ? { item: this.url(lang, item.path) } : {}),
+      })),
+    };
+  }
+
+  private appJsonLd(lang: Lang, description: string): object {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: this.transloco.translate('app.name', {}, lang),
+      description,
+      url: this.url(lang, ''),
+      image: DEFAULT_IMAGE,
+      downloadUrl: LATEST_ZIP_URL,
+      applicationCategory: 'GameApplication',
+      operatingSystem: 'macOS 26 (Apple silicon)',
+      inLanguage: HTML_LANG[lang],
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    };
   }
 
   /** Tira a página dos buscadores (ex.: perfil que não existe mais). */

@@ -49,6 +49,29 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/community/profile').then((m) => m.ProfilePage),
       },
       {
+        path: 'forum',
+        data: { page: 'forum' },
+        loadComponent: () => import('./pages/forum/forum').then((m) => m.Forum),
+      },
+      {
+        // Antes de forum/:id, senão "new" viraria um id.
+        path: 'forum/new',
+        canActivate: [requireAuth],
+        data: { page: 'newTopic', noindex: true },
+        loadComponent: () => import('./pages/forum/new-topic').then((m) => m.NewTopic),
+      },
+      {
+        // O slug é só para ler; o id basta para achar o tópico.
+        path: 'forum/:id/:slug',
+        data: { page: 'topic' },
+        loadComponent: () => import('./pages/forum/topic').then((m) => m.TopicPage),
+      },
+      {
+        path: 'forum/:id',
+        data: { page: 'topic' },
+        loadComponent: () => import('./pages/forum/topic').then((m) => m.TopicPage),
+      },
+      {
         path: 'signup',
         canActivate: [guestOnly],
         data: { page: 'signup' },

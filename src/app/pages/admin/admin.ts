@@ -15,7 +15,10 @@ import { HTML_LANG, Lang } from '../../core/i18n/langs';
 import { AdminProfileDialog } from '../community/admin-profile-dialog';
 
 interface ModerationTarget {
-  profileId: string;
+  /** Perfis e comentários. */
+  profileId?: string;
+  /** Tópicos e respostas do fórum. */
+  topicId?: string;
   slug: string;
   name: string;
   /** Só em comentários. */
@@ -24,8 +27,10 @@ interface ModerationTarget {
   author: { id: string; username: string | null; banned: boolean } | null;
 }
 
+type TargetType = 'profile' | 'comment' | 'topic' | 'reply';
+
 interface OpenReport {
-  targetType: 'profile' | 'comment';
+  targetType: TargetType;
   targetId: string;
   count: number;
   reports: { reason: string; detail: string; reporter: string | null; createdAt: string }[];
@@ -33,7 +38,7 @@ interface OpenReport {
 }
 
 interface HiddenItem {
-  targetType: 'profile' | 'comment';
+  targetType: TargetType;
   targetId: string;
   target: ModerationTarget | null;
 }
@@ -87,11 +92,32 @@ export class Admin {
     this.hidden.reload();
   }
 
-  /** Apaga o comentário de vez (o perfil, pelo diálogo de edição). */
-  protected async deleteComment(item: OpenReport | HiddenItem): Promise<void> {
-    await this.run(this.key(item, 'delete'), 'adminEdit.deleted', () =>
-      this.community.adminDeleteComment(Number(item.targetId)),
-    );
+  /** Apaga de vez um comentário, tópico ou resposta (o perfil, pelo diálogo de edição). */
+  protected async deleteItem(item: OpenReport | HiddenItem): Promise<void> {
+    const id = item.targetId;
+    const action =
+      item.targetType === 'topic'
+        ? () => this.community.adminDeleteTopic(id)
+        : item.targetType === 'reply'
+          ? () => this.community.adminDeleteReply(Number(id))
+          : () => this.community.adminDeleteComment(Number(id));
+    await this.run(this.key(item, 'delete'), 'adminEdit.deleted', action);
+  }
+
+  /** Rótulo do item ("Perfil de configuração", "Resposta em …"). */
+  protected targetLabel(type: TargetType): string {
+    return { profile: 'admin.profile', comment: 'admin.comment', topic: 'admin.topic', reply: 'admin.reply' }[type];
+  }
+
+  protected deleteLabel(type: TargetType): string {
+    return type === 'topic' ? 'admin.deleteTopic' : type === 'reply' ? 'admin.deleteReply' : 'adminEdit.deleteComment';
+  }
+
+  /** Link para o item: o perfil, ou o tópico do fórum. */
+  protected targetLink(target: ModerationTarget): string[] {
+    return target.topicId
+      ? ['/', this.lang(), 'forum', target.topicId, target.slug]
+      : ['/', this.lang(), 'community', target.profileId ?? '', target.slug];
   }
 
   protected key(item: { targetType: string; targetId: string }, action: string): string {

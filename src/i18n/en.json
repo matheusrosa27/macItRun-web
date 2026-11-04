@@ -17,7 +17,8 @@
     "licenses": "Licenses",
     "login": "Sign in",
     "account": "My account",
-    "community": "Community"
+    "community": "Community",
+    "forum": "Forum"
   },
   "footer": {
     "label": "Footer links",
@@ -85,6 +86,18 @@
     "appLogin": {
       "title": "Sign in to the app",
       "description": "Authorize the macItRun app to use your account."
+    },
+    "forum": {
+      "title": "Forum",
+      "description": "The macItRun community forum: questions, problems and tips for running Windows apps and games on your Mac, with links to setup profiles."
+    },
+    "topic": {
+      "title": "Forum topic",
+      "description": "A discussion in the macItRun community forum."
+    },
+    "newTopic": {
+      "title": "New topic",
+      "description": "Start a discussion in the macItRun forum."
     }
   },
   "home": {
@@ -393,7 +406,11 @@
       "too_large": "The file is larger than 16 KB.",
       "invalid_json": "The request came in an invalid format.",
       "author_not_found": "There is no user with that name.",
-      "save_limit": "You've reached the limit of 500 saved profiles. Remove some to save others."
+      "save_limit": "You've reached the limit of 500 saved profiles. Remove some to save others.",
+      "title_invalid": "The title must have 3 to 120 characters.",
+      "body_invalid": "Write the text (within the character limit).",
+      "tags_invalid": "Use up to 5 tags, up to 30 characters each.",
+      "profiles_invalid": "One of the setup profiles mentioned is no longer published. Remove it and try again."
     }
   },
   "account": {
@@ -436,7 +453,7 @@
       "confirm": "Delete forever",
       "done": "Account deleted",
       "profiles": {
-        "label": "Your published setup profiles:",
+        "label": "Your published setup profiles and forum topics:",
         "keep": "Keep them in the community, as “deleted author”",
         "remove": "Delete them with the account"
       }
@@ -556,6 +573,12 @@
       },
       "notes": {
         "title": "How it went"
+      },
+      "discussions": {
+        "title": "Forum discussions",
+        "start": "Start a discussion",
+        "empty": "Nobody has started a discussion about this setup profile yet.",
+        "all": "See all {{ count }} discussions"
       }
     },
     "comments": {
@@ -581,6 +604,88 @@
       "ubisoft-connect": "Ubisoft Connect",
       "ea-app": "EA app",
       "rockstar": "Rockstar Games Launcher"
+    }
+  },
+  "forum": {
+    "title": "Forum",
+    "subtitle": "Ask, share what worked and swap tips about Windows apps and games on the Mac. Mention setup profiles so others can try them.",
+    "newTopic": "New topic",
+    "search": {
+      "label": "Search the forum",
+      "placeholder": "Search by title, text or tag",
+      "submit": "Search"
+    },
+    "tags": {
+      "label": "Most used tags"
+    },
+    "sort": {
+      "label": "Order",
+      "activity": "Recent activity",
+      "recent": "Newest",
+      "replies": "Most replies"
+    },
+    "profileFilter": "Topics that mention {{ name }}",
+    "clearProfile": "See all topics",
+    "results": "Topics found: {{ count }}",
+    "empty": {
+      "title": "No topics yet",
+      "filteredTitle": "No topics found",
+      "body": "Start the first one: tell what you are trying to run and how it went."
+    },
+    "card": {
+      "activity": "Last activity",
+      "replies": "Replies",
+      "profiles": "Setup profiles mentioned"
+    },
+    "topic": {
+      "back": "Forum",
+      "edited": "edited",
+      "edit": "Edit",
+      "saved": "Topic saved",
+      "delete": "Delete topic",
+      "confirmDelete": "Delete for good, with the replies",
+      "deleted": "Topic deleted",
+      "profiles": "Setup profiles mentioned",
+      "notFound": {
+        "title": "Topic not found",
+        "body": "This topic doesn't exist or is no longer visible."
+      }
+    },
+    "replies": {
+      "title": "Replies ({{ count }})",
+      "empty": "No replies yet.",
+      "label": "Your reply",
+      "placeholder": "Reply, tell how it went for you or suggest a setup profile",
+      "submit": "Reply",
+      "posted": "Reply posted",
+      "login": "Sign in to reply",
+      "setup": "To reply, choose your username in My account.",
+      "delete": "Delete reply",
+      "deleted": "Reply deleted",
+      "report": "Report reply",
+      "more": "See more replies",
+      "error": "Couldn't load the replies."
+    },
+    "form": {
+      "newTitle": "New topic",
+      "newSubtitle": "A question, a problem, a tip or an app that worked: give details (Mac, macOS version, what you already tried).",
+      "editTitle": "Edit topic",
+      "titleLabel": "Title",
+      "titlePlaceholder": "E.g.: Photoshop CS6 opens, but the menus are black",
+      "bodyLabel": "Text",
+      "bodyPlaceholder": "Tell what happens, what you already tried and on which Mac.",
+      "bodyHelp": "Plain text, no formatting",
+      "tagsLabel": "Tags",
+      "tagsPlaceholder": "Type and pick, e.g. the name of the app or game",
+      "tagsHelp": "Up to {{ max }}. They help people find the topic: the app or game name, the store, the problem.",
+      "profilesLabel": "Setup profiles mentioned (optional)",
+      "profilesPlaceholder": "Search setup profiles by name",
+      "profilesHelp": "Up to {{ max }}. The topic shows up on the page of each profile mentioned.",
+      "removeProfile": "Remove {{ name }}",
+      "submit": "Post topic",
+      "save": "Save",
+      "created": "Topic posted",
+      "setup": "To start a topic, choose your username in My account."
     }
   },
   "publish": {
@@ -676,7 +781,11 @@
     "unban": "Unban author",
     "done": "Done",
     "bannedDone": "Author banned",
-    "unbannedDone": "Author unbanned"
+    "unbannedDone": "Author unbanned",
+    "topic": "Forum topic",
+    "reply": "Reply on {{ name }}",
+    "deleteTopic": "Delete topic",
+    "deleteReply": "Delete reply"
   },
   "badges": {
     "title": "Badges",

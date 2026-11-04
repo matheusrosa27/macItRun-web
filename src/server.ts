@@ -9,7 +9,7 @@ import { join } from 'node:path';
 import { API_BASE } from './app/core/community/community';
 import { fetchLatestRelease, RELEASE_CACHE_MS, RELEASE_ENDPOINT } from './app/core/release/release';
 import { SITE_URL } from './app/core/site';
-import { buildRobots, buildSitemap, SitemapProfile } from './app/core/sitemap';
+import { buildRobots, buildSitemap, SitemapProfile, SitemapTopic } from './app/core/sitemap';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
@@ -40,27 +40,41 @@ app.get('/robots.txt', (_req, res) => {
   res.type('text/plain').send(buildRobots(SITE_URL));
 });
 
+/** Todas as páginas de uma lista da API (até 40 páginas, ou seja, 2.000 itens). */
+async function readAll<T>(path: string): Promise<T[]> {
+  const items: T[] = [];
+  if (!API_BASE) return items;
+  try {
+    for (let page = 1; page <= 40; page++) {
+      const response = await fetch(`${API_BASE}/${path}&page=${page}`);
+      if (!response.ok) break;
+      const list = (await response.json()) as { items: T[]; total: number; pageSize: number };
+      items.push(...list.items);
+      if (page * list.pageSize >= list.total) break;
+    }
+  } catch (error) {
+    console.error('sitemap', path, error);
+  }
+  return items;
+}
+
 /**
- * sitemap.xml com as páginas fixas e os perfis de configuração publicados (lidos da API,
- * até 2.000), com cache de 1 hora na CDN.
+ * sitemap.xml com as páginas fixas, os perfis de configuração publicados e os tópicos do fórum
+ * (lidos da API, até 2.000 de cada), com cache de 1 hora na CDN.
  */
 app.get('/sitemap.xml', async (_req, res) => {
-  const profiles: SitemapProfile[] = [];
-  if (API_BASE) {
-    try {
-      for (let page = 1; page <= 40; page++) {
-        const response = await fetch(`${API_BASE}/profiles?sort=recent&page=${page}`);
-        if (!response.ok) break;
-        const list = (await response.json()) as { items: SitemapProfile[]; total: number; pageSize: number };
-        profiles.push(...list.items.map(({ id, slug, updatedAt }) => ({ id, slug, updatedAt })));
-        if (page * list.pageSize >= list.total) break;
-      }
-    } catch (error) {
-      console.error('sitemap', error);
-    }
-  }
+  const [profiles, topics] = await Promise.all([
+    readAll<SitemapProfile>('profiles?sort=recent'),
+    readAll<SitemapTopic>('topics?sort=recent'),
+  ]);
   res.set('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=3600');
-  res.type('application/xml').send(buildSitemap(SITE_URL, profiles));
+  res.type('application/xml').send(
+    buildSitemap(
+      SITE_URL,
+      profiles.map(({ id, slug, updatedAt }) => ({ id, slug, updatedAt })),
+      topics.map(({ id, slug, activityAt }) => ({ id, slug, activityAt })),
+    ),
+  );
 });
 
 /**
