@@ -17,6 +17,7 @@
     "licenses": "Licencias",
     "login": "Entrar",
     "account": "Mi cuenta",
+    "saved": "Guardados",
     "community": "Perfiles de configuración",
     "forum": "Comunidad"
   },
@@ -472,6 +473,39 @@
       "unpublish": "Despublicar",
       "unpublishConfirm": "¿Despublicar este perfil de configuración? Sale de la comunidad para siempre; para compartirlo otra vez, vuelve a publicarlo.",
       "unpublished": "Perfil de configuración despublicado"
+    },
+    "nav": {
+      "label": "Secciones de la cuenta",
+      "profile": "Perfil",
+      "login": "Inicio de sesión y seguridad",
+      "publications": "Publicaciones",
+      "saved": "Guardados",
+      "data": "Privacidad y datos"
+    },
+    "sections": {
+      "profile": {
+        "title": "Perfil público",
+        "body": "Cómo apareces en la comunidad: nombre de usuario y etiquetas."
+      },
+      "login": {
+        "title": "Inicio de sesión y seguridad",
+        "body": "El correo de la cuenta, las formas de entrar y la contraseña.",
+        "password": "Contraseña",
+        "passwordBody": "Te enviamos un enlace por correo para elegir una contraseña nueva.",
+        "signOutBody": "Cierra la sesión en este navegador."
+      },
+      "publications": {
+        "title": "Publicaciones",
+        "body": "Los perfiles de configuración que publicaste: edita las notas o despublícalos."
+      },
+      "saved": {
+        "title": "Guardados",
+        "body": "Lo que guardaste para ver después."
+      },
+      "data": {
+        "title": "Privacidad y datos",
+        "body": "Descarga una copia de tus datos o borra tu cuenta."
+      }
     }
   },
   "community": {
@@ -698,7 +732,7 @@
       "disliked": "No te gusta ({{ count }}). Haz clic para quitar"
     },
     "saved": {
-      "title": "Temas guardados",
+      "title": "Temas de la comunidad",
       "hint": "Temas de la comunidad que guardaste para leer después. Solo tú ves esta lista.",
       "empty": "Todavía no guardaste temas. Usa el botón Guardar en la página de un tema en"
     }
@@ -844,7 +878,7 @@
     "deleted": "Eliminado"
   },
   "saved": {
-    "title": "Guardados",
+    "title": "Perfiles de configuración",
     "hint": "Perfiles de configuración que guardaste para después. Solo tú ves esta lista.",
     "save": "Guardar",
     "saved": "Guardado",

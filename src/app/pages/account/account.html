@@ -1,219 +1,339 @@
-<section class="mx-auto max-w-2xl px-4 py-12 md:py-16">
-  <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
-
+<section class="mx-auto max-w-5xl px-4 py-12 md:py-16">
   @let current = account();
   @if (current === undefined || leaving()) {
+    <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
     <div class="flex justify-center py-16">
       <p-progress-spinner strokeWidth="4" styleClass="!w-10 !h-10" [ariaLabel]="'auth.loading' | transloco" />
     </div>
   } @else if (current === null) {
+    <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
     <div class="mt-8 flex flex-col items-start gap-4">
       <p-message severity="error" [text]="'auth.errors.generic' | transloco" />
       <p-button [label]="'account.signOut' | transloco" severity="secondary" (onClick)="signOut()" />
     </div>
   } @else if (auth.needsSetup()) {
     <!-- Cadastro pelo Google ou GitHub: falta escolher o nome e aceitar os termos. -->
-    <div class="mt-8 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <h2 class="m-0 text-xl font-semibold">{{ 'account.setup.title' | transloco }}</h2>
-      <p class="mt-2 mb-6 text-surface-600 dark:text-surface-400">{{ 'account.setup.body' | transloco }}</p>
+    <div class="mx-auto max-w-2xl">
+      <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
+      <div class="mt-8 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+        <h2 class="m-0 text-xl font-semibold">{{ 'account.setup.title' | transloco }}</h2>
+        <p class="mt-2 mb-6 text-surface-600 dark:text-surface-400">{{ 'account.setup.body' | transloco }}</p>
 
-      <form [formGroup]="setupForm" (ngSubmit)="completeSetup()" class="flex flex-col gap-5" novalidate>
-        <div class="flex flex-col gap-2">
-          <label for="setup-username" class="font-medium">{{ 'auth.fields.username' | transloco }}</label>
-          <input
-            pInputText
-            id="setup-username"
-            formControlName="username"
-            autocomplete="username"
-            autocapitalize="none"
-            spellcheck="false"
-            [maxlength]="usernameMax"
-            fluid
-          />
-          <small class="text-surface-500 dark:text-surface-400">{{ 'auth.username.help' | transloco }}</small>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <div class="flex items-start gap-2">
-            <p-checkbox inputId="setup-terms" formControlName="terms" [binary]="true" />
-            <label for="setup-terms" class="text-sm leading-relaxed">
-              {{ 'auth.signup.terms.accept' | transloco }}
-              <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.terms' | transloco }}</a>
-              {{ 'auth.signup.terms.and' | transloco }}
-              <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
-            </label>
+        <form [formGroup]="setupForm" (ngSubmit)="completeSetup()" class="flex flex-col gap-5" novalidate>
+          <div class="flex flex-col gap-2">
+            <label for="setup-username" class="font-medium">{{ 'auth.fields.username' | transloco }}</label>
+            <input
+              pInputText
+              id="setup-username"
+              formControlName="username"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              [maxlength]="usernameMax"
+              fluid
+            />
+            <small class="text-surface-500 dark:text-surface-400">{{ 'auth.username.help' | transloco }}</small>
           </div>
-          @if (setupForm.controls.terms.touched && setupForm.controls.terms.invalid) {
-            <p-message severity="error" size="small" variant="simple">{{ 'auth.validation.terms' | transloco }}</p-message>
+
+          <div class="flex flex-col gap-2">
+            <div class="flex items-start gap-2">
+              <p-checkbox inputId="setup-terms" formControlName="terms" [binary]="true" />
+              <label for="setup-terms" class="text-sm leading-relaxed">
+                {{ 'auth.signup.terms.accept' | transloco }}
+                <a [routerLink]="['/', lang(), 'terms']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.terms' | transloco }}</a>
+                {{ 'auth.signup.terms.and' | transloco }}
+                <a [routerLink]="['/', lang(), 'privacy']" target="_blank" class="text-primary underline underline-offset-2">{{ 'auth.signup.terms.privacy' | transloco }}</a>{{ 'auth.signup.terms.end' | transloco }}
+              </label>
+            </div>
+            @if (setupForm.controls.terms.touched && setupForm.controls.terms.invalid) {
+              <p-message severity="error" size="small" variant="simple">{{ 'auth.validation.terms' | transloco }}</p-message>
+            }
+          </div>
+
+          @if (error(); as error) {
+            <p-message severity="error" [text]="error | transloco" />
           }
-        </div>
 
-        @if (error(); as error) {
-          <p-message severity="error" [text]="error | transloco" />
-        }
-
-        <div class="flex flex-wrap gap-3">
-          <p-button type="submit" [label]="'account.setup.submit' | transloco" [loading]="busy() === 'setup'" />
-          <p-button
-            [label]="'account.signOut' | transloco"
-            severity="secondary"
-            [text]="true"
-            [loading]="busy() === 'signOut'"
-            (onClick)="signOut()"
-          />
-        </div>
-      </form>
+          <div class="flex flex-wrap gap-3">
+            <p-button type="submit" [label]="'account.setup.submit' | transloco" [loading]="busy() === 'setup'" />
+            <p-button
+              [label]="'account.signOut' | transloco"
+              severity="secondary"
+              [text]="true"
+              [loading]="busy() === 'signOut'"
+              (onClick)="signOut()"
+            />
+          </div>
+        </form>
+      </div>
     </div>
   } @else {
+    <!-- Cabeçalho: quem está conectado -->
+    <header class="flex flex-wrap items-center gap-4">
+      <span
+        class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-contrast uppercase"
+        aria-hidden="true"
+        >{{ (current.username ?? current.email).charAt(0) }}</span
+      >
+      <div class="min-w-0">
+        <h1 class="m-0 text-3xl font-bold">{{ 'account.title' | transloco }}</h1>
+        <p class="mt-1 mb-0 text-surface-600 dark:text-surface-300">
+          <app-author [author]="{ username: current.username, badges: current.badges }" [strong]="true" />
+        </p>
+      </div>
+    </header>
+
     @if (current.banned) {
       <p-message class="mt-6 block" severity="warn" [text]="'account.banned' | transloco" />
     }
 
-    <!-- Perfil -->
-    <div class="mt-8 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <h2 class="m-0 text-xl font-semibold">{{ 'account.profile.title' | transloco }}</h2>
-      <dl class="mt-4 mb-0 grid gap-4">
-        <div>
-          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'auth.fields.username' | transloco }}</dt>
-          <dd class="m-0 mt-1">
-            @if (editingUsername()) {
-              <form [formGroup]="usernameForm" (ngSubmit)="saveUsername()" class="flex flex-wrap items-center gap-2" novalidate>
-                <input
-                  pInputText
-                  formControlName="username"
-                  autocapitalize="none"
-                  spellcheck="false"
-                  [maxlength]="usernameMax"
-                  [attr.aria-label]="'auth.fields.username' | transloco"
-                  class="min-w-0 flex-1"
-                />
-                <p-button type="submit" [label]="'account.save' | transloco" size="small" [loading]="busy() === 'username'" />
+    <div class="mt-8 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]">
+      <!-- Sumário: na lateral no computador; faixa rolável no celular -->
+      <aside class="min-w-0 lg:sticky lg:top-24 lg:self-start">
+        <nav [attr.aria-label]="'account.nav.label' | transloco">
+          <ul class="-mx-4 my-0 flex list-none gap-1 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:overflow-visible lg:p-0">
+            @for (item of sections; track item.id) {
+              <li class="shrink-0">
+                <a
+                  [routerLink]="[]"
+                  [queryParams]="{ section: item.id === 'profile' ? null : item.id }"
+                  [attr.aria-current]="activeSection() === item.id ? 'page' : null"
+                  [class]="
+                    activeSection() === item.id
+                      ? 'flex items-center gap-3 rounded-lg bg-primary-50 px-3 py-2 font-medium whitespace-nowrap text-primary-700 no-underline dark:bg-primary-950 dark:text-primary-200'
+                      : 'flex items-center gap-3 rounded-lg px-3 py-2 whitespace-nowrap text-surface-700 no-underline hover:bg-surface-100 dark:text-surface-200 dark:hover:bg-surface-800'
+                  "
+                >
+                  <i [class]="'pi ' + item.icon + ' text-sm'" aria-hidden="true"></i>
+                  <span>{{ 'account.nav.' + item.id | transloco }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </nav>
+
+        <div class="mt-4 hidden flex-col gap-1 border-t border-surface-200 pt-4 lg:flex dark:border-surface-800">
+          @if (current.role === 'admin') {
+            <a
+              [routerLink]="['/', lang(), 'admin']"
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-surface-700 no-underline hover:bg-surface-100 dark:text-surface-200 dark:hover:bg-surface-800"
+            >
+              <i class="pi pi-shield text-sm" aria-hidden="true"></i>
+              <span>{{ 'admin.title' | transloco }}</span>
+            </a>
+          }
+          <button
+            type="button"
+            class="flex cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-3 py-2 text-left text-base text-surface-700 hover:bg-surface-100 dark:text-surface-200 dark:hover:bg-surface-800"
+            [disabled]="busy() === 'signOut'"
+            (click)="signOut()"
+          >
+            <i class="pi pi-sign-out text-sm" aria-hidden="true"></i>
+            <span>{{ 'account.signOut' | transloco }}</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- A seção escolhida -->
+      <div class="min-w-0">
+        <header class="mb-6">
+          <h2 class="m-0 text-2xl font-semibold">{{ 'account.sections.' + activeSection() + '.title' | transloco }}</h2>
+          <p class="mt-1 mb-0 text-surface-600 dark:text-surface-400">
+            {{ 'account.sections.' + activeSection() + '.body' | transloco }}
+          </p>
+        </header>
+
+        @if (error() && !deleteOpen()) {
+          <p-message class="mb-6 block" severity="error" [text]="error()! | transloco" />
+        }
+
+        @switch (activeSection()) {
+          @case ('profile') {
+            <div class="rounded-xl border border-surface-200 bg-surface-0 dark:border-surface-800 dark:bg-surface-900">
+              <!-- Nome de usuário -->
+              <div class="p-6">
+                <h3 class="m-0 text-base font-semibold">{{ 'auth.fields.username' | transloco }}</h3>
+                <div class="mt-3">
+                  @if (editingUsername()) {
+                    <form [formGroup]="usernameForm" (ngSubmit)="saveUsername()" class="flex flex-wrap items-center gap-2" novalidate>
+                      <input
+                        pInputText
+                        formControlName="username"
+                        autocapitalize="none"
+                        spellcheck="false"
+                        [maxlength]="usernameMax"
+                        [attr.aria-label]="'auth.fields.username' | transloco"
+                        class="min-w-0 flex-1"
+                      />
+                      <p-button type="submit" [label]="'account.save' | transloco" size="small" [loading]="busy() === 'username'" />
+                      <p-button
+                        [label]="'account.cancel' | transloco"
+                        size="small"
+                        severity="secondary"
+                        [text]="true"
+                        (onClick)="editingUsername.set(false)"
+                      />
+                    </form>
+                    <small class="mt-2 block text-surface-500 dark:text-surface-400">{{ 'auth.username.help' | transloco }}</small>
+                  } @else {
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <span class="font-medium">{{ '@' + current.username }}</span>
+                      <p-button
+                        icon="pi pi-pencil"
+                        [label]="'account.profile.editUsername' | transloco"
+                        size="small"
+                        severity="secondary"
+                        [outlined]="true"
+                        (onClick)="startEditingUsername()"
+                      />
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div class="border-t border-surface-200 p-6 dark:border-surface-800">
+                <h3 class="m-0 text-base font-semibold">{{ 'badges.title' | transloco }}</h3>
+                <div class="mt-3">
+                  <app-author [author]="{ username: current.username, badges: current.badges }" />
+                </div>
+                <details class="mt-4 text-sm">
+                  <summary class="cursor-pointer text-primary">{{ 'badges.how' | transloco }}</summary>
+                  <ul class="m-0 mt-3 flex list-none flex-col gap-2 p-0">
+                    @for (badge of allBadges; track badge) {
+                      <li class="flex flex-wrap items-center gap-2">
+                        <p-tag
+                          [value]="'badges.' + badge + '.label' | transloco"
+                          [icon]="badgeStyle[badge].icon"
+                          [severity]="badgeStyle[badge].severity"
+                          styleClass="!px-1.5 !py-0 !text-xs"
+                        />
+                        <span class="text-surface-600 dark:text-surface-300">{{ 'badges.' + badge + '.description' | transloco }}</span>
+                      </li>
+                    }
+                  </ul>
+                </details>
+              </div>
+
+              <!-- Desde quando -->
+              <div class="border-t border-surface-200 p-6 dark:border-surface-800">
+                <h3 class="m-0 text-base font-semibold">{{ 'account.profile.memberSince' | transloco }}</h3>
+                <p class="mt-3 mb-0">{{ memberSince() }}</p>
+              </div>
+            </div>
+          }
+
+          @case ('login') {
+            <div class="rounded-xl border border-surface-200 bg-surface-0 dark:border-surface-800 dark:bg-surface-900">
+              <div class="p-6">
+                <h3 class="m-0 text-base font-semibold">{{ 'auth.fields.email' | transloco }}</h3>
+                <p class="mt-3 mb-0 break-all">{{ current.email }}</p>
+              </div>
+              <div class="border-t border-surface-200 p-6 dark:border-surface-800">
+                <h3 class="m-0 text-base font-semibold">{{ 'account.profile.providers' | transloco }}</h3>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  @for (provider of current.providers; track provider) {
+                    <p-tag [value]="providerLabel(provider) | transloco" severity="secondary" />
+                  }
+                </div>
+              </div>
+              @if (current.providers.includes('email')) {
+                <div class="flex flex-wrap items-center justify-between gap-3 border-t border-surface-200 p-6 dark:border-surface-800">
+                  <div>
+                    <h3 class="m-0 text-base font-semibold">{{ 'account.sections.login.password' | transloco }}</h3>
+                    <p class="mt-1 mb-0 text-sm text-surface-600 dark:text-surface-400">
+                      {{ 'account.sections.login.passwordBody' | transloco }}
+                    </p>
+                  </div>
+                  <a pButton [routerLink]="['/', lang(), 'reset-password']" severity="secondary" [outlined]="true" size="small">
+                    <span pButtonLabel>{{ 'account.changePassword' | transloco }}</span>
+                  </a>
+                </div>
+              }
+              <div class="flex flex-wrap items-center justify-between gap-3 border-t border-surface-200 p-6 dark:border-surface-800">
+                <div>
+                  <h3 class="m-0 text-base font-semibold">{{ 'account.signOut' | transloco }}</h3>
+                  <p class="mt-1 mb-0 text-sm text-surface-600 dark:text-surface-400">
+                    {{ 'account.sections.login.signOutBody' | transloco }}
+                  </p>
+                </div>
                 <p-button
-                  [label]="'account.cancel' | transloco"
-                  size="small"
+                  [label]="'account.signOut' | transloco"
+                  icon="pi pi-sign-out"
                   severity="secondary"
-                  [text]="true"
-                  (onClick)="editingUsername.set(false)"
-                />
-              </form>
-              <small class="mt-1 block text-surface-500 dark:text-surface-400">{{ 'auth.username.help' | transloco }}</small>
-            } @else {
-              <div class="flex items-center gap-2">
-                <span class="font-medium">{{ '@' + current.username }}</span>
-                <p-button
-                  icon="pi pi-pencil"
+                  [outlined]="true"
                   size="small"
-                  severity="secondary"
-                  [text]="true"
-                  [rounded]="true"
-                  [ariaLabel]="'account.profile.editUsername' | transloco"
-                  (onClick)="startEditingUsername()"
+                  [loading]="busy() === 'signOut'"
+                  (onClick)="signOut()"
                 />
               </div>
-            }
-          </dd>
-        </div>
-        <div>
-          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'auth.fields.email' | transloco }}</dt>
-          <dd class="m-0 mt-1 break-all">{{ current.email }}</dd>
-        </div>
-        <div>
-          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'account.profile.providers' | transloco }}</dt>
-          <dd class="m-0 mt-1 flex flex-wrap gap-2">
-            @for (provider of current.providers; track provider) {
-              <p-tag [value]="providerLabel(provider) | transloco" severity="secondary" />
-            }
-          </dd>
-        </div>
-        <div>
-          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'account.profile.memberSince' | transloco }}</dt>
-          <dd class="m-0 mt-1">{{ memberSince() }}</dd>
-        </div>
-        <div>
-          <dt class="text-sm text-surface-500 dark:text-surface-400">{{ 'badges.title' | transloco }}</dt>
-          <dd class="m-0 mt-1">
-            <app-author [author]="{ username: current.username, badges: current.badges }" />
-            <details class="mt-3 text-sm">
-              <summary class="cursor-pointer text-primary">{{ 'badges.how' | transloco }}</summary>
-              <ul class="m-0 mt-3 flex list-none flex-col gap-2 p-0">
-                @for (badge of allBadges; track badge) {
-                  <li class="flex flex-wrap items-center gap-2">
-                    <p-tag
-                      [value]="'badges.' + badge + '.label' | transloco"
-                      [icon]="badgeStyle[badge].icon"
-                      [severity]="badgeStyle[badge].severity"
-                      styleClass="!px-1.5 !py-0 !text-xs"
-                    />
-                    <span class="text-surface-600 dark:text-surface-300">{{ 'badges.' + badge + '.description' | transloco }}</span>
-                  </li>
-                }
-              </ul>
-            </details>
-          </dd>
-        </div>
-      </dl>
+              @if (current.role === 'admin') {
+                <div class="flex flex-wrap items-center justify-between gap-3 border-t border-surface-200 p-6 lg:hidden dark:border-surface-800">
+                  <h3 class="m-0 text-base font-semibold">{{ 'admin.title' | transloco }}</h3>
+                  <a pButton [routerLink]="['/', lang(), 'admin']" severity="secondary" [outlined]="true" size="small">
+                    <i class="pi pi-shield" pButtonIcon></i>
+                    <span pButtonLabel>{{ 'admin.title' | transloco }}</span>
+                  </a>
+                </div>
+              }
+            </div>
+          }
 
-      @if (error() && !deleteOpen()) {
-        <p-message class="mt-4 block" severity="error" [text]="error()! | transloco" />
-      }
+          @case ('publications') {
+            <div class="rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+              <app-my-profiles [lang]="lang()" />
+            </div>
+          }
 
-      <div class="mt-6 flex flex-wrap gap-3">
-        @if (current.providers.includes('email')) {
-          <a pButton [routerLink]="['/', lang(), 'reset-password']" severity="secondary" [outlined]="true">
-            <span pButtonLabel>{{ 'account.changePassword' | transloco }}</span>
-          </a>
+          @case ('saved') {
+            <div class="flex flex-col gap-6">
+              <div class="rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+                <app-saved-profiles [lang]="lang()" />
+              </div>
+              <div class="rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
+                <app-saved-topics [lang]="lang()" />
+              </div>
+            </div>
+          }
+
+          @case ('data') {
+            <div class="flex flex-col gap-6">
+              <div
+                class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900"
+              >
+                <div class="min-w-0 flex-1">
+                  <h3 class="m-0 text-base font-semibold">{{ 'account.data.title' | transloco }}</h3>
+                  <p class="mt-1 mb-0 text-sm text-surface-600 dark:text-surface-400">{{ 'account.data.body' | transloco }}</p>
+                </div>
+                <p-button
+                  [label]="'account.data.download' | transloco"
+                  icon="pi pi-download"
+                  severity="secondary"
+                  [outlined]="true"
+                  size="small"
+                  [loading]="busy() === 'export'"
+                  (onClick)="exportData()"
+                />
+              </div>
+
+              <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-red-300 p-6 dark:border-red-900">
+                <div class="min-w-0 flex-1">
+                  <h3 class="m-0 text-base font-semibold text-red-700 dark:text-red-400">{{ 'account.delete.title' | transloco }}</h3>
+                  <p class="mt-1 mb-0 text-sm text-surface-600 dark:text-surface-400">{{ 'account.delete.body' | transloco }}</p>
+                </div>
+                <p-button
+                  [label]="'account.delete.button' | transloco"
+                  icon="pi pi-trash"
+                  severity="danger"
+                  [outlined]="true"
+                  size="small"
+                  (onClick)="openDelete()"
+                />
+              </div>
+            </div>
+          }
         }
-        @if (current.role === 'admin') {
-          <a pButton [routerLink]="['/', lang(), 'admin']" severity="secondary" [outlined]="true">
-            <i class="pi pi-shield" pButtonIcon></i>
-            <span pButtonLabel>{{ 'admin.title' | transloco }}</span>
-          </a>
-        }
-        <p-button
-          [label]="'account.signOut' | transloco"
-          icon="pi pi-sign-out"
-          severity="secondary"
-          [outlined]="true"
-          [loading]="busy() === 'signOut'"
-          (onClick)="signOut()"
-        />
       </div>
-    </div>
-
-    <!-- Salvos -->
-    <div class="mt-6 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <app-saved-profiles [lang]="lang()" />
-    </div>
-
-    <!-- Tópicos salvos -->
-    <div class="mt-6 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <app-saved-topics [lang]="lang()" />
-    </div>
-
-    <!-- Perfis de configuração -->
-    <div class="mt-6 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <app-my-profiles [lang]="lang()" />
-    </div>
-
-    <!-- Dados -->
-    <div class="mt-6 rounded-xl border border-surface-200 bg-surface-0 p-6 dark:border-surface-800 dark:bg-surface-900">
-      <h2 class="m-0 text-xl font-semibold">{{ 'account.data.title' | transloco }}</h2>
-      <p class="mt-2 mb-4 text-surface-600 dark:text-surface-400">{{ 'account.data.body' | transloco }}</p>
-      <p-button
-        [label]="'account.data.download' | transloco"
-        icon="pi pi-download"
-        severity="secondary"
-        [outlined]="true"
-        [loading]="busy() === 'export'"
-        (onClick)="exportData()"
-      />
-    </div>
-
-    <!-- Apagar -->
-    <div class="mt-6 rounded-xl border border-red-300 p-6 dark:border-red-900">
-      <h2 class="m-0 text-xl font-semibold">{{ 'account.delete.title' | transloco }}</h2>
-      <p class="mt-2 mb-4 text-surface-600 dark:text-surface-400">{{ 'account.delete.body' | transloco }}</p>
-      <p-button [label]="'account.delete.button' | transloco" icon="pi pi-trash" severity="danger" [outlined]="true" (onClick)="openDelete()" />
     </div>
 
     <p-dialog

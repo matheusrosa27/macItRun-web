@@ -35,6 +35,19 @@
       <!-- Conta: só aparece no navegador, depois de saber se há alguém conectado. -->
       @if (auth.enabled && auth.ready()) {
         @if (auth.user()) {
+          <!-- Atalho para os salvos (perfis de configuração e tópicos) -->
+          <a
+            pButton
+            [routerLink]="link('account')"
+            [queryParams]="{ section: 'saved' }"
+            [outlined]="true"
+            size="small"
+            [attr.aria-label]="'nav.saved' | transloco"
+            [title]="'nav.saved' | transloco"
+          >
+            <i class="pi pi-bookmark-fill" pButtonIcon></i>
+            <span pButtonLabel class="hidden sm:inline">{{ 'nav.saved' | transloco }}</span>
+          </a>
           <a
             pButton
             [routerLink]="link('account')"
@@ -102,6 +115,15 @@
       >
     }
     <a [href]="kofiUrl" target="_blank" rel="noopener" class="rounded-md px-3 py-2 no-underline text-inherit hover:bg-surface-100 dark:hover:bg-surface-800">{{ 'nav.support' | transloco }}</a>
+    @if (auth.enabled && auth.ready() && auth.user()) {
+      <a
+        [routerLink]="link('account')"
+        [queryParams]="{ section: 'saved' }"
+        class="rounded-md px-3 py-2 no-underline text-inherit hover:bg-surface-100 dark:hover:bg-surface-800"
+        (click)="menuOpen.set(false)"
+        >{{ 'nav.saved' | transloco }}</a
+      >
+    }
     @if (auth.enabled && auth.ready()) {
       <a
         [routerLink]="link(auth.user() ? 'account' : 'login')"

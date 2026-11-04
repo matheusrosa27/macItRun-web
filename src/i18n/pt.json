@@ -17,6 +17,7 @@
     "licenses": "Licenças",
     "login": "Entrar",
     "account": "Minha conta",
+    "saved": "Salvos",
     "community": "Perfis de configuração",
     "forum": "Comunidade"
   },
@@ -472,6 +473,39 @@
       "unpublish": "Despublicar",
       "unpublishConfirm": "Despublicar este perfil de configuração? Ele sai da comunidade e não volta; para compartilhar de novo, publique outra vez.",
       "unpublished": "Perfil de configuração despublicado"
+    },
+    "nav": {
+      "label": "Seções da conta",
+      "profile": "Perfil",
+      "login": "Login e segurança",
+      "publications": "Publicações",
+      "saved": "Salvos",
+      "data": "Privacidade e dados"
+    },
+    "sections": {
+      "profile": {
+        "title": "Perfil público",
+        "body": "Como você aparece na comunidade: nome de usuário e tags."
+      },
+      "login": {
+        "title": "Login e segurança",
+        "body": "O e-mail da conta, as formas de entrar e a senha.",
+        "password": "Senha",
+        "passwordBody": "Mandamos um link para o seu e-mail para você escolher uma senha nova.",
+        "signOutBody": "Sai da conta neste navegador."
+      },
+      "publications": {
+        "title": "Publicações",
+        "body": "Os perfis de configuração que você publicou: edite as notas ou despublique."
+      },
+      "saved": {
+        "title": "Salvos",
+        "body": "O que você guardou para ver depois."
+      },
+      "data": {
+        "title": "Privacidade e dados",
+        "body": "Baixe uma cópia dos seus dados ou apague a conta."
+      }
     }
   },
   "community": {
@@ -698,7 +732,7 @@
       "disliked": "Não curtido ({{ count }}). Clique para tirar"
     },
     "saved": {
-      "title": "Tópicos salvos",
+      "title": "Tópicos da comunidade",
       "hint": "Tópicos da comunidade que você guardou para ler depois. Só você vê esta lista.",
       "empty": "Nenhum tópico salvo ainda. Use o botão Salvar na página de um tópico em"
     }
@@ -844,7 +878,7 @@
     "deleted": "Apagado"
   },
   "saved": {
-    "title": "Salvos",
+    "title": "Perfis de configuração",
     "hint": "Perfis de configuração que você guardou para usar depois. Só você vê esta lista.",
     "save": "Salvar",
     "saved": "Salvo",

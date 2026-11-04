@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -24,6 +24,16 @@ import { SavedProfiles } from './saved-profiles';
 import { SavedTopics } from './saved-topics';
 
 type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
+
+/** Seções da conta, na ordem do sumário. A escolhida fica na URL (?section=). */
+const SECTIONS = [
+  { id: 'profile', icon: 'pi-user' },
+  { id: 'login', icon: 'pi-lock' },
+  { id: 'publications', icon: 'pi-upload' },
+  { id: 'saved', icon: 'pi-bookmark' },
+  { id: 'data', icon: 'pi-database' },
+] as const;
+type SectionId = (typeof SECTIONS)[number]['id'];
 
 @Component({
   selector: 'app-account',
@@ -56,6 +66,13 @@ export class Account {
   private readonly fb = inject(FormBuilder).nonNullable;
 
   readonly lang = input.required<Lang>();
+  /** ?section=: a seção aberta (Perfil, se não vier ou for desconhecida). */
+  readonly section = input<string>();
+
+  protected readonly sections = SECTIONS;
+  protected readonly activeSection = computed<SectionId>(
+    () => SECTIONS.find((s) => s.id === this.section())?.id ?? 'profile',
+  );
 
   protected readonly account = this.auth.account;
   protected readonly usernameMax = USERNAME_MAX;
@@ -89,6 +106,21 @@ export class Account {
   protected readonly leaving = computed(() => this.busy() === 'delete' || this.busy() === 'signOut');
 
   constructor() {
+    // Trocar de seção limpa o erro e a edição da anterior.
+    effect(() => {
+      this.activeSection();
+      untracked(() => {
+        this.error.set(null);
+        this.editingUsername.set(false);
+      });
+      // No celular o sumário é uma faixa rolável: mostra a aba escolhida.
+      setTimeout(() =>
+        this.document
+          .querySelector('nav [aria-current="page"]')
+          ?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' }),
+      );
+    });
+
     // Preenche o cadastro com o login do GitHub ou o começo do e-mail do Google.
     effect(() => {
       const account = this.account();

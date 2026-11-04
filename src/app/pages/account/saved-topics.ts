@@ -16,7 +16,7 @@ import { Lang } from '../../core/i18n/langs';
   selector: 'app-saved-topics',
   imports: [RouterLink, TranslocoPipe, ButtonModule, MessageModule, SkeletonModule, TagModule],
   template: `
-    <h2 class="m-0 text-xl font-semibold">{{ 'forum.saved.title' | transloco }}</h2>
+    <h3 class="m-0 text-lg font-semibold">{{ 'forum.saved.title' | transloco }}</h3>
     <p class="mt-2 mb-0 text-sm text-surface-600 dark:text-surface-400">{{ 'forum.saved.hint' | transloco }}</p>
 
     @if (list.error()) {

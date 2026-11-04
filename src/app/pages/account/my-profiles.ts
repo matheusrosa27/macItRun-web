@@ -32,7 +32,7 @@ const NOTES_MAX = 2000;
   ],
   template: `
     <div class="flex flex-wrap items-center justify-between gap-3">
-      <h2 class="m-0 text-xl font-semibold">{{ 'account.profiles.title' | transloco }}</h2>
+      <h3 class="m-0 text-lg font-semibold">{{ 'account.profiles.title' | transloco }}</h3>
       <a pButton [routerLink]="['/', lang(), 'community', 'publish']" size="small" [outlined]="true">
         <i class="pi pi-plus" pButtonIcon></i>
         <span pButtonLabel>{{ 'publish.title' | transloco }}</span>

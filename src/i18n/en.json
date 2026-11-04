@@ -17,6 +17,7 @@
     "licenses": "Licenses",
     "login": "Sign in",
     "account": "My account",
+    "saved": "Saved",
     "community": "Setup Profiles",
     "forum": "Community"
   },
@@ -472,6 +473,39 @@
       "unpublish": "Unpublish",
       "unpublishConfirm": "Unpublish this setup profile? It leaves the community for good; to share it again, publish it again.",
       "unpublished": "Setup profile unpublished"
+    },
+    "nav": {
+      "label": "Account sections",
+      "profile": "Profile",
+      "login": "Sign-in & security",
+      "publications": "Publications",
+      "saved": "Saved",
+      "data": "Privacy & data"
+    },
+    "sections": {
+      "profile": {
+        "title": "Public profile",
+        "body": "How you appear in the community: username and badges."
+      },
+      "login": {
+        "title": "Sign-in & security",
+        "body": "Your account email, the ways you sign in and your password.",
+        "password": "Password",
+        "passwordBody": "We email you a link to choose a new password.",
+        "signOutBody": "Signs you out of this browser."
+      },
+      "publications": {
+        "title": "Publications",
+        "body": "The setup profiles you published: edit the notes or unpublish them."
+      },
+      "saved": {
+        "title": "Saved",
+        "body": "What you kept to see later."
+      },
+      "data": {
+        "title": "Privacy & data",
+        "body": "Download a copy of your data or delete your account."
+      }
     }
   },
   "community": {
@@ -698,7 +732,7 @@
       "disliked": "Disliked ({{ count }}). Click to undo"
     },
     "saved": {
-      "title": "Saved topics",
+      "title": "Community topics",
       "hint": "Community topics you kept to read later. Only you see this list.",
       "empty": "No saved topics yet. Use the Save button on a topic page in"
     }
@@ -844,7 +878,7 @@
     "deleted": "Deleted"
   },
   "saved": {
-    "title": "Saved",
+    "title": "Setup profiles",
     "hint": "Setup profiles you kept for later. Only you see this list.",
     "save": "Save",
     "saved": "Saved",
