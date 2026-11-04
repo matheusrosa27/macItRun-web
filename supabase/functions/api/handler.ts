@@ -13,6 +13,8 @@
 // PATCH  /api/v1/profiles/{id}               (admin) { "file"?, "notes"?, "status"?, "author"? }
 // DELETE /api/v1/profiles/{id}               (admin)
 // GET    /api/v1/profile-filters             valores dos filtros (Macs testados)
+// POST   /api/v1/app-login                   (login) { "challenge" } → { "code" }: login do app de Mac
+// POST   /api/v1/app-login/redeem            { "code", "verifier" } → { "tokenHash" }
 //
 // Login: `Authorization: Bearer <access token do Supabase>`. As escritas rodam como a pessoa
 // e passam pelas funções do banco, que validam tudo de novo.
@@ -47,6 +49,11 @@ export interface Clients {
   user(token: string): Rpc;
   /** O id da pessoa dona do token, ou null se o token não vale. */
   authenticate(token: string): Promise<string | null>;
+  /**
+   * Um link de login novo da pessoa (o hash do token, sem mandar e-mail), para o app de Mac
+   * ganhar uma sessão própria. null se a conta não tiver e-mail.
+   */
+  loginTokenHash(userId: string): Promise<string | null>;
 }
 
 const SORTS = ['likes', 'recent', 'downloads'];
@@ -57,6 +64,7 @@ const MAX_BODY_BYTES = 16 * 1024;
 const MAX_PUBLISH_BYTES = MAX_PROFILE_BYTES + 9 * 1024;
 /** Escritas por IP por minuto (publicar, curtir, comentar, denunciar). */
 const WRITES_PER_MINUTE = 30;
+const APP_LOGIN = /\/v1\/app-login(\/redeem)?\/?$/;
 const ROUTE =
   /\/v1\/(?:profiles(?:\/([a-z0-9-]{1,32})(?:\/(download|comments|like))?)?|(profile-filters)|(reports))\/?$/;
 
@@ -76,6 +84,8 @@ const DB_ERRORS: Record<string, number> = {
   not_admin: 403,
   author_not_found: 400,
   daily_limit: 429,
+  invalid_request: 400,
+  rate_limited: 429,
 };
 
 class ApiError extends Error {
@@ -93,6 +103,8 @@ class ApiError extends Error {
 
 export async function handle(request: Request, clients: Clients): Promise<Response> {
   const url = new URL(request.url);
+  const appLogin = APP_LOGIN.exec(url.pathname);
+  if (appLogin) return await appLoginRoute(request, clients, Boolean(appLogin[1]));
   const match = ROUTE.exec(url.pathname);
   if (!match) return error(404, 'not_found');
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
@@ -192,6 +204,58 @@ async function publishProfile(request: Request, clients: Clients): Promise<Respo
     notes,
   });
   return json(created, 201, NO_STORE);
+}
+
+/**
+ * Login do app de Mac (PKCE). O site, com a sessão da pessoa, pede um código para o desafio do
+ * app; o app troca o código e o segredo pelo token de um link de login e o confirma no Supabase
+ * Auth (/auth/v1/verify), ganhando uma sessão só dele.
+ */
+async function appLoginRoute(request: Request, clients: Clients, redeem: boolean): Promise<Response> {
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+  if (request.method !== 'POST') return error(405, 'method_not_allowed', { Allow: 'POST, OPTIONS' });
+  try {
+    await limitByIp(request, clients.writer);
+    const body = (await jsonBody(request, MAX_BODY_BYTES)) as Record<string, unknown>;
+    if (redeem) {
+      const { code, verifier } = body;
+      if (typeof code !== 'string' || typeof verifier !== 'string' || !/^[A-Za-z0-9._~-]{43,128}$/.test(verifier)) {
+        throw new ApiError(400, 'invalid_request');
+      }
+      const result = await call(clients.writer, 'app_login_redeem', {
+        code,
+        verifier_hash: await sha256Base64Url(verifier),
+      });
+      if (!result) return error(400, 'invalid_code');
+      return json(result, 200, NO_STORE);
+    }
+    const user = await clients.authenticate(bearer(request));
+    if (!user) throw new ApiError(401, 'not_authenticated');
+    const { challenge } = body;
+    if (typeof challenge !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(challenge)) {
+      throw new ApiError(400, 'invalid_request');
+    }
+    const tokenHash = await clients.loginTokenHash(user);
+    if (!tokenHash) throw new ApiError(400, 'no_email');
+    const code = base64Url(crypto.getRandomValues(new Uint8Array(32)));
+    return json(
+      await call(clients.writer, 'app_login_create', { code, user_id: user, challenge, token_hash: tokenHash }),
+      201,
+      NO_STORE,
+    );
+  } catch (cause) {
+    if (cause instanceof ApiError) return error(cause.status, cause.code);
+    console.error(cause);
+    return error(500, 'internal_error');
+  }
+}
+
+async function sha256Base64Url(text: string): Promise<string> {
+  return base64Url(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text))));
+}
+
+function base64Url(bytes: Uint8Array): string {
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
 const STATUSES = ['published', 'hidden', 'removed'];

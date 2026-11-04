@@ -47,6 +47,8 @@ beforeEach(async () => {
     // Nos testes, o "token" é o id da pessoa.
     authenticate: async (token) =>
       (await db.query<{ id: string }>('select id from auth.users where id::text = $1', [token])).rows[0]?.id ?? null,
+    // Nos testes, o "hash do link" diz de quem é.
+    loginTokenHash: async (userId) => `hash-${userId}`,
   };
 });
 
@@ -395,5 +397,56 @@ describe('admin pela API', () => {
   test('apaga', async () => {
     assert.equal((await send('DELETE', undefined, admin)).status, 204);
     assert.equal((await get('/v1/profiles/darksouls3')).status, 404);
+  });
+});
+
+describe('POST /api/v1/app-login (login do app de Mac)', () => {
+  // Par PKCE de exemplo da RFC 7636 (apêndice B).
+  const verifier = 'dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk';
+  const challenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM';
+  let ana: string;
+  beforeEach(async () => {
+    ana = await signUp(db, { email: 'ana@example.com', metadata: { username: 'ana', terms_accepted: 'true' } });
+  });
+  const post = (path: string, payload: unknown, token?: string) =>
+    get(path, 'POST', {
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify(payload),
+    });
+
+  test('o código vale uma vez, só com o segredo certo, e devolve o token da pessoa', async () => {
+    const created = await post('/v1/app-login', { challenge }, ana);
+    assert.equal(created.status, 201);
+    const { code } = await body(created);
+    assert.match(code, /^[A-Za-z0-9_-]{43}$/);
+
+    const redeemed = await post('/v1/app-login/redeem', { code, verifier });
+    assert.equal(redeemed.status, 200);
+    assert.deepEqual(await body(redeemed), { tokenHash: `hash-${ana}` });
+    assert.equal(redeemed.headers.get('Cache-Control'), 'no-store');
+
+    const again = await post('/v1/app-login/redeem', { code, verifier });
+    assert.equal(again.status, 400);
+    assert.equal((await body(again)).error, 'invalid_code');
+  });
+
+  test('segredo errado gasta o código', async () => {
+    const { code } = await body(await post('/v1/app-login', { challenge }, ana));
+    const wrong = await post('/v1/app-login/redeem', { code, verifier: 'x'.repeat(43) });
+    assert.equal((await body(wrong)).error, 'invalid_code');
+    const right = await post('/v1/app-login/redeem', { code, verifier });
+    assert.equal(right.status, 400);
+  });
+
+  test('pedir o código exige login e um desafio válido', async () => {
+    assert.equal((await post('/v1/app-login', { challenge })).status, 401);
+    assert.equal((await post('/v1/app-login', { challenge: 'curto' }, ana)).status, 400);
+    assert.equal((await get('/v1/app-login')).status, 405);
+  });
+
+  test('no máximo 5 pedidos pendentes por pessoa', async () => {
+    for (let i = 0; i < 5; i++) assert.equal((await post('/v1/app-login', { challenge }, ana)).status, 201);
+    const sixth = await post('/v1/app-login', { challenge }, ana);
+    assert.equal(sixth.status, 429);
   });
 });

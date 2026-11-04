@@ -113,6 +113,16 @@ export class CommunityService {
     );
   }
 
+  /**
+   * Login do app de Mac: pede um código de uso único para o desafio PKCE que o app mandou.
+   * O app troca o código (com o segredo que só ele tem) por uma sessão própria.
+   */
+  appLogin(challenge: string): Promise<{ code: string }> {
+    return this.withToken((headers) =>
+      this.http.post<{ code: string }>(`${API_BASE}/app-login`, { challenge }, { headers }),
+    );
+  }
+
   /** Chama a API com o login da pessoa; erros viram PublishError (código e problemas do arquivo). */
   private async withToken<T>(request: (headers: Record<string, string>) => Observable<T>): Promise<T> {
     const token = await this.auth.accessToken();

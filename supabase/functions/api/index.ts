@@ -27,12 +27,22 @@ const clients = {
 };
 
 const auth = createClient(url, publishable, options).auth;
+const admin = createClient(url, key('SUPABASE_SECRET_KEYS', 'SUPABASE_SERVICE_ROLE_KEY'), options).auth.admin;
 const handlerClients = {
   ...clients,
   // O Supabase Auth confere o token e diz de quem é.
   authenticate: async (token: string) => {
     const { data, error } = await auth.getUser(token);
     return error ? null : (data.user?.id ?? null);
+  },
+  // Gera um link de login (sem mandar e-mail) e devolve só o hash do token, para o app de Mac.
+  loginTokenHash: async (userId: string) => {
+    const { data: found, error: userError } = await admin.getUserById(userId);
+    const email = found?.user?.email;
+    if (userError || !email) return null;
+    const { data, error } = await admin.generateLink({ type: 'magiclink', email });
+    if (error) throw error;
+    return data.properties?.hashed_token ?? null;
   },
 };
 

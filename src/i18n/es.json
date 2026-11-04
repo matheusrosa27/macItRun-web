@@ -81,6 +81,10 @@
     "admin": {
       "title": "Moderación",
       "description": "Moderación de la comunidad de macItRun."
+    },
+    "appLogin": {
+      "title": "Iniciar sesión en la app",
+      "description": "Autoriza a la app macItRun a usar tu cuenta."
     }
   },
   "home": {
@@ -712,5 +716,21 @@
     "remove": "Quitar",
     "unavailable": "Ya no disponible",
     "empty": "Todavía no guardaste nada. Usa el botón Guardar en la página de un perfil de configuración."
+  },
+  "appLogin": {
+    "title": "Iniciar sesión en la app macItRun",
+    "body": "La app macItRun de tu Mac quiere usar la cuenta {{username}} para publicar perfiles, dar me gusta, comentar y guardar.",
+    "authorize": "Autorizar",
+    "cancel": "Cancelar",
+    "working": "Autorizando…",
+    "done": "¡Listo! Vuelve a macItRun.",
+    "doneHint": "Si la app no se abrió, haz clic en el botón de abajo.",
+    "openApp": "Abrir macItRun",
+    "cancelled": "Inicio de sesión cancelado. Puedes cerrar esta página.",
+    "invalid": "Este enlace de inicio de sesión no es válido. Empieza de nuevo desde la app.",
+    "noEmail": "Tu cuenta no tiene correo; la app necesita uno para entrar.",
+    "error": "No se pudo autorizar. Inténtalo de nuevo.",
+    "incomplete": "Elige un nombre de usuario en tu cuenta antes de usar la app.",
+    "finishAccount": "Ir a la cuenta"
   }
 }

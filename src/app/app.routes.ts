@@ -72,6 +72,13 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/account/account').then((m) => m.Account),
       },
       {
+        // O app de Mac abre esta página para a pessoa autorizar o login dele.
+        path: 'app-login',
+        canActivate: [requireAuth],
+        data: { page: 'appLogin', noindex: true },
+        loadComponent: () => import('./pages/account/app-login').then((m) => m.AppLogin),
+      },
+      {
         path: 'admin',
         canActivate: [requireAdmin],
         data: { page: 'admin', noindex: true },

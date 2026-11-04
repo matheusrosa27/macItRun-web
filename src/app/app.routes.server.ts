@@ -19,6 +19,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: ':lang/reset-password', renderMode: RenderMode.Prerender, getPrerenderParams: eachLang },
   // Só faz sentido com a sessão, que fica no navegador.
   { path: ':lang/account', renderMode: RenderMode.Client },
+  { path: ':lang/app-login', renderMode: RenderMode.Client },
   // Download mostra a versão atual: renderiza no servidor e a CDN guarda por 10 minutos.
   {
     path: ':lang/download',

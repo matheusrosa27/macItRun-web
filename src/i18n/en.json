@@ -81,6 +81,10 @@
     "admin": {
       "title": "Moderation",
       "description": "Moderation of the macItRun community."
+    },
+    "appLogin": {
+      "title": "Sign in to the app",
+      "description": "Authorize the macItRun app to use your account."
     }
   },
   "home": {
@@ -712,5 +716,21 @@
     "remove": "Remove",
     "unavailable": "No longer available",
     "empty": "Nothing saved yet. Use the Save button on a setup profile page."
+  },
+  "appLogin": {
+    "title": "Sign in to the macItRun app",
+    "body": "The macItRun app on your Mac wants to use the account {{username}} to publish profiles, like, comment and save.",
+    "authorize": "Authorize",
+    "cancel": "Cancel",
+    "working": "Authorizing…",
+    "done": "Done! Go back to macItRun.",
+    "doneHint": "If the app did not open, click the button below.",
+    "openApp": "Open macItRun",
+    "cancelled": "Sign-in cancelled. You can close this page.",
+    "invalid": "This sign-in link is not valid. Start again from the app.",
+    "noEmail": "Your account has no email; the app needs one to sign in.",
+    "error": "Could not authorize. Try again.",
+    "incomplete": "Choose a username in your account before using the app.",
+    "finishAccount": "Go to account"
   }
 }
