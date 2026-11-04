@@ -10,6 +10,7 @@ import {
   ListParams,
   MyProfile,
   PublishError,
+  SavedProfile,
   ReportReason,
   ReportTarget,
   Page,
@@ -161,6 +162,19 @@ export class CommunityService {
 
   report(target: ReportTarget, reason: ReportReason, detail: string): Promise<{ reported: boolean; hidden: boolean }> {
     return this.auth.rpc('report', { target_type: target.type, target_id: target.id, reason, detail });
+  }
+
+  /** Salvar nos favoritos particulares (separado da curtida, que é pública). */
+  save(profileId: string, saved: boolean): Promise<{ saved: boolean }> {
+    return this.auth.rpc('save_profile', { profile_id: profileId, saved });
+  }
+
+  saved(profileId: string): Promise<boolean> {
+    return this.auth.hasSaved(profileId);
+  }
+
+  mySaved(): Promise<SavedProfile[]> {
+    return this.auth.rpc('my_saved_profiles');
   }
 
   /** Se a pessoa conectada já curtiu o perfil (cada um só lê as próprias curtidas). */

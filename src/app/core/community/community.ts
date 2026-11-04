@@ -140,3 +140,11 @@ export interface AdminChanges {
   status?: 'published' | 'hidden' | 'removed';
   author?: string | null;
 }
+
+/** Um perfil salvo pela pessoa. Fora do ar (escondido ou despublicado), só id e nome. */
+export type SavedProfile = (ProfileSummary & { available: true; savedAt: string }) | {
+  id: string;
+  name: string;
+  available: false;
+  savedAt: string;
+};

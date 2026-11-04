@@ -58,6 +58,15 @@
         [attr.aria-pressed]="liked()"
         (onClick)="toggleLike()"
       />
+      <p-button
+        [icon]="saved() ? 'pi pi-bookmark-fill' : 'pi pi-bookmark'"
+        [label]="(saved() ? 'saved.saved' : 'saved.save') | transloco"
+        severity="secondary"
+        [outlined]="!saved()"
+        [loading]="saving()"
+        [attr.aria-pressed]="saved()"
+        (onClick)="toggleSave()"
+      />
       @if (isAdmin()) {
         <p-button
           icon="pi pi-pencil"

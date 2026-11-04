@@ -176,7 +176,7 @@
   },
   "legal": {
     "updated": "Updated {{ date }}",
-    "updatedDate": "November 3, 2026",
+    "updatedDate": "November 4, 2026",
     "privacy": {
       "title": "Privacy policy",
       "intro": "This policy explains which personal data the macItRun website handles, why, and what your rights are, under Brazil's General Data Protection Law (Law No. 13,709/2018, LGPD). The Mac app does not send personal data to the website.",
@@ -214,7 +214,7 @@
       },
       "contact": {
         "title": "Contact",
-        "body": "For any request about your data, write to the controller at the contact email published on this page."
+        "body": "For any request about your data or question about this policy, write to the controller. You will get an answer within 15 days, as the LGPD requires."
       }
     },
     "terms": {
@@ -388,7 +388,8 @@
       "not_admin": "Only administrators can do that.",
       "too_large": "The file is larger than 16 KB.",
       "invalid_json": "The request came in an invalid format.",
-      "author_not_found": "There is no user with that name."
+      "author_not_found": "There is no user with that name.",
+      "save_limit": "You've reached the limit of 500 saved profiles. Remove some to save others."
     }
   },
   "account": {
@@ -700,5 +701,16 @@
     "deleteComment": "Delete comment",
     "saved": "Setup profile saved",
     "deleted": "Deleted"
+  },
+  "saved": {
+    "title": "Saved",
+    "hint": "Setup profiles you kept for later. Only you see this list.",
+    "save": "Save",
+    "saved": "Saved",
+    "added": "Saved to your list",
+    "removed": "Removed from saved",
+    "remove": "Remove",
+    "unavailable": "No longer available",
+    "empty": "Nothing saved yet. Use the Save button on a setup profile page."
   }
 }

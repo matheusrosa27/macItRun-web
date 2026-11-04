@@ -177,3 +177,50 @@ describe('filtros', () => {
     });
   });
 });
+
+describe('salvar', () => {
+  const save = (userId, args) => as(db, userId, (tx) => rpc(tx, 'save_profile', { profile_id: profile, ...args }));
+  const mine = (userId) => as(db, userId, (tx) => rpc(tx, 'my_saved_profiles'));
+
+  test('salvar duas vezes guarda uma; tirar remove; não mexe nas curtidas', async () => {
+    assert.deepEqual(await save(ana), { saved: true });
+    await save(ana);
+    const list = await mine(ana);
+    assert.deepEqual(list.map((p) => [p.id, p.name, p.available]), [[profile, 'Dark Souls III', true]]);
+    assert.equal(await likes(db, profile), 0);
+    assert.deepEqual(await save(ana, { saved: false }), { saved: false });
+    assert.deepEqual(await mine(ana), []);
+  });
+
+  test('cada um só vê os seus', async () => {
+    const bia = await member(db, 'bia');
+    await save(ana);
+    assert.deepEqual(await mine(bia), []);
+    assert.equal((await as(db, bia, (tx) => tx.query('select * from public.saved_profiles'))).rows.length, 0);
+    assert.equal((await as(db, ana, (tx) => tx.query('select * from public.saved_profiles'))).rows.length, 1);
+    await rejects(as(db, null, (tx) => tx.query('select * from public.saved_profiles')), 'permission denied');
+    await rejects(
+      as(db, ana, (tx) => tx.query('insert into public.saved_profiles (user_id, profile_id) values (auth.uid(), $1)', [profile])),
+      'permission denied',
+    );
+  });
+
+  test('sem login não salva; perfil fora do ar fica indisponível e pode sair da lista', async () => {
+    await rejects(save(null), 'permission denied');
+    await rejects(save(ana, { profile_id: 'nada' }), 'not_found');
+    await save(ana);
+    await db.query(`update public.profiles set status = 'hidden' where id = $1`, [profile]);
+    assert.deepEqual((await mine(ana)).map((p) => [p.id, p.available]), [[profile, false]]);
+    await rejects(save(ana), 'not_found');
+    await save(ana, { saved: false });
+    assert.deepEqual(await mine(ana), []);
+  });
+
+  test('entra na exportação e some ao apagar a conta', async () => {
+    await save(ana);
+    const data = await as(db, ana, (tx) => rpc(tx, 'export_my_data'));
+    assert.deepEqual(data.saved.map((s) => s.profileId), [profile]);
+    await as(db, ana, (tx) => rpc(tx, 'delete_my_account'));
+    assert.equal((await db.query('select 1 from public.saved_profiles')).rows.length, 0);
+  });
+});

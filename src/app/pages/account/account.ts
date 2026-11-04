@@ -20,6 +20,7 @@ import { TERMS_ACCEPTED_FLAG } from '../auth/oauth-buttons';
 import { BADGE_STYLE, BADGES } from '../../core/community/badges';
 import { AuthorName } from '../community/author';
 import { MyProfiles } from './my-profiles';
+import { SavedProfiles } from './saved-profiles';
 
 type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
 
@@ -39,6 +40,7 @@ type Action = 'setup' | 'username' | 'export' | 'delete' | 'signOut';
     TagModule,
     MyProfiles,
     AuthorName,
+    SavedProfiles,
   ],
   templateUrl: './account.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

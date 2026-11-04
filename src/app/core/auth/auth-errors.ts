@@ -28,6 +28,7 @@ const KNOWN = new Set([
   'too_large',
   'invalid_json',
   'author_not_found',
+  'save_limit',
 ]);
 
 interface ErrorLike {

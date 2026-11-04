@@ -18,5 +18,8 @@ export const INSTALL_COMMAND = `curl -fsSL https://raw.githubusercontent.com/${R
 
 export const KOFI_URL = 'https://ko-fi.com/matheusrosa27';
 
+/** Contato do controlador dos dados (LGPD), na política de privacidade. */
+export const CONTACT_EMAIL = 'mrosa.labs@gmail.com';
+
 /** Fontes do runtime Wine distribuído pelo app (LGPL). */
 export const WINE_SOURCES_URL = `${RELEASES_URL}/download/runtime-26.3.0-r5/macitrun-wine-26.3.0-r5-sources.tar`;

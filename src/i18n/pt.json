@@ -176,7 +176,7 @@
   },
   "legal": {
     "updated": "Atualizado em {{ date }}",
-    "updatedDate": "3 de novembro de 2026",
+    "updatedDate": "4 de novembro de 2026",
     "privacy": {
       "title": "Política de privacidade",
       "intro": "Esta política explica quais dados pessoais o site do macItRun trata, por quê e quais são os seus direitos, conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD). O app de Mac não envia dados pessoais ao site.",
@@ -214,7 +214,7 @@
       },
       "contact": {
         "title": "Contato",
-        "body": "Para qualquer pedido sobre seus dados, escreva para o controlador pelo e-mail de contato publicado nesta página."
+        "body": "Para qualquer pedido sobre seus dados ou dúvida sobre esta política, escreva para o controlador. A resposta vem em até 15 dias, como pede a LGPD."
       }
     },
     "terms": {
@@ -388,7 +388,8 @@
       "not_admin": "Só administradores podem fazer isso.",
       "too_large": "O arquivo passa de 16 KB.",
       "invalid_json": "O envio veio num formato inválido.",
-      "author_not_found": "Não existe usuário com esse nome."
+      "author_not_found": "Não existe usuário com esse nome.",
+      "save_limit": "Você chegou ao limite de 500 perfis salvos. Tire alguns para salvar outros."
     }
   },
   "account": {
@@ -700,5 +701,16 @@
     "deleteComment": "Apagar comentário",
     "saved": "Perfil de configuração salvo",
     "deleted": "Apagado"
+  },
+  "saved": {
+    "title": "Salvos",
+    "hint": "Perfis de configuração que você guardou para usar depois. Só você vê esta lista.",
+    "save": "Salvar",
+    "saved": "Salvo",
+    "added": "Salvo na sua lista",
+    "removed": "Tirado dos salvos",
+    "remove": "Tirar",
+    "unavailable": "Fora do ar",
+    "empty": "Nada salvo ainda. Use o botão Salvar na página de um perfil de configuração."
   }
 }

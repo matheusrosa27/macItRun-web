@@ -222,11 +222,20 @@ export class AuthService {
   }
 
   /** Se a pessoa conectada curtiu o perfil (o RLS só mostra as próprias curtidas). */
-  async hasLiked(profileId: string): Promise<boolean> {
+  hasLiked(profileId: string): Promise<boolean> {
+    return this.hasOwnRow('likes', profileId);
+  }
+
+  /** Se a pessoa conectada salvou o perfil (o RLS só mostra os próprios salvos). */
+  hasSaved(profileId: string): Promise<boolean> {
+    return this.hasOwnRow('saved_profiles', profileId);
+  }
+
+  private async hasOwnRow(table: 'likes' | 'saved_profiles', profileId: string): Promise<boolean> {
     const client = await this.client;
     if (!client || !this._session()) return false;
     const { count, error } = await client
-      .from('likes')
+      .from(table)
       .select('profile_id', { count: 'exact', head: true })
       .eq('profile_id', profileId);
     if (error) throw error;

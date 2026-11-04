@@ -103,6 +103,9 @@ export class ProfilePage {
 
   protected readonly likes = linkedSignal(() => this.info()?.likes ?? 0);
   protected readonly liked = signal(false);
+  /** Nos favoritos particulares da pessoa (separado da curtida). */
+  protected readonly saved = signal(false);
+  protected readonly saving = signal(false);
   protected readonly liking = signal(false);
 
   /**
@@ -168,6 +171,7 @@ export class ProfilePage {
       if (!this.browser || !id || !this.auth.ready()) return;
       if (!user) {
         this.liked.set(false);
+        this.saved.set(false);
         this.likedKnown.set(true);
         return;
       }
@@ -179,6 +183,10 @@ export class ProfilePage {
           () => this.liked.set(false),
         )
         .finally(() => this.likedKnown.set(true));
+      this.community.saved(id).then(
+        (saved) => this.saved.set(saved),
+        () => this.saved.set(false),
+      );
     });
 
     // A página pode ter vindo da CDN (até 1 minuto de atraso): no navegador, curtidas e
@@ -294,6 +302,33 @@ export class ProfilePage {
     }
     this.reportTarget.set(target);
     this.reportOpen.set(true);
+  }
+
+  /** Salvar pede login e conta completa; tirar dos salvos, só login. */
+  protected async toggleSave(): Promise<void> {
+    if (!this.auth.user()) {
+      await this.goToLogin();
+      return;
+    }
+    const next = !this.saved();
+    if (next && this.auth.needsSetup()) {
+      await this.router.navigate(['/', this.lang(), 'account']);
+      return;
+    }
+    this.saving.set(true);
+    try {
+      const result = await this.community.save(this.id(), next);
+      this.saved.set(result.saved);
+      this.messages.add({
+        severity: 'success',
+        summary: this.transloco.translate(result.saved ? 'saved.added' : 'saved.removed'),
+        life: 2500,
+      });
+    } catch (error) {
+      this.toastError(error);
+    } finally {
+      this.saving.set(false);
+    }
   }
 
   protected async goToLogin(): Promise<void> {
